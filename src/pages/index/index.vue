@@ -11,6 +11,36 @@
         title="Button 按钮"
         is-link
       ></nut-cell>
+      <nut-cell
+        to="/uni_modules/sky-nutui/components/sky-nutui/packages/__VUE/cell/demo"
+        title="Cell 单元格"
+        is-link
+      ></nut-cell>
+      <nut-cell
+        to="/uni_modules/sky-nutui/components/sky-nutui/packages/__VUE/configprovider/demo"
+        title="ConfigProvider 全局配置"
+        is-link
+      ></nut-cell>
+      <nut-cell
+        to="/uni_modules/sky-nutui/components/sky-nutui/packages/__VUE/icon/demo"
+        title="Icon 图标"
+        is-link
+      ></nut-cell>
+      <nut-cell
+        to="/uni_modules/sky-nutui/components/sky-nutui/packages/__VUE/image/demo"
+        title="Image 图片"
+        is-link
+      ></nut-cell>
+      <nut-cell
+        to="/uni_modules/sky-nutui/components/sky-nutui/packages/__VUE/overlay/demo"
+        title="OverLay 遮罩层"
+        is-link
+      ></nut-cell>
+      <nut-cell
+        to="/uni_modules/sky-nutui/components/sky-nutui/packages/__VUE/popup/demo"
+        title="Popup 弹出层"
+        is-link
+      ></nut-cell>
     </nut-cell-group>
   </view>
 </template>
@@ -28,29 +58,9 @@ export default {
 </script>
 
 <style>
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo {
-  height: 200rpx;
-  width: 200rpx;
-  margin-top: 200rpx;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 50rpx;
-}
-
-.text-area {
-  display: flex;
-  justify-content: center;
-}
-
-.title {
-  font-size: 36rpx;
-  color: #8f8f94;
+page {
+  background-color: #f7f8fa;
+  height: 100%;
+  padding-bottom: 25rpx;
 }
 </style>
