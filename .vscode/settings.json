@@ -1,1 +1,6 @@
-{}
+{
+    "i18n-ally.localesPaths": [
+        "src/components/packages/locale",
+        "src/components/packages/locale/lang"
+    ]
+}

@@ -1,23 +1,24 @@
 <template>
   <view :class="classes" :style="getStyle" @click="handleClick">
     <view class="nut-button__warp">
-      <nut-icon popClass="nut-icon-loading" v-if="loading"></nut-icon>
+      <nut-icon class="nut-icon-loading" v-if="loading"></nut-icon>
       <nut-icon
         v-if="icon && !loading"
         :name="icon"
+        v-bind="$attrs"
         :class-prefix="iconClassPrefix"
         :font-class-name="iconFontClassName"
       ></nut-icon>
-      <template :class="{ text: icon || loading }" v-if="$slots.default">
+      <view :class="{ text: icon || loading }" v-if="$slots.default">
         <slot></slot>
-      </template>
+      </view>
     </view>
   </view>
 </template>
 
 <script lang="ts">
 import { PropType, CSSProperties, toRefs, computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 import Icon from '../icon/index.vue';
 const { componentName, create } = createComponent('button');
 export default create({
@@ -54,10 +55,6 @@ export default create({
       type: Boolean,
       default: false
     },
-    height: {
-      type: String,
-      default: ''
-    },
     icon: {
       type: String,
       default: ''
@@ -71,12 +68,9 @@ export default create({
       default: 'nutui-iconfont'
     }
   },
-  options: {
-      virtualHost: true
-  },
   emits: ['click'],
   setup(props, { emit, slots }) {
-    const { type, size, shape, disabled, loading, color, plain, block,height } = toRefs(props);
+    const { type, size, shape, disabled, loading, color, plain, block } = toRefs(props);
 
     const handleClick = (event: MouseEvent) => {
       if (!loading.value && !disabled.value) {
@@ -111,9 +105,6 @@ export default create({
           style.color = '#fff';
           style.background = color.value;
         }
-      }
-      if(height) {
-          style.height = height.value
       }
 
       return style;

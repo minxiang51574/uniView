@@ -1,6 +1,6 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('title') }}</h2>
+    <h2>{{ translate('title') }}</h2>
     <div class="demo-button-row">
       <nut-button type="primary">{{ translate('primary') }}</nut-button>
       <nut-button type="info">{{ translate('info') }}</nut-button>
@@ -11,24 +11,24 @@
       <nut-button type="warning">{{ translate('warning') }}</nut-button>
       <nut-button type="success">{{ translate('success') }}</nut-button>
     </div>
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title1') }}</h2>
     <div class="demo-button-row2">
       <nut-button plain type="primary">{{ translate('plain') }}</nut-button>
       <nut-button plain type="info">{{ translate('plain') }}</nut-button>
     </div>
 
-    <h2 class="h2">{{ translate('title2') }}</h2>
+    <h2>{{ translate('title2') }}</h2>
     <div class="demo-button-row2">
       <nut-button disabled type="primary">{{ translate('disabled') }}</nut-button>
       <nut-button plain disabled type="info">{{ translate('disabled') }}</nut-button>
       <nut-button plain disabled type="primary">{{ translate('disabled') }}</nut-button>
     </div>
-    <h2 class="h2">{{ translate('title3') }}</h2>
+    <h2>{{ translate('title3') }}</h2>
     <div class="demo-button-row2">
       <nut-button shape="square" type="primary"> {{ translate('square') }}</nut-button>
       <nut-button type="info"> {{ translate('round') }}</nut-button>
     </div>
-    <h2 class="h2">{{ translate('title4') }}</h2>
+    <h2>{{ translate('title4') }}</h2>
     <div class="demo-button-row2">
       <nut-button loading type="info"></nut-button>
       <nut-button loading type="warning">{{ translate('loading') }}</nut-button>
@@ -36,24 +36,24 @@
         translate('changeLoading')
       }}</nut-button>
     </div>
-    <h2 class="h2">{{ translate('title5') }}</h2>
+    <h2>{{ translate('title5') }}</h2>
     <div class="demo-button-row2">
       <nut-button shape="square" plain type="primary" icon="star-fill"></nut-button>
       <nut-button shape="square" type="primary" icon="star">{{ translate('star') }}</nut-button>
     </div>
 
-    <h2 class="h2">{{ translate('title7') }}</h2>
+    <h2>{{ translate('title7') }}</h2>
     <div class="demo-button-row2">
       <nut-button size="large" type="primary" style="margin-bottom: 10px">{{ translate('large') }}</nut-button>
       <nut-button type="primary">{{ translate('normal') }}</nut-button>
       <nut-button size="small" type="primary">{{ translate('small') }}</nut-button>
       <nut-button size="mini" type="primary">{{ translate('mini') }}</nut-button>
     </div>
-    <h2 class="h2">{{ translate('title8') }}</h2>
+    <h2>{{ translate('title8') }}</h2>
     <div class="demo-button-row2">
       <nut-button block type="primary">{{ translate('block') }}</nut-button>
     </div>
-    <h2 class="h2">{{ translate('title9') }}</h2>
+    <h2>{{ translate('title9') }}</h2>
     <div class="demo-button-row2">
       <nut-button color="#7232dd">{{ translate('pure') }}</nut-button>
       <nut-button color="#7232dd" plain>{{ translate('pure') }}</nut-button>
@@ -64,9 +64,9 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('button');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -162,6 +162,7 @@ export default createDemo({
 }
 .demo-button-row2 {
   margin-bottom: 10px;
+  display: flex;
   align-items: center;
   flex-wrap: wrap;
 }
