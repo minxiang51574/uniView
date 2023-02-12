@@ -39,7 +39,7 @@
 import { createVNode, ref } from 'vue';
 import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('dialog');
-import { Dialog } from '@/components/packages/nutui.vue';
+import { Dialog } from '@/components/packages/nutui2';
 import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({

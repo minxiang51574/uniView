@@ -8,7 +8,7 @@
 
 ``` javascript
 import { createApp } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 
 const app = createApp();
 app.use(Toast);
@@ -40,7 +40,7 @@ export default {
   <nut-cell title="Text 文字提示" is-link @click="textToast('网络失败，请稍后再试~')"></nut-cell>
 </template>
 <script>
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
      const textToast = (msg) => {
@@ -62,7 +62,7 @@ export default {
   <nut-cell title="Toast 标题展示" is-link @click="textToast('网络失败，请稍后再试~')"></nut-cell>
 </template>
 <script>
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
      const textToast = (msg) => {
@@ -86,7 +86,7 @@ export default {
   <nut-cell title="Toast 成功提示" is-link @click="textToast('成功提示')"></nut-cell>
 </template>
 <script>
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
      const textToast = (msg) => {
@@ -109,7 +109,7 @@ export default {
   <nut-cell title="Toast 失败提示" is-link @click="textToast('失败提示')"></nut-cell>
 </template>
 <script>
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
      const textToast = (msg) => {
@@ -132,7 +132,7 @@ export default {
   <nut-cell title="Toast 警告提示" is-link @click="textToast('警告提示')"></nut-cell>
 </template>
 <script>
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
      const textToast = (msg) => {
@@ -155,7 +155,7 @@ export default {
   <nut-cell title="Toast 加载提示" is-link @click="textToast('加载中')"></nut-cell>
 </template>
 <script>
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
      const textToast = (msg) => {
@@ -178,7 +178,7 @@ export default {
   <nut-cell title="Toast不消失" is-link @click="textToast('Toast不消失')"></nut-cell>
 </template>
 <script>
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
      const textToast = (msg) => {
@@ -202,7 +202,7 @@ export default {
   <nut-cell title="Toast 自定义底部高度" is-link @click="textToast('自定义距离')"></nut-cell>
 </template>
 <script>
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
      const textToast = (msg) => {
@@ -227,7 +227,7 @@ export default {
   <nut-cell title="Loading带透明罩" is-link @click="textToast('加载中')"></nut-cell>
 </template>
 <script>
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
      const textToast = (msg) => {

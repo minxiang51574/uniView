@@ -1,7 +1,7 @@
 import { createApp, Component } from 'vue';
 import { isFunction, isString } from '../util';
 
-export const CreateComponent = (options: any, component: any) => {
+export const createComponent = (options: any, component: any) => {
   let elWarp: HTMLElement = document.body;
   const teleport = (options.teleport as string) || 'body';
   if (teleport != 'body') {

@@ -1,10 +1,18 @@
+/*
+ * @Author: minxiang51574 546143220@qq.com
+ * @Date: 2023-02-12 17:55:23
+ * @LastEditors: minxiang51574 546143220@qq.com
+ * @LastEditTime: 2023-02-12 19:34:06
+ * @FilePath: \uniView\src\components\packages\__VUE\dialog\index.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import Dialog from './index.vue';
 import { h, VNode, CSSProperties } from 'vue';
 import Popup from '../popup/index.vue';
 import Icon from '../icon/index.vue';
 import Button from '../button/index.vue';
 import OverLay from '../overlay/index.vue';
-import { CreateComponent } from '@/components/packages/utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 export class DialogOptions {
   title?: string = '';
   content?: string | VNode = '';
@@ -42,7 +50,7 @@ class DialogFunction {
   instance: any;
   constructor(_options: DialogOptions) {
     let options = Object.assign(this.options, _options);
-    const { unmount } = CreateComponent(options, {
+    const { unmount } = createComponent(options, {
       name: 'dialog',
       components: [Popup, Icon, Button, OverLay],
       wrapper: (elWarp: any, root: any) => {

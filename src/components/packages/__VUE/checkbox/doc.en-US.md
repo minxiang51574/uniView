@@ -238,7 +238,7 @@ When the value changes, the `change` event will be triggered
 </template>
 <script lang="ts">
   import { reactive, toRefs, ref } from 'vue';
-  import { Toast } from '@nutui/nutui';
+  import { Toast } from '@/components/packages/nutui';
   export default {
     props: {},
     setup() {
@@ -299,7 +299,7 @@ When the value changes, the `change` event will be triggered
 </template>
 <script lang="ts">
   import { reactive, toRefs } from 'vue';
-  import { Toast } from '@nutui/nutui';
+  import { Toast } from '@/components/packages/nutui';
   export default {
     props: {},
     setup() {
@@ -335,7 +335,7 @@ When the value changes, the `change` event will be triggered
 </template>
 <script lang="ts">
   import { reactive, toRefs,ref, Ref } from 'vue';
-  import { Toast } from '@nutui/nutui';
+  import { Toast } from '@/components/packages/nutui';
   export default {
     props: {},
     setup() {

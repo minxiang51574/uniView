@@ -1,26 +1,23 @@
-import { createVNode, render, h, onMounted, VNode, ComponentInternalInstance, Component } from 'vue';
-import { App } from 'vue';
+import { createVNode, render, h, onMounted } from 'vue';
 import Notify from './index.vue';
 const defaultOptions = {
   type: 'base',
+  // showPopup: true,
   visible: true,
   msg: '',
   color: undefined,
   background: undefined,
   duration: 3000,
-  className: '',
+  className: ''
   // onClosed: null,
   // onClick: null,
   // onOpened: null,
   // textTimer: null,
-  teleport: '',
-  unmount: new Function()
+  // unmount: null
 };
-type Id = { id: string };
-type TDOptions = Partial<typeof defaultOptions & Id>;
 
 let idsMap: string[] = [];
-let optsMap: TDOptions[] = [];
+let optsMap: any[] = [];
 const clearNotify = (id?: string) => {
   if (id) {
     const container = document.getElementById(id);
@@ -41,8 +38,8 @@ const clearNotify = (id?: string) => {
   }
 };
 
-const updateNotify = (opts: TDOptions) => {
-  const container = document.getElementById(opts.id as string);
+const updateNotify = (opts: any) => {
+  const container = document.getElementById(opts.id);
   if (container) {
     const currentOpt = optsMap.find((item) => item.id === opts.id);
     if (currentOpt) {
@@ -50,13 +47,13 @@ const updateNotify = (opts: TDOptions) => {
     } else {
       opts = { ...defaultOptions, ...opts };
     }
-    const instance: VNode = createVNode(Notify, opts);
+    const instance: any = createVNode(Notify, opts);
     render(instance, container);
-    return (instance.component as ComponentInternalInstance).data;
+    return instance.component.ctx;
   }
 };
 
-const mountNotify = (opts: TDOptions) => {
+const mountNotify = (opts: any) => {
   opts.unmount = clearNotify;
   let _id;
   if (opts.id) {
@@ -92,7 +89,7 @@ const mountNotify = (opts: TDOptions) => {
       };
     }
   };
-  const instance: VNode = createVNode(Wrapper);
+  const instance: any = createVNode(Wrapper);
   document.body.appendChild(root);
   render(instance, root);
   // const container = document.createElement('view');
@@ -135,7 +132,7 @@ export const NotifyFunction = {
     errorMsg(msg);
     return mountNotify({ ...obj, msg, type: 'warning' });
   },
-  hide(): void {
+  hide() {
     clearNotify();
   },
   install(app: any): void {

@@ -181,7 +181,7 @@
 </template>
 
 <script lang="ts">
-import { Toast } from '@/components/packages/nutui.vue';
+import { Toast } from '@/components/packages/nutui';
 import { reactive, ref } from 'vue';
 import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('form');

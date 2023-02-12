@@ -23,7 +23,7 @@
 <script lang="ts">
 import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('toast');
-import { Toast } from '@/components/packages/nutui.vue';
+import { Toast } from '@/components/packages/nutui'; 
 import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 import { onUnmounted } from 'vue';
 const initTranslate = () =>

@@ -117,8 +117,9 @@ export default create({
   },
   emits: ['update', 'update:visible', 'ok', 'cancel', 'opened', 'closed'],
   setup(props, { emit }) {
-    const showPopup = ref(props.visible);
+    const showPopup = ref(props.visible); 
     onMounted(() => {
+      console.log(222);
       if (props.closeOnPopstate) {
         window.addEventListener('popstate', function () {
           closed('page');

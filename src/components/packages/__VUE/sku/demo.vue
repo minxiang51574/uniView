@@ -110,7 +110,7 @@ import { reactive, ref, toRefs, onMounted } from 'vue';
 
 import { createComponent } from '@/components/packages/utils/create';
 import { useTranslate } from '@/components/sites/assets/util/useTranslate';
-import { Toast } from '@/components/packages/nutui.vue';
+import { Toast } from '@/components/packages/nutui';
 const { createDemo, translate } = createComponent('sku');
 
 const initTranslate = () =>

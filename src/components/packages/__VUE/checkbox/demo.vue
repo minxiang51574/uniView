@@ -142,7 +142,7 @@
 <script lang="ts">
 import { reactive, ref, toRefs, onMounted, Ref } from 'vue';
 import { createComponent } from '@/components/packages/utils/create';
-import { Toast } from '@/components/packages/nutui.vue';
+import { Toast } from '@/components/packages/nutui';
 const { createDemo, translate } = createComponent('checkbox');
 import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>

@@ -29,7 +29,7 @@
 import { reactive, toRefs, onMounted, onUnmounted, h } from 'vue';
 import { createComponent } from '@/components/packages/utils/create';
 import { TableColumnProps } from './types';
-import { Toast } from '@/components/packages/nutui.vue';
+import { Toast } from '@/components/packages/nutui';
 import Button from '@/components/packages/__VUE/button/index.vue';
 import Icon from '@/components/packages/__VUE/icon/index.vue';
 const { createDemo, translate } = createComponent('table');

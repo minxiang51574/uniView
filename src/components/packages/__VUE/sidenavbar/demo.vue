@@ -81,7 +81,7 @@
 import { reactive, toRefs } from 'vue';
 import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('sidenavbar');
-import { Toast } from '@/components/packages/nutui.vue';
+import { Toast } from '@/components/packages/nutui';
 import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({

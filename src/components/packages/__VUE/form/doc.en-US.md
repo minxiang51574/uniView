@@ -75,7 +75,7 @@ app.use(CellGroup);
 </template>
 <script lang="ts">
 import { ref,reactive } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup(){
     const dynamicRefForm = ref<any>(null);
@@ -165,7 +165,7 @@ export default {
 </template>
 <script lang="ts">
 import { ref,reactive } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
 setup(){
     const formData = reactive({

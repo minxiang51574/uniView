@@ -30,7 +30,7 @@ For online debugging, please change the browser to mobile mode
 </template>
 <script>
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default{
   setup() {
     const visible = ref(false);
@@ -77,7 +77,7 @@ export default{
 </template>
 <script>
 import { ref,reactive } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default{
   setup() {
     const visible = ref(false);
@@ -123,7 +123,7 @@ export default{
 </template>
 <script>
 import { ref,reactive } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default{
   setup() {
     const visible = ref(false);
@@ -166,7 +166,7 @@ export default{
 </template>
 <script>
 import { ref,reactive } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default{
   setup() {
     const visible = ref(false);
@@ -208,7 +208,7 @@ export default{
 </template>
 <script>
 import { ref,reactive } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default{
   setup() {
     const visible = ref(false);
@@ -257,7 +257,7 @@ export default{
 </template>
 <script>
 import { ref,reactive } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default{
   setup() {
     const visible = ref(false);

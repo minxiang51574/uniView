@@ -35,7 +35,7 @@ app.use(Popup);
 </template>
 <script>
 import { reactive } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default{
   setup() {
     const state = reactive({
@@ -81,7 +81,7 @@ export default{
 </template>
 <script>
 import { reactive } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default{
   setup() {
     const state = reactive({
@@ -134,7 +134,7 @@ export default{
 </template>
 <script>
 import { reactive } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default{
   setup() {
     const state = reactive({
@@ -185,7 +185,7 @@ export default{
 </template>
 <script>
 import { reactive } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default{
   setup() {
     const state = reactive({
@@ -234,7 +234,7 @@ export default{
 </template>
 <script>
 import { reactive } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default{
   setup() {
     const state = reactive({

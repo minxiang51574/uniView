@@ -51,7 +51,7 @@ app.use(Icon);
 </template>
 <script lang="ts">
   import { toRefs, reactive } from 'vue';
-  import { Toast } from '@nutui/nutui';
+  import { Toast } from '@/components/packages/nutui';
   export default {
     setup() {
       const state = reactive({

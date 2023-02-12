@@ -34,7 +34,8 @@ import { reactive } from 'vue';
 import { createComponent } from '@/components/packages/utils/create';
 import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const { createDemo, translate } = createComponent('rate');
-import { Toast } from '@/components/packages/nutui.vue';
+import { Toast } from '@/components/packages/nutui';
+
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

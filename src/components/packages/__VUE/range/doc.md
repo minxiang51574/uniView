@@ -30,7 +30,7 @@ app.use(Range);
 
 <script lang="ts">
   import { ref } from 'vue';
-  import { Toast } from '@nutui/nutui';
+  import { Toast } from '@/components/packages/nutui';
   export default {
     setup() {
       const value = ref(40);
@@ -57,7 +57,7 @@ app.use(Range);
 
 <script lang="ts">
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
     const value = ref([20, 80]);
@@ -82,7 +82,7 @@ export default {
 
 <script lang="ts">
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
     const value = ref(0);
@@ -107,7 +107,7 @@ export default {
 
 <script lang="ts">
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
     const value = ref(20);
@@ -132,7 +132,7 @@ export default {
 
 <script lang="ts">
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
     const value = ref(30);
@@ -157,7 +157,7 @@ export default {
 
 <script lang="ts">
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
     const value = ref(40);
@@ -183,7 +183,7 @@ export default {
 
 <script lang="ts">
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
     const value = ref(50);
@@ -214,7 +214,7 @@ export default {
 
 <script lang="ts">
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
     const value = ref(40);
@@ -256,7 +256,7 @@ export default {
 
 <script lang="ts">
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
     const value = ref(60);
@@ -297,7 +297,7 @@ export default {
 
 <script lang="ts">
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
     const value10 = ref(20);
@@ -352,7 +352,7 @@ export default {
 
 <script lang="ts">
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
   setup() {
     const value12 = ref(20);

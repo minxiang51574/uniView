@@ -29,7 +29,7 @@ app.use(Icon)
 </template>
 <script>
   import { ref } from 'vue';
-  import { Toast } from '@nutui/nutui';
+  import { Toast } from '@/components/packages/nutui';
   export default {
     setup() {
       const switchChecked = ref(true);

@@ -1,7 +1,7 @@
 import ImagePreview from './index.vue';
 import { h } from 'vue';
 import { ImageInterface } from './types';
-import { CreateComponent } from '@/components/packages/utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 import { Interceptor } from '@/components/packages/utils/util';
 import Popup from '../popup/index.vue';
 import Video from '../video/index.vue';
@@ -38,7 +38,7 @@ class ImagePreviewFunction {
 
   constructor(_options: ImagePreviewOptions) {
     const options = Object.assign(this.options, _options);
-    const { instance, unmount } = CreateComponent(options, {
+    const { instance, unmount } = createComponent(options, {
       name: 'imagepreview',
       components: [Popup, Video, Swiper, SwiperItem, Icon, OverLay],
       wrapper: () => {

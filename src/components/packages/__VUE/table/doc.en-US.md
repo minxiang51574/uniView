@@ -543,7 +543,7 @@ app.use(Table);
 </template>
 <script lang="ts">
   import { reactive, toRefs } from 'vue';
-  import { Toast } from '@nutui/nutui';
+  import { Toast } from '@/components/packages/nutui';
   export default {
     setup() {
       const state = reactive({

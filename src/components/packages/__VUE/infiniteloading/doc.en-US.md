@@ -114,7 +114,7 @@ Scrolling to the bottom of the list automatically loads more data.
 
 <script>
   import { ref,reactive,onMounted,toRefs} from 'vue';
-  import { Toast } from '@nutui/nutui';
+  import { Toast } from '@/components/packages/nutui';
   export default {
     setup(props) {
       const refreshHasMore = ref(true);

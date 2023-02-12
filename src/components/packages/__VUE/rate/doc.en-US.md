@@ -159,7 +159,7 @@ export default {
 </template>
 <script lang="ts">
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
     setup() {
         const value = ref(3);
@@ -182,7 +182,7 @@ export default {
 </template>
 <script lang="ts">
 import { ref } from 'vue';
-import { Toast } from '@nutui/nutui';
+import { Toast } from '@/components/packages/nutui';
 export default {
     setup() {
         const value = ref(3);
