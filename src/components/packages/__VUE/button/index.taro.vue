@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { PropType, CSSProperties, toRefs, computed } from 'vue';
-import { createComponent } from '@/packages/utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('button');
 import Icon from '../icon/index.taro.vue';
 export default create({

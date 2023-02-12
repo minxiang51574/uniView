@@ -9,9 +9,10 @@
   </view>
 </template>
 <script lang="ts">
-import { toRefs, computed, watch, reactive,onUnmounted, onBeforeMount, onMounted } from 'vue';
-import { createComponent } from '../../utils/create';
-import { padZero, getTimeStamp } from './util';
+import { toRefs, computed, watch, reactive, onBeforeMount, onMounted } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
+import { getTimeStamp } from './util';
+import { padZero } from '@/components/packages/utils/util';
 const { componentName, create, translate } = createComponent('countdown');
 export default create({
   props: {
@@ -93,24 +94,26 @@ export default create({
     };
 
     const tick = () => {
-        state.timer = setInterval(()=>{
-            if (state.counting) {
-              const currentTime = Date.now() - state.diffTime;
-              const remainTime = Math.max(state.handleEndTime - currentTime, 0);
-            
-              state.restTime = remainTime;
-            
-              if (!remainTime) {
-                state.counting = false;
-                pause();
-                emit('on-end');
-              }
-            
-              if (remainTime > 0) {
-                //tick();
-              }
+      if (window !== undefined) {
+        (state.timer as any) = requestAnimationFrame(() => {
+          if (state.counting) {
+            const currentTime = Date.now() - state.diffTime;
+            const remainTime = Math.max(state.handleEndTime - currentTime, 0);
+
+            state.restTime = remainTime;
+
+            if (!remainTime) {
+              state.counting = false;
+              pause();
+              emit('on-end');
             }
-        },1)
+
+            if (remainTime > 0) {
+              tick();
+            }
+          }
+        });
+      }
     };
 
     // 将倒计时剩余时间格式化   参数： t  时间戳  type custom 自定义类型
@@ -193,8 +196,7 @@ export default create({
     };
     // 暂定
     const pause = () => {
-      //cancelAnimationFrame(state.timer as any);
-      clearInterval(state.timer)
+      cancelAnimationFrame(state.timer as any);
       state.counting = false;
       emit('on-paused', state.restTime);
     };
@@ -207,19 +209,13 @@ export default create({
       }
     };
 
-    onMounted(() => {
+    onBeforeMount(() => {
       if (props.autoStart) {
         initTime();
       } else {
         state.restTime = props.time;
       }
     });
-    
-    onUnmounted(()=>{
-        if(state.timer) {
-            clearInterval(state.timer)
-        }
-    })
 
     watch(
       () => state.restTime,
@@ -261,13 +257,11 @@ export default create({
         initTime();
       }
     );
-    
 
     return {
       ...toRefs(props),
       slots,
       classes,
-      getTimeStamp,
       start,
       pause,
       renderTime,
@@ -278,5 +272,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

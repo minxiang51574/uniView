@@ -194,8 +194,8 @@ export default {
 :::
 
 
-
-## Prop
+## API
+### Props
 
 | Attribute          | Description                                                                      | Type    | Default          |
 |--------------------|----------------------------------------------------------------------------------|---------|------------------|
@@ -204,8 +204,8 @@ export default {
 | icon-size          | Star size                                                                        | Number  | 18               |
 | active-color       | Icon selection color                                                             | String  | #fa200c          |
 | void-color         | Icon unselected color                                                            | String  | #ccc             |
-| unchecked-icon     | Use icon (unchecked)[icon name](#/icon)                                          | String  | star-n           |
-| checked-icon       | Use icon (checked)[icon name](#/icon)                                            | String  | star-fill-n      |
+| unchecked-icon     | Use icon (unchecked)[icon name](#/en-US/component/icon)                                          | String  | star-n           |
+| checked-icon       | Use icon (checked)[icon name](#/en-US/component/icon)                                            | String  | star-fill-n      |
 | font-class-name    | Custom icon font base class name                                                 | String  | `nutui-iconfont` |
 | class-prefix       | Custom icon class name prefix for using custom icons                             | String  | `nut-icon`       |
 | allow-half         | half star                                                                        | Boolean | false            |
@@ -215,7 +215,7 @@ export default {
 | touchable`v3.1.22` | Whether to allow select rate by touch gesture                                    | Boolean | true             |
 
 
-## Event
+### Events
 | Event  | Description                                                | Arguments |
 |--------|------------------------------------------------------------|-----------|
 | change | An event that fires whenever the current score is modified | val       |

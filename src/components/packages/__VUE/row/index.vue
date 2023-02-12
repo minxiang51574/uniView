@@ -1,11 +1,11 @@
 <template>
-  <view :class="getClasses()" @click="handleClick">
+  <view :class="getClasses()">
     <slot></slot>
   </view>
 </template>
 <script lang="ts">
 import { provide } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('row');
 
 export default create({
@@ -31,8 +31,8 @@ export default create({
       default: 'nowrap'
     }
   },
-  emits: ['click'],
-  setup(props, { emit }) {
+  emits: [],
+  setup(props) {
     const prefixCls = componentName;
     provide('gutter', props.gutter);
     const getClass = (prefix: string, type: string) => {
@@ -47,17 +47,12 @@ export default create({
               ${prefixCls}
               `;
     };
-    const handleClick = (evt: MouseEvent) => {
-      evt.stopPropagation();
-      emit('click', evt);
-    };
     return {
-      getClasses,
-      handleClick
+      getClasses
     };
   }
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

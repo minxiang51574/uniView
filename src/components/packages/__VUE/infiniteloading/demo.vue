@@ -47,9 +47,9 @@
 
 <script lang="ts">
 import { onMounted, ref, reactive, toRefs, getCurrentInstance } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('infiniteloading');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 
 const initTranslate = () =>
   useTranslate({
@@ -157,6 +157,11 @@ export default createDemo({
 </script>
 
 <style lang="scss" scoped>
+.nut-theme-dark {
+  .infiniteLi {
+    color: $dark-color;
+  }
+}
 .infiniteUl {
   height: 300px;
   width: 100%;

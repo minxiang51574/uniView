@@ -8,12 +8,13 @@ Used to upload local pictures or files to the server.
 
 ``` javascript
 import { createApp } from 'vue';
-import { Uploader,Icon,Progress } from '@nutui/nutui';
+import { Uploader,Icon,Progress,Button } from '@nutui/nutui';
 
 const app = createApp();
 app.use(Uploader);
 app.use(Icon);
 app.use(Progress);
+app.use(Button);
 
 ```
 
@@ -35,11 +36,11 @@ app.use(Progress);
   <nut-uploader :url="uploadUrl" v-model:file-list="defaultFileList" maximum="3" multiple></nut-uploader>
 </template>
 <script lang="ts">
-import { ref } from 'vue';
+import { reactive } from 'vue';
 export default {
   setup() {
      const uploadUrl = 'https://xxxxx';
-     const defaultFileList = ref([
+     const defaultFileList = reactive([
       {
         name: 'file 1.png',
         url: 'https://m.360buyimg.com/babel/jfs/t1/164410/22/25162/93384/616eac6cE6c711350/0cac53c1b82e1b05.gif',
@@ -81,11 +82,11 @@ export default {
   </nut-uploader>
 </template>
 <script lang="ts">
-import { ref } from 'vue';
+import { reactive } from 'vue';
 export default {
   setup() {
      const uploadUrl = 'https://xxxxx';
-     const defaultFileList = ref([
+     const defaultFileList = reactive([
       {
         name: 'file 1.png',
         url: 'https://m.360buyimg.com/babel/jfs/t1/164410/22/25162/93384/616eac6cE6c711350/0cac53c1b82e1b05.gif',
@@ -286,6 +287,37 @@ export default {
 </script>
 ```
 :::
+
+### Customize XHR upload(before-xhr-upload）
+
+:::demo
+```html
+<!-- When the upload method is put, upload the source file stream directly -->
+<template>
+  <nut-uploader url="https://xxxx" method="put" :before-xhr-upload="beforeXhrUpload"></nut-uploader>
+</template>
+
+<script lang="ts">
+import { ref } from 'vue';
+export default {
+  setup() {
+      // source file https://github.com/jdf2e/nutui/blob/next/src/packages/__VUE/uploader/uploader.ts#L51
+     const beforeXhrUpload=(xhr:XMLHttpRequest,options:any)=>{
+        if (options.method.toLowerCase() == 'put') {
+          xhr.send(options.sourceFile);
+        }else{
+          xhr.send(options.formData);
+        }
+     }
+     return {
+      beforeXhrUpload
+    };
+  }
+}
+</script>
+```
+:::
+
 ### Once the file is selected, manually perform the upload via the button
     
 :::demo
@@ -294,6 +326,7 @@ export default {
   <nut-uploader :url="uploadUrl" maximum="5" :auto-upload="false" ref="uploadRef"></nut-uploader>
   <br />
   <nut-button type="success" size="small" @click="submitUpload">Perform upload</nut-button>
+  <nut-button type="danger" size="small" @click="clearUpload">Clear upload</nut-button>
 </template>
 <script lang="ts">
 import { ref } from 'vue';
@@ -304,10 +337,14 @@ export default {
     const submitUpload = () => {
       uploadRef.value.submit();
     };
+    const clearUpload = () => {
+      uploadRef.value.clearUploadQueue();
+    };
     return {
       uploadUrl,
       uploadRef,
-      submitUpload
+      submitUpload,
+      clearUpload
     };
   }
 }
@@ -324,8 +361,8 @@ export default {
 </template>
 ```
 :::
-
-### Prop
+## API
+### Props
 
 | Attribute         | Description                                                                                                                                      | Type                              | Default          |
 |-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------|------------------|
@@ -344,16 +381,17 @@ export default {
 | accept            | File types that can be accepted. See [input accept Attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept)       | String                            | *                |
 | headers           | Set request headers                                                                                                                              | Object                            | {}               |
 | data              | Uploading extra params or function which can return uploading extra params                                                                       | Object                            | {}               |
-| upload-icon       | Upload area [icon name](#/icon) or image link                                                                                                    | String                            | "photograph"     |
-| upload-icon-size  | Upload area [icon size] (#/icon) size, such as `20px` `2em` `2rem`                                                                               | String or Number                  | -                |
+| upload-icon       | Upload area [icon name](#/en-US/component/icon) or image link                                                                                                    | String                            | "photograph"     |
+| upload-icon-size  | Upload area [icon size] (#/en-US/component/icon) size, such as `20px` `2em` `2rem`                                                                               | String or Number                  | -                |
 | xhr-state         | The success status (status) value of the interface response                                                                                      | Number                            | 200              |
 | with-credentials  | The ajax upload with cookie sent                                                                                                                 | Boolean                           | false            |
 | multiple          | Whether to support multiple file selection                                                                                                       | Boolean                           | false            |
 | disabled          | Whether to disable file upload                                                                                                                   | Boolean                           | false            |
 | timeout           | timeout, in milliseconds                                                                                                                         | Number丨String                    | 1000 * 30        |
 | before-upload     | Hook before reading the file, return false to stop reading the file, can return Promise                                                          | Function                          | null             |
-| before-delete     | Hook before delete the file, return false to stop reading the file, can return Promise                                                           | Function(file): boolean 丨Promise | -                |
-
+| before-xhr-upload`v3.2.1` | Customize the method when uploading XHR                                                                                                                                                                          | Function(xhr，option)                          | null             |
+| before-delete     | Hook before delete the file, return false to stop reading the file, can return Promise                                                           | Function(file,fileList): boolean 丨Promise | -                |
+| delete-icon               | Customize the delete button by passing in [icon name](/#/en-US/component/icon) or an image link                                                                                                                                                   | String                            | "photograph"     |
 
 
 ### FileItem
@@ -367,7 +405,7 @@ export default {
 | type      | File type                                                   | "image/jpeg"                    |
 | formData  | Upload the required data                                    | new FormData()                  |
 
-### Event
+### Events
 
 | Event           | Description                                              | Arguments                      |
 |-----------------|----------------------------------------------------------|--------------------------------|
@@ -387,4 +425,4 @@ Use [ref](https://vuejs.org/guide/essentials/template-refs.html#template-refs) t
 | Name             | Description                                                                                 | Arguments | Return value |
 |------------------|---------------------------------------------------------------------------------------------|-----------|--------------|
 | submit           | Manual upload mode, perform upload operation                                                | -         | -            |
-| clearUploadQueue | Empty the selected file queue (this method is generally used when uploading in manual mode) | -         | -            |
+| clearUploadQueue | Empty the selected file queue (this method is generally used when uploading in manual mode) | index         | -            |

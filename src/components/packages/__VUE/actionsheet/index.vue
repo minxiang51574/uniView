@@ -37,15 +37,11 @@
   </view>
 </template>
 <script lang="ts">
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 import { computed, useSlots } from 'vue';
-import Popup,{ popupProps } from '../popup/index.vue';
 import { popupProps } from '../popup/props';
 const { componentName, create } = createComponent('actionsheet');
 export default create({
-components: {
-[Popup.name]: Popup
-},
   props: {
     ...popupProps,
     cancelTxt: {
@@ -133,5 +129,5 @@ components: {
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

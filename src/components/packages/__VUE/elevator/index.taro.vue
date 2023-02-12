@@ -1,6 +1,6 @@
 <template>
   <view :class="classes">
-    <scroll-view
+    <Nut-Scroll-View
       class="nut-elevator__list scrollview"
       :scroll-top="scrollTop"
       :scroll-y="true"
@@ -33,7 +33,7 @@
       <view class="nut-elevator__list__fixed" :style="fixedStyle" v-show="scrollY > 0" v-if="isSticky">
         <span class="fixed-title">{{ indexList[currentIndex][acceptKey] }}</span>
       </view>
-    </scroll-view>
+    </Nut-Scroll-View>
     <view class="nut-elevator__code--current" v-show="scrollStart" v-if="indexList.length > 0">
       {{ indexList[codeIndex][acceptKey] }}
     </view>
@@ -54,9 +54,11 @@
 </template>
 <script lang="ts">
 import { computed, reactive, toRefs, nextTick, ref, Ref, watch } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useExpose } from '../../utils/useExpose/index';
+import { createComponent } from '@/components/packages/utils/create';
+import { useExpose } from '@/components/packages/utils/useExpose/index';
 const { componentName, create } = createComponent('elevator');
+import NutScrollView from '../scrollView/index.taro.vue';
+
 import Taro from '@tarojs/taro';
 interface ElevatorData {
   name: string;
@@ -64,6 +66,9 @@ interface ElevatorData {
   [key: string]: string | number;
 }
 export default create({
+  components: {
+    NutScrollView
+  },
   props: {
     height: {
       type: [Number, String],
@@ -92,8 +97,8 @@ export default create({
       default: 35
     }
   },
-  emits: ['click-item', 'click-index'],
-  setup(props: any, context: any) {
+  emits: ['click-item', 'click-index', 'change'],
+  setup(props, context) {
     const spaceHeight = 23;
     const listview: Ref<HTMLElement> = ref() as Ref<HTMLElement>;
     const state = reactive({
@@ -154,8 +159,8 @@ export default create({
       state.listHeight.push(height);
       for (let i = 0; i < state.listGroup.length; i++) {
         state.query.selectAll(`.elevator__item__${i}`).boundingClientRect();
-        state.query.exec((res: any) => {
-          height += res[i][0].height;
+        state.query.exec((res) => {
+          height += Math.floor(res[i][0].height);
           state.listHeight.push(height);
         });
       }
@@ -242,6 +247,13 @@ export default create({
         }
         if (state.fixedTop === fixedTop) return;
         state.fixedTop = fixedTop;
+      }
+    );
+
+    watch(
+      () => state.currentIndex,
+      (newVal: number) => {
+        context.emit('change', newVal);
       }
     );
 

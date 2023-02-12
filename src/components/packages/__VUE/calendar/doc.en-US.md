@@ -496,6 +496,60 @@ export default {
 
 ```
 :::
+
+### Custom First Day Of Week
+:::demo
+```html
+<template>
+  <nut-cell
+    :showIcon="true"
+    title="Custom First Day Of Week"
+    :desc="date ? `${date} ${dateWeek}` : 'Please Select Date'"
+    @click="openSwitch('isVisible')"
+    :first-day-of-week="2"
+  >
+  </nut-cell>
+  <nut-calendar
+    v-model:visible="isVisible"
+    :default-value="date"
+    @close="closeSwitch('isVisible')"
+    @choose="setChooseValue"
+    :start-date="`2019-10-11`"
+    :end-date="`2022-11-11`"
+  >
+  </nut-calendar>
+</template>
+<script lang="ts">
+import { reactive, toRefs } from 'vue';
+export default {
+  setup() {
+    const state = reactive({
+      isVisible: false,
+      date: '',
+      dateWeek: ''
+    });
+    const openSwitch = param => {
+      state[`${param}`] = true;
+    };
+    const closeSwitch = param => {
+      state[`${param}`] = false;
+    };
+    const setChooseValue = param => {
+      state.date = param[3];
+      state.dateWeek = param[4];
+    };
+    return {
+      ...toRefs(state),
+      openSwitch,
+      closeSwitch,
+      setChooseValue
+    };
+  }
+};
+</script>
+```
+
+:::
 ### Tiled Display
 :::demo
 ```html
@@ -551,8 +605,8 @@ export default {
 | is-auto-back-fill | Automatic backfill                                          | Boolean         | false           |
 | title             | whether to show title                                          | String          | ‘Calendar’      |
 | default-value     | Default value, select single date : `String`，other: `Array` | String 、 Array | null            |
-| start-date        | The start date, or null if the start date is not limited             | String          | Today            |
-| end-date          | The end date, or null if the end date is not limited              | String          | 365 days from today |
+| start-date        | The start date            | String          | Today            |
+| end-date          | The end date            | String          | 365 days from today |
 | show-today          | Whether to show today's mark               | Boolean          | true |
 | start-text         | Range selection, start part of the text              | String          | Start |
 | end-text         | Range selection, end part of the text            | String          | End |
@@ -560,6 +614,7 @@ export default {
 | show-title          | Whether to show the calendar title               | Boolean          | true |
 | show-sub-title          | Whether to display the date title              | Boolean          | true |
 | to-date-animation          | Whether to use scroll animation              | Boolean          | true |
+| first-day-of-week          | Set the start day of week              | 0-6          | 0 |
 
 ### Events
 
@@ -588,3 +643,4 @@ Through [ref](https://vuejs.org/guide/essentials/template-refs.html), you can ge
 | Name | Description             | Arguments          |
 |--------|------------------|---------------|
 | scrollToDate   | Scroll to the month of the specified date | string:'2021-12-30' |
+| initPosition`v3.3.4`   | Initialize scroll position |  |

@@ -7,7 +7,7 @@
     @touchend="onTouchEnd"
     @touchcancel="onTouchEnd"
   >
-    <view class="nut-swipe__left" ref="leftRef" :id="'leftRef-' + refRandomId">
+    <view class="nut-swipe__left" ref="leftRef">
       <slot name="left"></slot>
     </view>
 
@@ -15,17 +15,17 @@
       <slot name="default"></slot>
     </view>
 
-    <view class="nut-swipe__right" ref="rightRef" :id="'rightRef-' + refRandomId">
+    <view class="nut-swipe__right" ref="rightRef">
       <slot name="right"></slot>
     </view>
   </view>
 </template>
 <script lang="ts">
-import { useTouch } from '../../utils/useTouch';
-import { computed, onMounted, reactive, Ref, ref,getCurrentInstance } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useTaroRect } from '../../utils/useTaroRect';
+import { useTouch } from '@/components/packages/utils/useTouch';
+import { computed, reactive, Ref, ref } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('swipe');
+
 export type SwipePosition = 'left' | 'right' | '';
 export default create({
   props: {
@@ -47,14 +47,8 @@ export default create({
     }
   },
   emits: ['open', 'close'],
-options: {
-    virtualHost: true
-},
+
   setup(props, { emit }) {
-      
-      const { proxy } = getCurrentInstance()
-      
-    const refRandomId = Math.random().toString(36).slice(-8);
     const classes = computed(() => {
       const prefixCls = componentName;
       return {
@@ -62,27 +56,18 @@ options: {
       };
     });
 
-    const getRefWidth = async (refId: String) => {
-     
-      let rect = await useTaroRect(refId, proxy);
-      return rect.width || 0;
+    const getRefWidth = (ref: Ref<HTMLElement | undefined>): number => {
+      return ref.value?.clientWidth || 0;
     };
 
-    const leftRef = ref<HTMLElement>();
-    const leftRefWidth = ref(0);
-    const rightRef = ref<HTMLElement>();
-    const rightRefWidth = ref(0);
-
-    const initWidth = async () => {
-      leftRefWidth.value = await getRefWidth('#leftRef-'+refRandomId);
-      rightRefWidth.value = await getRefWidth('#rightRef-'+refRandomId);
-    };
-
-    onMounted(() => {
-      setTimeout(() => {
-        initWidth();
-      }, 100);
-    });
+    const leftRef = ref<HTMLElement>(),
+      leftRefWidth = computed(() => {
+        return getRefWidth(leftRef);
+      });
+    const rightRef = ref<HTMLElement>(),
+      rightRefWidth = computed(() => {
+        return getRefWidth(rightRef);
+      });
 
     let opened: boolean = false;
     let position: SwipePosition = '';
@@ -147,7 +132,7 @@ options: {
         if (props.disabled) return;
         touch.start(event);
       },
-      async onTouchMove(event: Event) {
+      onTouchMove(event: Event) {
         if (props.disabled) return;
         touch.move(event);
         if (touch.isHorizontal()) {
@@ -193,14 +178,12 @@ options: {
       ...touchMethods,
       leftRef,
       rightRef,
-      refRandomId,
       open,
       close
     };
   }
 });
 </script>
-
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-cell
       :title="translate('chooseCity')"
       :desc="index"
@@ -16,9 +16,10 @@
       :title="translate('chooseCity')"
       @change="change"
       @confirm="(options) => confirm('index', options)"
+      :showCancelText="false"
     ></nut-picker>
 
-    <h2 class="h2">{{ translate('defaultSelected') }}</h2>
+    <h2>{{ translate('defaultSelected') }}</h2>
     <nut-cell
       :title="translate('chooseCity')"
       :desc="defult"
@@ -37,7 +38,7 @@
     >
     </nut-picker>
 
-    <h2 class="h2">{{ translate('tileDesc') }}</h2>
+    <h2>{{ translate('tileDesc') }}</h2>
     <nut-cell
       :title="translate('chooseCity')"
       :desc="defult"
@@ -57,7 +58,7 @@
     >
     </nut-picker>
 
-    <h2 class="h2">{{ translate('multipleColumns') }}</h2>
+    <h2>{{ translate('multipleColumns') }}</h2>
     <nut-cell
       :title="translate('chooseTime')"
       :desc="multiple"
@@ -76,7 +77,7 @@
     >
     </nut-picker>
 
-    <h2 class="h2">{{ translate('cascade') }}</h2>
+    <h2>{{ translate('cascade') }}</h2>
     <nut-cell
       :title="translate('chooseCity')"
       :desc="cascader"
@@ -88,12 +89,13 @@
     ></nut-cell>
     <nut-picker
       v-model:visible="showCascader"
+      v-model="selectedCascader"
       :columns="cascaderColumns"
       :title="translate('chooseCity')"
       @confirm="(options) => confirm('cascader', options)"
     ></nut-picker>
 
-    <h2 class="h2">{{ translate('async') }}</h2>
+    <h2>{{ translate('async') }}</h2>
     <nut-cell
       :title="translate('chooseCity')"
       :desc="async"
@@ -111,7 +113,7 @@
       @confirm="(options) => confirm('async', options)"
     ></nut-picker>
 
-    <h2 class="h2">{{ translate('custom') }}</h2>
+    <h2>{{ translate('custom') }}</h2>
     <nut-cell
       :title="translate('validTime')"
       :desc="effect"
@@ -129,33 +131,14 @@
     >
       <nut-button block type="primary" @click="alwaysFun">{{ translate('always') }}</nut-button></nut-picker
     >
-
-    <!-- <h2 class="h2">异步获取</h2>
-    <nut-cell
-      :title="translate('validTime')"
-      :desc="effect"
-      @click="
-        () => {
-          showJK = true;
-        }
-      "
-    ></nut-cell>
-    <nut-picker
-      v-model:visible="showJK"
-      :columns="jkColumns"
-      :title="translate('chooseDate')"
-      @confirm="(options) => confirm('effect', options)"
-      @change="changeJK"
-    ></nut-picker
-    > -->
   </div>
 </template>
 <script lang="ts">
 import { toRefs, ref, onMounted, reactive, computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 import { PickerOption } from './types';
 const { createDemo, translate } = createComponent('picker');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 import { Internation } from './doc.en';
 
 useTranslate(Internation);
@@ -164,6 +147,7 @@ export default createDemo({
   setup() {
     const selectedValue = ref(['ZheJiang']);
     const selectedTime = ref(['Wednesday', 'Afternoon']);
+    const selectedCascader = ref(['FuJian', 'FuZhou', 'TaiJiang']);
     const asyncValue = ref<string[]>([]);
     const columsNum = ref([]);
     const columns = computed(() => [
@@ -367,8 +351,11 @@ export default createDemo({
       }, 500);
     });
 
-    const confirm = (tag: string, { selectedValue }: { selectedValue: string[] }) => {
-      (desc as any)[tag] = selectedValue.join(',');
+    const confirm = (
+      tag: string,
+      { selectedValue, selectedOptions }: { selectedValue: string[]; selectedOptions: any }
+    ) => {
+      (desc as any)[tag] = selectedOptions.map((val: any) => val.text).join(',');
     };
     const change = ({ selectedValue }: { selectedValue: string[] }) => {
       console.log(selectedValue);
@@ -411,6 +398,7 @@ export default createDemo({
       alwaysFun,
       translate,
       selectedTime,
+      selectedCascader,
       columsNum,
       showTile,
       showJK,

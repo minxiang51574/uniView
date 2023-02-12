@@ -1,4 +1,4 @@
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { translate } = createComponent('uploader');
 export type SizeType = 'original' | 'compressed';
 export type SourceType = 'album' | 'camera' | 'user' | 'environment';

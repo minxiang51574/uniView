@@ -26,7 +26,7 @@
 </template>
 <script lang="ts">
 import { toRefs, computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create, translate } = createComponent('empty');
 
 type statusOptions = {
@@ -87,5 +87,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

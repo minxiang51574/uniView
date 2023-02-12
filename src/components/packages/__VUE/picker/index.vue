@@ -8,30 +8,33 @@
       :close-on-click-overlay="closeOnClickOverlay"
       @close="close"
       :round="true"
-      
+      :teleportDisable="teleportDisable"
+      :safeAreaInsetBottom="safeAreaInsetBottom"
+      :destroyOnClose="destroyOnClose"
     >
       <view class="nut-picker__bar">
-        <view class="nut-picker__cancel nut-picker__left nut-picker__button" @click="close">{{
+        <view class="nut-picker__left" v-if="showCancelText" @click="close">{{
           cancelText || translate('cancel')
         }}</view>
         <view class="nut-picker__title"> {{ title }}</view>
-        <view class="nut-picker__confirm nut-picker__right nut-picker__button" @click="confirmHandler()">{{
+        <view class="nut-picker__right" v-if="showOkText" @click="confirmHandler()">{{
           okText || translate('confirm')
         }}</view>
       </view>
 
       <slot name="top"></slot>
 
-      <view class="nut-picker__column" ref="wrapHeight">
-        <view class="nut-picker__hairline"></view>
+      <view class="nut-picker__column">
         <view class="nut-picker__columnitem" v-for="(column, columnIndex) in columnsList" :key="columnIndex">
           <nut-picker-column
+            :ref="swipeRef"
             :itemShow="show"
             :column="column"
             :readonly="readonly"
             :columnsType="columnsType"
-            :value="defaultValues[columnIndex]"
+            :value="defaultValues && defaultValues[columnIndex]"
             :threeDimensional="threeDimensional"
+            :swipeDuration="swipeDuration"
             @change="
               (option) => {
                 changeHandler(columnIndex, option);
@@ -47,12 +50,11 @@
 </template>
 <script lang="ts">
 import { ref, onMounted, onBeforeUnmount, reactive, watch, computed, toRaw, toRefs, PropType } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 import popup from '../popup/index.vue';
-import { popupProps } from '../popup/props'
+import { popupProps } from '../popup/props';
 import column from './Column.vue';
 const { componentName, create, translate } = createComponent('picker');
-// import { PickerColumnOption, PickerOption, TouchParams } from './types';
 
 export interface PickerOption {
   text: string | number;
@@ -95,8 +97,19 @@ export default create({
       type: Boolean,
       default: false
     },
-    // 是否开启3D效果
     threeDimensional: {
+      type: Boolean,
+      default: true
+    },
+    swipeDuration: {
+      type: [Number, String],
+      default: 1000
+    },
+    showOkText: {
+      type: Boolean,
+      default: true
+    },
+    showCancelText: {
       type: Boolean,
       default: true
     }
@@ -109,9 +122,17 @@ export default create({
     });
 
     // 选中项
-    let defaultValues = ref<(number | string)[]>(props.modelValue);
+    let defaultValues = ref<(number | string)[]>(
+      Array.isArray(props.modelValue) && props.modelValue.length > 0 ? props.modelValue : []
+    );
 
-    const wrapHeight = ref();
+    const pickerColumn = ref<any[]>([]);
+
+    const swipeRef = (el: any) => {
+      if (el && pickerColumn.value.length < columnsList.value.length) {
+        pickerColumn.value.push(el);
+      }
+    };
 
     const classes = computed(() => {
       const prefixCls = componentName;
@@ -150,7 +171,11 @@ export default create({
           return state.formattedColumns as PickerOption[][];
         case 'cascade':
           // 级联数据处理
-          return formatCascade(state.formattedColumns as PickerOption[], defaultValues.value);
+
+          return formatCascade(
+            state.formattedColumns as PickerOption[],
+            defaultValues.value ? defaultValues.value : []
+          );
         default:
           return [state.formattedColumns] as PickerOption[][];
       }
@@ -191,6 +216,8 @@ export default create({
 
     const changeHandler = (columnIndex: number, option: PickerOption) => {
       if (option && Object.keys(option).length) {
+        defaultValues.value = defaultValues.value ? defaultValues.value : [];
+
         if (columnsType.value === 'cascade') {
           defaultValues.value[columnIndex] = option.value ? option.value : '';
           let index = columnIndex;
@@ -218,12 +245,26 @@ export default create({
     };
 
     const confirmHandler = () => {
+      pickerColumn.value.length > 0 &&
+        pickerColumn.value.forEach((column) => {
+          column.stopMomentum();
+        });
+
+      if (defaultValues.value && !defaultValues.value.length) {
+        columnsList.value.forEach((columns) => {
+          defaultValues.value.push(columns[0].value);
+          selectedOptions.value.push(columns[0]);
+        });
+      }
+
       emit('confirm', {
         selectedValue: defaultValues.value,
         selectedOptions: selectedOptions.value
       });
       emit('update:visible', false);
     };
+
+    const isSameValue = (valA: any, valB: any) => JSON.stringify(valA) === JSON.stringify(valB);
 
     onMounted(() => {
       if (props.visible) state.show = props.visible;
@@ -236,8 +277,7 @@ export default create({
     watch(
       () => props.modelValue,
       (newValues) => {
-        const isSameValue = JSON.stringify(newValues) === JSON.stringify(defaultValues.value);
-        if (!isSameValue) {
+        if (!isSameValue(newValues, defaultValues.value)) {
           defaultValues.value = newValues;
         }
       },
@@ -247,25 +287,26 @@ export default create({
     watch(
       defaultValues,
       (newValues) => {
-        const isSameValue = JSON.stringify(newValues) === JSON.stringify(props.modelValue);
-        if (!isSameValue) {
+        if (!isSameValue(newValues, props.modelValue)) {
           emit('update:modelValue', newValues);
         }
       },
-      { immediate: true }
+      { deep: true }
     );
 
     watch(
       () => props.visible,
       (val) => {
         state.show = val;
+        if (val) {
+          pickerColumn.value = [];
+        }
       }
     );
 
     watch(
       () => props.columns,
       (val) => {
-        console.log('更新 columes');
         if (val.length) state.formattedColumns = val as PickerOption[];
       }
     );
@@ -280,11 +321,13 @@ export default create({
       changeHandler,
       confirmHandler,
       defaultValues,
-      translate
+      translate,
+      pickerColumn,
+      swipeRef
     };
   }
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

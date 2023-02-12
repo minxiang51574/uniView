@@ -10,7 +10,7 @@
         <template v-if="isHaveSlot('price')">
           <slot name="price"></slot>
         </template>
-        <nut-pric v-else :price="price"></nut-pric>
+        <nut-price v-else :price="price"></nut-price>
         <template v-if="isHaveSlot('origin')">
           <slot name="origin"></slot>
         </template>
@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { computed, reactive } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { create } = createComponent('card');
 export default create({
   props: {

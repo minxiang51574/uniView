@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('price');
 
 export default create({
@@ -56,13 +56,18 @@ export default create({
     size: {
       type: String,
       default: 'large'
+    },
+    strikeThrough: {
+      type: Boolean,
+      default: false
     }
   },
 
   setup(props) {
     const classes = computed(() => {
       return {
-        [componentName]: true
+        [componentName]: true,
+        [`${componentName}--strike`]: props.strikeThrough
       };
     });
     const showSymbol = computed(() => {
@@ -115,5 +120,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

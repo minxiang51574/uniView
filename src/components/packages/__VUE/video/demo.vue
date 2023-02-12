@@ -34,10 +34,10 @@
 
 <script lang="ts">
 import { reactive, toRefs } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('video');
 
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

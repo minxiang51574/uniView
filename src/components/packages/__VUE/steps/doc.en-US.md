@@ -14,7 +14,8 @@ import { Steps, Step } from '@nutui/nutui';
 import { Steps, Step  } from '@nutui/nutui-taro';
 
 const app = createApp();
-app.use(Steps).use(Step);
+app.use(Steps);
+app.use(Step);
 ```
 
 ### Basic Usage
@@ -132,34 +133,34 @@ app.use(Steps).use(Step);
 :::
 
 
+
 ## API
 
-### Props
-
-#### nut-steps
+### Steps Props
 
 | Attribute       | Description                                         | Type             | Default |
 | ---------------------- | ----------------------------------------------------------- | -------------- | ----------- |
-| direction	             | 	Show direction，`horizontal`,`vertical`  | String        | 'horizontal'  | 
-| current	               | 	Current step           | Number、String        | '0'      |
-| progress-dot            |  Dot step bar     | Boolean | false         |
+| direction	             | 	Show direction，`horizontal`,`vertical`  | String        | `horizontal`  | 
+| current	               | 	Current step           | Number、String        | `0`      |
+| progress-dot            |  Dot step bar     | Boolean | `false`         |
 
-#### nut-steps events
+### Steps Events
 
 | Event | Description                  | Arguments   |
 |--------|----------------|--------------|
 | click-step  | Triggered when the title or icon of the step is clicked | index: number |
 
-#### nut-step
+### Step Props
 
 | Attribute       | Description                         | Type             | Default |
 | ---------------- | ---------------------- | ------------ | ----------- |
-| title            | Title of the process step         | String | Step |
-| content          | Descriptive text of process steps (supporting HTML structure)      | String | Step description |
-| icon          | Icon       | String | null |
-| icon-color          | Icon color       | String | null |
+| title            | Title of the process step         | String | `Step` |
+| content          | Descriptive text of process steps (supporting HTML structure)      | String | `Step description` |
+| icon          | [Icon Name](#/en-US/component/icon)       | String | null |
+| icon-color          | [Icon Color](#/en-US/component/icon)        | String | null |
+| size          | [Icon Size](#/zh-CN/component/icon)       | string | `12px` |
 
-#### nut-step slots
+### Step Slots
 
 | Event | Description                  |
 | ---------------- | ---------------------- |

@@ -68,9 +68,9 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('tag');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 
 const initTranslate = () =>
   useTranslate({

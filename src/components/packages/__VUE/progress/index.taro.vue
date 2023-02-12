@@ -3,7 +3,6 @@
     <div
       class="nut-progress-outer"
       :id="'nut-progress-outer-taro-' + randRef"
-      ref="progressOuter"
       :class="[showText && !textInside ? 'nut-progress-outer-part' : '', size ? 'nut-progress-' + size : '']"
       :style="{ height: height }"
     >
@@ -35,12 +34,12 @@
         </div>
       </div>
     </div>
-    <div class="nut-progress-text" :style="{ lineHeight: height }" v-if="showText && !textInside">
+    <div class="nut-progress-text" v-if="showText && !textInside">
       <template v-if="status == 'text' || status == 'active'">
         <span :style="textStyle">{{ percentage }}{{ isShowPercentage ? '%' : '' }} </span>
       </template>
       <template v-else-if="status == 'icon'">
-        <nut-icon size="16px" :name="iconName" :color="iconColor"></nut-icon>
+        <nut-icon v-bind="$attrs" size="16px" :name="iconName" :color="iconColor"></nut-icon>
       </template>
     </div>
   </div>
@@ -48,9 +47,8 @@
 
 <script lang="ts">
 import { computed, onMounted, useSlots, ref, watch } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 import Taro, { eventCenter, getCurrentInstance } from '@tarojs/taro';
-import { log } from 'lzutf8';
 const { create } = createComponent('progress');
 export default create({
   props: {
@@ -107,13 +105,15 @@ export default create({
   setup(props, { emit }) {
     const slotDefault = !!useSlots().default;
     const height = ref(props.strokeWidth + 'px');
-    const progressOuter = ref<any>();
     const insideText = ref();
     const refRandomId = Math.random().toString(36).slice(-8);
     const randRef = ref(refRandomId);
+    const percentage = computed(() => {
+      return props.percentage >= 100 ? 100 : props.percentage;
+    });
     const bgStyle = computed(() => {
       return {
-        width: props.percentage + '%',
+        width: percentage.value + '%',
         background: props.strokeColor || ''
       };
     });
@@ -130,7 +130,7 @@ export default create({
       height,
       bgStyle,
       textStyle,
-      progressOuter,
+      percentage,
       insideText,
       randRef,
       slotDefault

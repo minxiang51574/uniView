@@ -1,5 +1,5 @@
 <template>
-  <view :class="classes" v-show="state.showWrapper&&parentOffset>0">
+  <view :class="classes" v-show="state.showWrapper">
     <div
       v-show="state.isShowPlaceholderElement"
       @click="handleClickOutside"
@@ -9,25 +9,27 @@
     >
     </div>
     <nut-popup
-      :popStyle="
-        parent.props.direction === 'down' ? { top: 'calc(var(--window-top) + '+parent.offset.value+'px)' } : { bottom: 'calc(var(--window-bottom) + '+parent.offset.value+'px)',top: 'auto' }
+      :style="
+        parent.props.direction === 'down' ? { top: parent.offset.value + 'px' } : { bottom: parent.offset.value + 'px' }
       "
       :overlayStyle="
-        parent.props.direction === 'down' ? { top: 'calc(var(--window-top) + '+parent.offset.value+'px)' } : { bottom: 'calc(var(--window-bottom) + '+parent.offset.value+'px)',top: 'auto' }
+        parent.props.direction === 'down'
+          ? { top: parent.offset.value + 'px' }
+          : { bottom: parent.offset.value + 'px', top: 'auto' }
       "
       v-bind="$attrs"
       v-model:visible="state.showPopup"
-      :position="parent.props.direction === 'down' ? 'topMenu' : 'bottomMenu'"
+      :position="parent.props.direction === 'down' ? 'top' : 'bottom'"
       :duration="parent.props.duration"
       pop-class="nut-menu__pop"
-      overlayClass="nut-menu__overlay"
+      :destroy-on-close="false"
       :overlay="parent.props.overlay"
-      @close="handleClose"
+      @closed="handleClose"
       :lockScroll="parent.props.lockScroll"
-      :isWrapTeleport="false"
+      :teleportDisable="false"
       :close-on-click-overlay="parent.props.closeOnClickOverlay"
     >
-      <view class="nut-menu-item__content">
+      <view class="nut-menu-item__content nut-menu-item__overflow">
         <view
           v-for="(option, index) in options"
           :key="index"
@@ -37,10 +39,12 @@
           @click="onClick(option)"
         >
           <nut-icon
+            v-bind="$attrs"
             :class="{ activeTitleClass: option.value === modelValue, inactiveTitleClass: option.value !== modelValue }"
             v-if="option.value === modelValue"
             :name="optionIcon"
             :color="parent.props.activeColor"
+            :class-prefix="classPrefix"
           ></nut-icon>
           <view
             :class="{ activeTitleClass: option.value === modelValue, inactiveTitleClass: option.value !== modelValue }"
@@ -54,8 +58,8 @@
   </view>
 </template>
 <script lang="ts">
-import { reactive, PropType, inject, getCurrentInstance, computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { reactive, PropType, inject, getCurrentInstance, computed, onUnmounted } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('menu-item');
 import Icon from '../icon/index.vue';
 import Popup from '../popup/index.vue';
@@ -76,19 +80,22 @@ export default create({
       type: Number,
       default: 1
     },
-    titleIcon: String,
     activeTitleClass: String,
     inactiveTitleClass: String,
     optionIcon: {
       type: String,
       default: 'Check'
+    },
+    classPrefix: {
+      type: String,
+      default: 'nut-icon'
     }
   },
   components: {
     [Icon.name]: Icon,
     [Popup.name]: Popup
   },
-  emits: ['update:modelValue', 'change'],
+  emits: ['update:modelValue', 'change', 'open', 'close'],
   setup(props, { emit, slots }) {
     const state = reactive({
       showPopup: false,
@@ -104,10 +111,15 @@ export default create({
         // 获取子组件自己的实例
         const instance = getCurrentInstance()!;
 
-        const { link } = parent;
+        const { link, removeLink } = parent;
 
         // @ts-ignore
         link(instance);
+
+        onUnmounted(() => {
+          // @ts-ignore
+          removeLink(instance);
+        });
 
         return {
           parent
@@ -116,10 +128,6 @@ export default create({
     };
 
     const { parent } = useParent();
-    
-    const parentOffset = computed(()=>{
-        return parent.offset.value
-    })
 
     const classes = computed(() => {
       const prefixCls = componentName;
@@ -129,7 +137,7 @@ export default create({
     });
 
     const placeholderElementStyle = computed(() => {
-      const heightStyle = { height: 'calc(var(--window-top) + '+parent.offset.value+'px)'  };
+      const heightStyle = { height: parent.offset.value + 'px' };
 
       if (parent.props.direction === 'down') {
         return heightStyle;
@@ -144,15 +152,12 @@ export default create({
       }
 
       state.showPopup = show;
-      if(!show) {
-          state.isShowPlaceholderElement = show;
-      }else{
-          state.isShowPlaceholderElement = show;
-      }
+      state.isShowPlaceholderElement = show;
       // state.transition = !options.immediate;
 
       if (show) {
         state.showWrapper = true;
+        emit('open');
       }
     };
 
@@ -177,13 +182,14 @@ export default create({
     };
 
     const handleClose = () => {
-        console.log('onclose')
+      emit('close');
       state.showWrapper = false;
       state.isShowPlaceholderElement = false;
     };
 
     const handleClickOutside = () => {
       state.showPopup = false;
+      emit('close');
     };
 
     return {
@@ -195,12 +201,11 @@ export default create({
       toggle,
       onClick,
       handleClose,
-      handleClickOutside,
-      parentOffset
+      handleClickOutside
     };
   }
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

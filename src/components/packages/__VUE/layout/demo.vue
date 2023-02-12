@@ -1,6 +1,6 @@
 <template>
   <div class="demo full">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <div class="box-item">
       <nut-row>
         <nut-col :span="24">
@@ -41,7 +41,7 @@
         </nut-col>
       </nut-row>
     </div>
-    <h2 class="h2">{{ translate('desc') }}</h2>
+    <h2>{{ translate('desc') }}</h2>
     <div class="box-item">
       <nut-row :gutter="10">
         <nut-col :span="8">
@@ -55,7 +55,7 @@
         </nut-col>
       </nut-row>
     </div>
-    <h2 class="h2">{{ translate('flex') }}</h2>
+    <h2>{{ translate('flex') }}</h2>
     <div class="box-item">
       <nut-row type="flex" wrap="nowrap">
         <nut-col :span="6">
@@ -128,11 +128,11 @@
 </template>
 
 <script lang="ts">
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('layout');
 import Row from '../row/index.vue';
 import Col from '../col/index.vue';
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -160,7 +160,6 @@ export default createDemo({
 
 <style lang="scss" scoped>
 .box-item {
-  background: #fff;
   margin-bottom: 20px;
   padding: 20px 0;
 }

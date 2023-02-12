@@ -5,7 +5,7 @@
 </template>
 <script lang="ts">
 import { getCurrentInstance, onMounted, provide, ref, watch } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { create } = createComponent('collapse');
 export default create({
   props: {
@@ -62,17 +62,10 @@ export default create({
         let doms: any = collapseChldren.value;
         Array.from(doms).forEach((item: any) => {
           if (typeof newval == 'number' || typeof newval == 'string') {
-            if (newval == item.name) {
-              item.changeOpen(true);
-            } else {
-              item.changeOpen(false);
-            }
+            item.changeOpen(newval == item.name ? true : false);
           } else if (Object.values(newval) instanceof Array) {
-            if (newval.indexOf(Number(item.name)) > -1 || newval.indexOf(String(item.name)) > -1) {
-              item.changeOpen(true);
-            } else {
-              item.changeOpen(false);
-            }
+            const isOpen = newval.indexOf(Number(item.name)) > -1 || newval.indexOf(String(item.name)) > -1;
+            item.changeOpen(isOpen);
           }
           item.animation();
         });
@@ -120,5 +113,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

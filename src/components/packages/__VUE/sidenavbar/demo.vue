@@ -1,12 +1,12 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-cell @click="handleClick1">
       <span
         ><label>{{ translate('right') }}</label></span
       >
     </nut-cell>
-    <nut-popup position="right" v-model:visible="show1" :popStyle="{ width, height }">
+    <nut-popup position="right" v-model:visible="show1" :style="{ width, height }">
       <nut-sidenavbar>
         <nut-subsidenavbar :title="translate('title1')" ikey="6">
           <nut-subsidenavbar :title="translate('title2')" ikey="9">
@@ -25,7 +25,7 @@
         ><label>{{ translate('left') }}</label></span
       >
     </nut-cell>
-    <nut-popup position="left" v-model:visible="show2" :popStyle="{ width, height }">
+    <nut-popup position="left" v-model:visible="show2" :style="{ width, height }">
       <nut-sidenavbar>
         <nut-subsidenavbar :title="translate('title7')" ikey="3" :open="false">
           <nut-sidenavbaritem ikey="4" :title="translate('title8')"></nut-sidenavbaritem>
@@ -37,14 +37,14 @@
         </nut-subsidenavbar>
       </nut-sidenavbar>
     </nut-popup>
-    <h2 class="h2">{{ translate('nest') }}</h2>
+    <h2>{{ translate('nest') }}</h2>
     <div>
       <nut-cell @click="handleClick3">
         <span
           ><label>{{ translate('show') }}</label></span
         >
       </nut-cell>
-      <nut-popup position="right" v-model:visible="show3" :popStyle="{ width, height }">
+      <nut-popup position="right" v-model:visible="show3" :style="{ width, height }">
         <nut-sidenavbar :show="show3">
           <nut-sidenavbaritem
             ikey="1"
@@ -79,9 +79,10 @@
 
 <script lang="ts">
 import { reactive, toRefs } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('sidenavbar');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { Toast } from '@/components/packages/nutui.vue';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -170,11 +171,7 @@ export default createDemo({
     };
 
     const handleClick4 = (msg: string) => {
-      //Toast.text(msg);
-      uni.showToast({
-          title:msg,
-          icon:'none'
-      })
+      Toast.text(msg);
     };
 
     return {

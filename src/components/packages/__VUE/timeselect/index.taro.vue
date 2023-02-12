@@ -29,7 +29,7 @@
 </template>
 <script lang="ts">
 import { computed, provide } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create, translate } = createComponent('timeselect');
 export default create({
   props: {

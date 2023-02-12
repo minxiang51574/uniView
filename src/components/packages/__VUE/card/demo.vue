@@ -1,6 +1,6 @@
 <template>
   <view class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-card
       :img-url="state.imgUrl"
       :title="state.title"
@@ -11,7 +11,7 @@
       :shopName="state.shopName"
     >
     </nut-card>
-    <h2 class="h2">{{ translate('customProduct') }}</h2>
+    <h2>{{ translate('customProduct') }}</h2>
     <nut-card
       :img-url="state.imgUrl"
       :title="state.title"
@@ -29,7 +29,7 @@
         </div>
       </template>
     </nut-card>
-    <h2 class="h2">{{ translate('customShop') }}</h2>
+    <h2>{{ translate('customShop') }}</h2>
     <nut-card
       :img-url="state.imgUrl"
       :title="state.title"
@@ -46,16 +46,14 @@
         <span>询价</span>
       </template>
       <template #origin>
-        <image
+        <img
           class="tag"
           src="https://img11.360buyimg.com/jdphoto/s58x28_jfs/t9451/359/415622649/15318/b0943e5d/59a78495N3bd2a9f8.png"
           alt=""
-          mode="heightFix"
-          style="display: inline-block;vertical-align: middle;margin-right: 5px;margin-left: 2px;height: 14px;"
         />
       </template>
     </nut-card>
-    <h2 class="h2">{{ translate('customFooter') }}</h2>
+    <h2>{{ translate('customFooter') }}</h2>
     <nut-card
       :img-url="state.imgUrl"
       :title="state.title"
@@ -74,9 +72,9 @@
 
 <script lang="ts">
 import { computed, reactive } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('card');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

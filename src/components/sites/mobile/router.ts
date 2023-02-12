@@ -11,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 /** webpack */
-// const files = require.context('@/packages', true, /demo\.vue$/);
+// const files = require.context('@/components/packages', true, /demo\.vue$/);
 // files.keys().forEach(component => {
 //   const componentEntity = files(component).default;
 //   routes.push({

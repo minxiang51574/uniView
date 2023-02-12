@@ -7,7 +7,7 @@
             :class="[checkIndex == index ? 'nut-category__cateListItemChecked' : 'nut-category__cateListItem']"
             @click="getChildList(index)"
           >
-            {{ item.catName }}
+            {{ item?.catName }}
           </div>
         </div>
       </div>
@@ -18,7 +18,7 @@
 </template>
 <script lang="ts">
 import { Ref, ref, toRefs, warn, watch, onMounted } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('category');
 
 //经典分类
@@ -61,5 +61,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

@@ -1,39 +1,39 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-addresslist
       :data="data"
-      @handelDelIcon="delClick"
-      @handelEditIcon="editClick"
-      @handelItem="itemClick"
+      @delIcon="delClick"
+      @editIcon="editClick"
+      @itemClick="itemClick"
       :showBottomButton="false"
       :dataMapOptions="dataMapOptions"
     >
     </nut-addresslist>
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title1') }}</h2>
     <nut-addresslist
       :data="data"
-      longPressEdition
+      long-Press
       :showBottomButton="false"
-      @handelDelIcon="delClick"
-      @handelEditIcon="editClick"
-      @handelItem="itemClick"
-      @longPressCopyClick="copyClick"
-      @longPressSetClick="setClick"
-      @longPressDelClick="delClick"
+      @delIcon="delClick"
+      @editIcon="editClick"
+      @itemClick="itemClick"
+      @longCopy="copyClick"
+      @longSet="setClick"
+      @longDel="delClick"
       :dataMapOptions="dataMapOptions"
     >
     </nut-addresslist>
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title2') }}</h2>
     <nut-addresslist
       :data="data"
       swipeEdition
       showBottomButton
-      @handelDelIcon="delClick"
-      @handelEditIcon="editClick"
-      @handelItem="itemClick"
-      @swipeDelClick="delClick"
-      @addAddressClick="addAddress"
+      @delIcon="delClick"
+      @editIcon="editClick"
+      @itemClick="itemClick"
+      @swipeDel="delClick"
+      @add="addAddress"
       :dataMapOptions="dataMapOptions"
     >
     </nut-addresslist>
@@ -41,10 +41,10 @@
 </template>
 
 <script lang="ts">
-import { createComponent } from '../../utils/create';
-import { toRefs, reactive, onMounted, ref } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
+import { reactive, ref } from 'vue';
 const { createDemo, translate } = createComponent('addresslist');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -61,7 +61,6 @@ const initTranslate = () =>
 export default createDemo({
   props: {},
   setup() {
-    // const data = ref([]);
     initTranslate();
     const data = ref([
       {
@@ -84,22 +83,7 @@ export default createDemo({
       addressDetail: 'testaddressDetail',
       addressName: 'testaddressName'
     });
-    // onMounted(() => {
-    //   setTimeout(() => {
-    //     getData();
-    //   }, 500);
-    // });
 
-    // const getData = () => {
-    //   fetch('//storage.360buyimg.com/nutui/3x/addresslist.js')
-    //     .then((response) => response.json())
-    //     .then((res) => {
-    //       console.log('res', res)
-    //       data.value = res.data;
-    //       console.log('data', data.value)
-    //     })
-    //     .catch((err) => console.log('Oh, error', err));
-    // };
     const itemClick = () => {
       console.log('Click To Address');
     };
@@ -112,9 +96,6 @@ export default createDemo({
     const copyClick = () => {
       console.log('Click To Copy');
     };
-    const holdDownClick = (event: Event, id: number) => {
-      console.log('Long Press');
-    };
     const setClick = () => {
       console.log('Click On Settings');
     };
@@ -123,7 +104,6 @@ export default createDemo({
     };
     return {
       itemClick,
-      holdDownClick,
       data,
       delClick,
       editClick,

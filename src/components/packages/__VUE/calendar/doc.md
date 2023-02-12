@@ -19,7 +19,6 @@ app.use(Popup);
 
 ```
 
-## 代码演示
 
 ### 基础用法
 :::demo
@@ -488,6 +487,61 @@ export default {
 
 ```
 :::
+
+### 自定义周起始日
+:::demo
+```html
+<template>
+  <nut-cell
+    :showIcon="true"
+    title="自定义周起始日"
+    :desc="date ? `${date} ${dateWeek}` : '请选择'"
+    @click="openSwitch('isVisible')"
+    :first-day-of-week="2"
+  >
+  </nut-cell>
+  <nut-calendar
+    v-model:visible="isVisible"
+    :default-value="date"
+    @close="closeSwitch('isVisible')"
+    @choose="setChooseValue"
+    :start-date="`2019-10-11`"
+    :end-date="`2022-11-11`"
+  >
+  </nut-calendar>
+</template>
+<script lang="ts">
+import { reactive, toRefs } from 'vue';
+export default {
+  setup() {
+    const state = reactive({
+      isVisible: false,
+      date: '',
+      dateWeek: ''
+    });
+    const openSwitch = param => {
+      state[`${param}`] = true;
+    };
+    const closeSwitch = param => {
+      state[`${param}`] = false;
+    };
+    const setChooseValue = param => {
+      state.date = param[3];
+      state.dateWeek = param[4];
+    };
+    return {
+      ...toRefs(state),
+      openSwitch,
+      closeSwitch,
+      setChooseValue
+    };
+  }
+};
+</script>
+```
+
+:::
+
 ### 平铺展示
 :::demo
 ```html
@@ -544,8 +598,8 @@ export default {
 | is-auto-back-fill | 自动回填                                          | Boolean         | false           |
 | title             | 显示标题                                          | String          | ‘日期选择’      |
 | default-value     | 默认值，单个日期选择 String，其他为 Array  | String 、 Array | null            |
-| start-date        | 开始日期， 如果不限制开始日期传 null              | String          | 今天            |
-| end-date          | 结束日期，如果不限制结束日期传 null               | String          | 距离今天 365 天 |
+| start-date        | 开始日期         | String          | 今天            |
+| end-date          | 结束日期              | String          | 距离今天 365 天 |
 | show-today          | 是否展示今天标记               | Boolean          | true |
 | start-text         | 范围选择，开始信息文案               | String          | ’开始‘ |
 | end-text         | 范围选择，结束信息文案               | String          | ‘结束’ |
@@ -553,6 +607,7 @@ export default {
 | show-title          | 是否在展示日历标题               | Boolean          | true |
 | show-sub-title          | 是否展示日期标题              | Boolean          | true |
 | to-date-animation          | 是否启动滚动动画              | Boolean          | true |
+| first-day-of-week          | 设置周起始日              | 0-6          | 0 |
 
 ### Events
 
@@ -581,3 +636,4 @@ export default {
 | 方法名 | 说明             | 参数          |
 |--------|------------------|---------------|
 | scrollToDate   | 滚动到指定日期所在月 | string:'2021-12-30' |
+| initPosition`v3.3.4`   | 初始化滚动位置 | 无 |

@@ -24,7 +24,7 @@ export default {
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
 import { getClassNames, getStyle } from './transition';
-import { sleep } from '@/packages/utils/util';
+import { sleep } from '@/components/packages/utils/util';
 import { transitionProps } from './props';
 const props = defineProps(transitionProps);
 
@@ -214,6 +214,6 @@ watch(
   { immediate: true }
 );
 </script>
-<style lang="scss" scoped>
-// @import './transition.scss';
+<style lang="scss">
+@import './index.scss' 
 </style>

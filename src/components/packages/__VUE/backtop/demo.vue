@@ -1,6 +1,6 @@
 <template>
   <div class="demo" id="elId">
-    <h2 class="h2">{{ translate('title') }}</h2>
+    <h2>{{ translate('title') }}</h2>
     <div class="text-data">{{ translate('content') }}1</div>
     <div class="text-data">{{ translate('content') }}2</div>
     <div class="text-data">{{ translate('content') }}3</div>
@@ -36,9 +36,9 @@
 </template>
 
 <script>
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('backtop');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': { title: '基本用法', clg: '触发返回顶部', content: '我是测试数据', backText: '顶部' },

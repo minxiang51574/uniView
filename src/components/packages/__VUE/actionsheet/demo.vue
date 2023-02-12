@@ -1,6 +1,6 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-cell :show-icon="true" :isLink="true" @click="switchActionSheet('isVisible1')">
       <span
         ><label>{{ translate('basic') }}</label></span
@@ -19,7 +19,7 @@
       >
       <div class="selected-option" v-html="state.val3"></div>
     </nut-cell>
-    <h2 class="h2">{{ translate('optionStatus') }}</h2>
+    <h2>{{ translate('optionStatus') }}</h2>
 
     <nut-cell :isLink="true" @click="switchActionSheet('isVisible4')">
       <span
@@ -28,7 +28,7 @@
       <div class="selected-option" v-html="state.val4"></div>
     </nut-cell>
 
-    <h2 class="h2">{{ translate('customContent') }}</h2>
+    <h2>{{ translate('customContent') }}</h2>
 
     <nut-cell :isLink="true" @click="switchActionSheet('isVisible5')">
       <span
@@ -80,9 +80,9 @@
 
 <script lang="ts">
 import { computed, reactive } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('actionsheet');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -227,5 +227,10 @@ export default createDemo({
 }
 .custom-content {
   padding: 10px 10px 160px;
+}
+.nut-theme-dark {
+  .custom-content {
+    color: white;
+  }
 }
 </style>

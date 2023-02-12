@@ -1,45 +1,37 @@
 <template>
-  <nut-swiper-item @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd" @touchcancel="onTouchEnd">
-    <view :style="imageStyle" class="nut-imagepreview-box" v-if="image && image.src">
-      <img :src="image.src" class="nut-imagepreview-img" @load="imageLoad" />
-    </view>
-
-    <view class="nut-imagepreview-box" v-if="video">
-      <nut-video :source="video.source" :options="video.options"></nut-video>
+  <nut-swiper-item @click="closeSwiper">
+    <view
+      :style="imageStyle"
+      class="nut-imagepreview-box"
+      @touchstart="onTouchStart"
+      @touchmove="onTouchMove"
+      @touchend="onTouchEnd"
+      @touchcancel="onTouchEnd"
+    >
+      <img v-if="image && image.src" :src="image.src" class="nut-imagepreview-img" @load="imageLoad" />
+      <nut-video v-if="video && video.source" :source="video.source" :options="video.options"></nut-video>
     </view>
   </nut-swiper-item>
 </template>
 <script lang="ts">
-import { toRefs, reactive, watch, onMounted, ref, computed, CSSProperties } from 'vue';
-import { createComponent } from '../../utils/create';
-import Popup from '../popup/index.vue';
-import Video from '../video/index.vue';
-import Swiper from '../swiper/index.vue';
-import SwiperItem from '../swiperitem/index.vue';
-import Icon from '../icon/index.vue';
-import { isPromise } from '../../utils/util.ts';
-import { useTouch } from '../../utils/useTouch';
-const { componentName, create } = createComponent('imagepreviewitem');
+import { toRefs, reactive, watch, computed, CSSProperties, PropType } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
+import { useTouch } from '@/components/packages/utils/useTouch';
+import { preventDefault, clamp } from '@/components/packages/utils/util';
+import { ImageInterface } from './types';
+import { baseProps } from './types';
+const { create } = createComponent('imagepreviewitem');
 
 export default create({
   props: {
-    show: {
-      type: Boolean,
-      default: false
-    },
-    initNo: Number,
+    ...baseProps,
     image: {
-      type: Object,
-      default: () => {}
+      type: Object as PropType<ImageInterface>,
+      default: () => ({})
     },
     video: {
-      type: Array,
-      default: () => {}
-    },
-
-    showIndex: {
-      type: Boolean,
-      default: true
+      type: Object,
+      default: () => ({})
     },
     rootWidth: {
       type: Number,
@@ -48,24 +40,10 @@ export default create({
     rootHeight: {
       type: Number,
       default: 0
-    },
-    minZoom: {
-      type: Number,
-      default: 1 / 3
-    },
-    maxZoom: {
-      type: Number,
-      default: 3
     }
   },
   emits: ['close', 'scale'],
-  components: {
-    [Popup.name]: Popup,
-    [Video.name]: Video,
-    [Swiper.name]: Swiper,
-    [SwiperItem.name]: SwiperItem,
-    [Icon.name]: Icon
-  },
+  components: {},
 
   setup(props, { emit }) {
     const state = reactive({
@@ -87,20 +65,25 @@ export default create({
       return state.imageRatio > rootRatio;
     });
 
-    // 图片放大
+    // 图片缩放
     const imageStyle = computed(() => {
-      const { scale, moveX, moveY, moving, zooming } = state;
-      const style: CSSProperties = {
-        transitionDuration: zooming || moving ? '0s' : '.3s'
-      };
+      const images = props.image;
+      if (images && images.src) {
+        const { scale, moveX, moveY, moving, zooming } = state;
+        const style: CSSProperties = {
+          transitionDuration: zooming || moving ? '0s' : '.3s'
+        };
 
-      if (scale !== 1) {
-        const offsetX = moveX / scale;
-        const offsetY = moveY / scale;
-        style.transform = `scale(${scale}, ${scale}) translate(${offsetX}px, ${offsetY}px)`;
+        if (scale !== 1) {
+          const offsetX = moveX / scale;
+          const offsetY = moveY / scale;
+          style.transform = `scale(${scale}, ${scale}) translate(${offsetX}px, ${offsetY}px)`;
+        }
+
+        return style;
       }
 
-      return style;
+      return {};
     });
 
     const maxMoveX = computed(() => {
@@ -126,7 +109,7 @@ export default create({
     });
 
     // 图片加载完成
-    const imageLoad = (event: any) => {
+    const imageLoad = (event: TouchEvent) => {
       const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
       state.imageRatio = naturalHeight / naturalWidth;
     };
@@ -165,7 +148,7 @@ export default create({
     let startMoveY: number;
     let startScale: number;
     let startDistance: number;
-    let doubleTapTimer: null;
+    let doubleTapTimer: number | null;
     let touchStartTime: number;
     let fingerNum: number;
 
@@ -215,6 +198,9 @@ export default create({
     };
 
     const checkTap = () => {
+      if (fingerNum == 1 && props.video && props.video.source) {
+        return;
+      }
       if (fingerNum > 1) {
         return;
       }
@@ -241,7 +227,6 @@ export default create({
     const onTouchEnd = (event: TouchEvent) => {
       let stopPropagation = false;
 
-      /* istanbul ignore else */
       if (state.moving || state.zooming) {
         stopPropagation = true;
 
@@ -271,25 +256,15 @@ export default create({
         }
       }
 
-      // eliminate tap delay on safari
       preventDefault(event, stopPropagation);
 
       checkTap();
       touch.reset();
     };
 
-    // 阻止
-    const preventDefault = (event: any, isStopPropagation?: boolean) => {
-      if (typeof event.cancelable !== 'boolean' || event.cancelable) {
-        event.preventDefault();
-      }
-
-      if (isStopPropagation) {
-        event.stopPropagation();
-      }
+    const closeSwiper = () => {
+      emit('close');
     };
-
-    const clamp = (num: number, min: number, max: number): number => Math.min(Math.max(num, min), max);
 
     watch(() => props.initNo, resetScale);
     watch(
@@ -308,7 +283,8 @@ export default create({
       onTouchEnd,
       getDistance,
       imageStyle,
-      imageLoad
+      imageLoad,
+      closeSwiper
     };
   }
 });

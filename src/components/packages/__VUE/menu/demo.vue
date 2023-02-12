@@ -1,14 +1,11 @@
 <template>
-  <div style="height: 100%;"
-    :class="state.lock?'lock':'unlock'"
-   class="demo full">
-     
-    <h2 class="h2">{{ translate('basic') }}</h2>
+  <div class="demo full">
+    <h2>{{ translate('basic') }}</h2>
     <nut-menu>
       <nut-menu-item v-model="state.value1" :options="options1" />
       <nut-menu-item v-model="state.value2" @change="handleChange" :options="options2" />
     </nut-menu>
-    <h2 class="h2">{{ translate('customMenuContent') }}</h2>
+    <h2>{{ translate('customMenuContent') }}</h2>
     <nut-menu>
       <nut-menu-item v-model="state.value1" :options="options1" />
       <nut-menu-item :title="translate('screen')" ref="item">
@@ -18,38 +15,38 @@
         </div>
       </nut-menu-item>
     </nut-menu>
-    <h2 class="h2">{{ translate('twoColsInOneLine') }}</h2>
+    <h2>{{ translate('twoColsInOneLine') }}</h2>
     <nut-menu>
       <nut-menu-item v-model="state.value3" :cols="2" :options="options3" />
     </nut-menu>
-    <h2 class="h2">{{ translate('customActiveColor') }}</h2>
+    <h2>{{ translate('customActiveColor') }}</h2>
     <nut-menu active-color="green">
       <nut-menu-item v-model="state.value1" :options="options1" />
       <nut-menu-item v-model="state.value2" @change="handleChange" :options="options2" />
     </nut-menu>
-    <h2 class="h2">{{ translate('customIcons') }}</h2>
-    <nut-menu>
-      <nut-menu-item v-model="state.value1" :options="options1" titleIcon="joy-smile" />
+    <h2>{{ translate('customIcons') }}</h2>
+    <nut-menu titleIcon="joy-smile">
+      <nut-menu-item v-model="state.value1" :options="options1" />
       <nut-menu-item v-model="state.value2" @change="handleChange" :options="options2" optionIcon="checklist" />
     </nut-menu>
-    <h2 class="h2">{{ translate('expandDirection') }}</h2>
+    <h2>{{ translate('expandDirection') }}</h2>
     <nut-menu direction="up">
       <nut-menu-item v-model="state.value1" :options="options1" />
       <nut-menu-item v-model="state.value2" @change="handleChange" :options="options2" />
     </nut-menu>
-    <h2 class="h2">{{ translate('disableMenu') }}</h2>
+    <h2>{{ translate('disableMenu') }}</h2>
     <nut-menu>
       <nut-menu-item disabled v-model="state.value1" :options="options1" />
-      <nut-menu-item disabled v-model="state.value2" @change="handleChange" :options="options2" />
+      <nut-menu-item disabled v-model="state.value2" :options="options2" />
     </nut-menu>
   </div>
 </template>
 
 <script lang="ts">
-import { reactive, ref, computed,provide } from 'vue';
-import { createComponent } from '../../utils/create';
+import { reactive, ref, computed } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('menu');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -126,18 +123,12 @@ const initTranslate = () =>
 export default createDemo({
   props: {},
   setup() {
-      
     initTranslate();
     const state = reactive({
       value1: 0,
       value2: 'a',
-      value3: 0,
-      lock: false
+      value3: 0
     });
-    
-    provide('lockPage',(isLock) => {
-        state.lock = isLock
-    })
 
     const options1 = computed(() => [
       { text: translate('allProducts'), value: 0 },
@@ -195,14 +186,3 @@ export default createDemo({
   }
 });
 </script>
-<style>
-    page {
-        height: 100%;
-    }
-    .lock {
-        overflow: hidden;
-    }
-    .unlock {
-        overflow: auto;
-    }
-</style>

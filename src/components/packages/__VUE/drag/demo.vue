@@ -1,25 +1,25 @@
- <template>
+<template>
   <div class="demo full">
-    <h2 class="h2">{{ translate('basic') }}</h2>
-    <nut-drag :top="120" :left="8">
+    <h2>{{ translate('basic') }}</h2>
+    <nut-drag :style="{ top: '120px', left: '8px' }">
       <nut-button type="primary">{{ translate('dragBasic') }}</nut-button>
     </nut-drag>
-    <h2 class="h2" style="top: 30px; position: relative">{{ translate('direction') }}</h2>
-    <nut-drag direction="x" :top="200" :left="8">
+    <h2 style="top: 30px; position: relative">{{ translate('direction') }}</h2>
+    <nut-drag direction="x" :style="{ top: '200px', left: '8px' }">
       <nut-button type="primary">{{ translate('directionX') }}</nut-button>
     </nut-drag>
-    <nut-drag direction="y" :top="200" :left="250">
+    <nut-drag direction="y" :style="{ top: '200px', right: '50px' }">
       <nut-button type="primary">{{ translate('directionY') }}</nut-button>
     </nut-drag>
-    <h2 class="h2" style="top: 60px; position: relative">{{ translate('attract') }}</h2>
-    <nut-drag direction="x" :attract="true" :top="275" :left="8" >
+    <h2 style="top: 60px; position: relative">{{ translate('attract') }}</h2>
+    <nut-drag direction="x" :attract="true" :style="{ top: '275px', left: '8px' }">
       <nut-button type="primary">{{ translate('attractText') }}</nut-button>
     </nut-drag>
-    <h2 class="h2" style="top: 90px; position: relative">{{ translate('limitBoundaries') }}</h2>
+    <h2 style="top: 90px; position: relative">{{ translate('limitBoundaries') }}</h2>
     <div class="drag-boundary"></div>
     <nut-drag
       :boundary="{ top: 361, left: 9, bottom: bottom(), right: right() }"
-       :top="400" :left="50"
+      :style="{ top: '400px', left: '50px' }"
     >
       <nut-button type="primary">{{ translate('limitBoundaries') }}</nut-button>
     </nut-drag>
@@ -27,9 +27,9 @@
 </template>
 
 <script lang="ts">
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('drag');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -57,12 +57,10 @@ export default createDemo({
   setup() {
     initTranslate();
     function right() {
-        let width = uni.getSystemInfoSync().windowWidth
-      return width - 300 - 9;
+      return document.documentElement.clientWidth - 300 - 9;
     }
     function bottom() {
-        let height = uni.getSystemInfoSync().windowHeight
-      return height - 559;
+      return document.documentElement.clientHeight - 559;
     }
     return {
       right,

@@ -1,7 +1,7 @@
 <template>
   <view :class="containerClasses">
     <view class="min" v-if="!hiddenRange">{{ +min }}</view>
-    <view ref="root" :id="'root-' + refRandomId" :style="wrapperStyle" :class="classes" @click.stop="onClick">
+    <view ref="root" :style="wrapperStyle" :class="classes" @click.stop="onClick">
       <view class="nut-range-mark" v-if="marksList.length > 0">
         <span v-for="marks in marksList" :key="marks" :class="markClassName(marks)" :style="marksStyle(marks)">
           {{ marks }}
@@ -18,7 +18,6 @@
               'nut-range-button-wrapper-left': index == 0,
               'nut-range-button-wrapper-right': index == 1
             }"
-            :catch-move="true"
             :tabindex="disabled ? -1 : 0"
             :aria-valuemin="+min"
             :aria-valuenow="curValue(index)"
@@ -53,7 +52,6 @@
             :aria-valuenow="curValue()"
             :aria-valuemax="+max"
             aria-orientation="horizontal"
-            :catch-move="true"
             @touchstart.stop.prevent="
               (e) => {
                 onTouchStart(e);
@@ -76,10 +74,10 @@
   </view>
 </template>
 <script lang="ts">
-import { ref, toRefs, computed, PropType, CSSProperties,getCurrentInstance } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useTouch } from '../../utils/useTouch';
-import { useTaroRect } from '../../utils/useTaroRect';
+import { ref, toRefs, computed, PropType, CSSProperties } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
+import { useTouch } from '@/components/packages/utils/useTouch';
+import { useRect } from '@/components/packages/utils/useRect';
 const { componentName, create } = createComponent('range');
 
 export default create({
@@ -88,6 +86,7 @@ export default create({
       type: Boolean,
       default: false
     },
+
     disabled: Boolean,
     activeColor: String,
     inactiveColor: String,
@@ -126,16 +125,10 @@ export default create({
     }
   },
 
-options: {
-    virtualHost: true
-},
   emits: ['change', 'drag-end', 'drag-start', 'update:modelValue'],
 
   setup(props, { emit, slots }) {
     const buttonIndex = ref(0);
-    
-    const { proxy } = getCurrentInstance()
-    
     let startValue: import('./type').SliderValue;
     let currentValue: import('./type').SliderValue;
 
@@ -210,7 +203,6 @@ options: {
           transition: dragStatus.value ? 'none' : undefined
         };
       } else {
-          console.log(calcMainAxis())
         return {
           width: calcMainAxis(),
           left: calcOffset(),
@@ -219,13 +211,13 @@ options: {
         };
       }
     });
-    const markClassName = (mark: any) => {
+    const markClassName = (mark: number) => {
       const classPrefix = 'nut-range-mark';
       const { modelValue, max, min } = props;
-      let lowerBound: any = Number(min);
-      let upperBound: any = Number(max);
+      let lowerBound: number = Number(min);
+      let upperBound: number | number[] = Number(max);
       if (props.range) {
-        const [left, right] = modelValue as any;
+        const [left, right] = modelValue as number[];
         lowerBound = left;
         upperBound = right;
       } else {
@@ -237,9 +229,9 @@ options: {
         [`${classPrefix}-text-active`]: isActive
       };
     };
-    const marksStyle = (mark: any) => {
+    const marksStyle = (mark: number) => {
       const { max, min, vertical } = props;
-      let style: any = {
+      let style: CSSProperties = {
         left: `${((mark - Number(min)) / scope.value) * 100}%`
       };
       if (vertical) {
@@ -249,17 +241,17 @@ options: {
       }
       return style;
     };
-    const tickStyle = (mark: any) => {
+    const tickStyle = (mark: number) => {
       const { modelValue, max, min } = props;
-      let lowerBound: any = Number(min);
-      let upperBound: any = Number(max);
+      let lowerBound: number = Number(min);
+      let upperBound: number = Number(max);
       if (props.range) {
-        const [left, right] = modelValue as any;
+        const [left, right] = modelValue as number[];
         lowerBound = left;
         upperBound = right;
       }
       let isActive = mark <= upperBound && mark >= lowerBound;
-      let style: any = {
+      let style: CSSProperties = {
         background: !isActive ? props.inactiveColor : props.activeColor
       };
 
@@ -297,10 +289,34 @@ options: {
       }
     };
 
+    const onClick = (event: MouseEvent) => {
+      if (props.disabled) {
+        return;
+      }
 
+      const { min, modelValue } = props;
+      const rect = useRect(root);
+      let delta = event.clientX - rect.left;
+      let total = rect.width;
+      if (props.vertical) {
+        delta = event.clientY - rect.top;
+        total = rect.height;
+      }
+      const value = Number(min) + (delta / total) * scope.value;
+      if (isRange(modelValue)) {
+        const [left, right] = modelValue;
+        const middle = (left + right) / 2;
+        if (value <= middle) {
+          updateValue([value, right], true);
+        } else {
+          updateValue([left, value], true);
+        }
+      } else {
+        updateValue(value, true);
+      }
+    };
 
     const onTouchStart = (event: TouchEvent) => {
-        console.log(getCurrentInstance())
       if (props.disabled) {
         return;
       }
@@ -315,11 +331,9 @@ options: {
       }
 
       dragStatus.value = 'start';
-      event.stopPropagation();
-      event.preventDefault();
     };
 
-    const onTouchMove = async (event: TouchEvent) => {
+    const onTouchMove = (event: TouchEvent) => {
       if (props.disabled) {
         return;
       }
@@ -331,8 +345,7 @@ options: {
       touch.move(event);
       dragStatus.value = 'draging';
 
-      //const rect = await useTaroRect(root, Taro);
-      const rect = await useTaroRect('#root-'+refRandomId, proxy);
+      const rect = useRect(root);
       let delta = touch.deltaX.value;
       let total = rect.width;
       let diff = (delta / total) * scope.value;
@@ -351,7 +364,7 @@ options: {
       event.preventDefault();
     };
 
-    const onTouchEnd = (event: TouchEvent) => {
+    const onTouchEnd = () => {
       if (props.disabled) {
         return;
       }
@@ -360,21 +373,19 @@ options: {
         emit('drag-end');
       }
       dragStatus.value = '';
-      event.stopPropagation();
-      event.preventDefault();
     };
 
     const curValue = (idx?: number) => {
       const value = typeof idx === 'number' ? (props.modelValue as number[])[idx] : props.modelValue;
       return value;
     };
-    const refRandomId = Math.random().toString(36).slice(-8);
+
     return {
       root,
       classes,
       wrapperStyle,
       buttonStyle,
-      //onClick,
+      onClick,
       onTouchStart,
       onTouchMove,
       onTouchEnd,
@@ -386,47 +397,11 @@ options: {
       markClassName,
       marksStyle,
       marksList,
-      tickStyle,
-      refRandomId,
-      isRange,
-      scope,
-      updateValue,
-      props
+      tickStyle
     };
-  },
-  methods: {
-      async onClick  (event) {
-          console.log(this,'this')
-          const { props,isRange,updateValue,refRandomId,scope } = this
-          if (props.disabled) {
-            return;
-          }
-          
-          const { min, modelValue } = props;
-          const rect = await useTaroRect('#root-'+refRandomId, this);
-          let delta = (event as any).touches[0].clientX - rect.left;
-          let total = rect.width;
-          if (props.vertical) {
-            delta = (event as any).touches[0].clientY - rect.top;
-            total = rect.height;
-          }
-          const value = Number(min) + (delta / total) * scope;
-          if (isRange(modelValue)) {
-            const [left, right] = modelValue;
-            const middle = (left + right) / 2;
-            if (value <= middle) {
-              updateValue([value, right], true);
-            } else {
-              updateValue([left, value], true);
-            }
-          } else {
-            updateValue(value, true);
-          }
-      }
   }
 });
 </script>
-
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

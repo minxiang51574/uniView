@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { reactive, toRefs, inject, computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('timepannel');
 export default create({
   name: 'timepannel',
@@ -47,5 +47,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

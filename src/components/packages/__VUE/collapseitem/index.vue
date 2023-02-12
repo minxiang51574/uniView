@@ -10,6 +10,7 @@
             <nut-icon
               v-if="titleIcon"
               :name="titleIcon"
+              v-bind="$attrs"
               :size="titleIconSize"
               :color="titleIconColor"
               :class="[titleIconPosition == 'left' ? 'titleIconLeft' : 'titleIconRight']"
@@ -28,6 +29,7 @@
       <nut-icon
         v-if="icon"
         :name="icon"
+        v-bind="$attrs"
         :size="iconSize"
         :color="iconColor"
         :class="['collapse-icon', { 'col-expanded': openExpanded }, { 'collapse-icon-disabled': disabled }]"
@@ -59,7 +61,7 @@ import {
   getCurrentInstance,
   ComponentInternalInstance
 } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { create, componentName } = createComponent('collapse-item');
 
 export default create({
@@ -110,8 +112,8 @@ export default create({
       openExpanded: false,
       // classDirection: 'right',
       iconStyle: {
-        transform: 'rotate(0deg)',
-        marginTop: parent.props.iconHeght ? '-' + parent.props.iconHeght / 2 + 'px' : '-10px'
+        transform: 'translateY(-50%) rotate(0deg)'
+        // marginTop: parent.props.iconHeght ? '-' + parent.props.iconHeght / 2 + 'px' : '-10px'
       }
     });
 
@@ -148,15 +150,16 @@ export default create({
       if (!wrapperRefEle || !contentRefEle) {
         return;
       }
+
       const offsetHeight = contentRefEle.offsetHeight || 'auto';
       if (offsetHeight) {
         const contentHeight = `${offsetHeight}px`;
         wrapperRefEle.style.willChange = 'height';
         wrapperRefEle.style.height = !proxyData.openExpanded ? 0 : contentHeight;
         if (parent.props.icon && !proxyData.openExpanded) {
-          proxyData.iconStyle['transform'] = 'rotate(0deg)';
+          proxyData.iconStyle['transform'] = 'translateY(-50%) rotate(0deg)';
         } else {
-          proxyData.iconStyle['transform'] = 'rotate(' + parent.props.rotate + 'deg)';
+          proxyData.iconStyle['transform'] = 'translateY(-50%) rotate(' + parent.props.rotate + 'deg)';
         }
       }
       if (!proxyData.openExpanded) {
@@ -172,7 +175,7 @@ export default create({
     const defaultOpen = () => {
       open();
       if (parent.props.icon) {
-        proxyData['iconStyle']['transform'] = 'rotate(' + parent.props.rotate + 'deg)';
+        proxyData['iconStyle']['transform'] = 'translateY(-50%) rotate(' + parent.props.rotate + 'deg)';
       }
     };
 
@@ -219,14 +222,18 @@ export default create({
       }
     });
 
-    watch(
-      () => ctx?.slots?.default?.(),
-      () => {
-        setTimeout(() => {
-          animation();
-        }, 300);
-      }
-    );
+    // watch(
+    //   () => ctx?.slots?.default?.(),
+    //   (val) => {
+    //     setTimeout(() => {
+    //       animation();
+    //     }, 300);
+    //   },
+    //   {
+    //     deep: true,
+    //     immediate: true
+    //   }
+    // );
 
     const init = () => {
       const { name } = props;
@@ -245,6 +252,19 @@ export default create({
       });
     };
     onMounted(() => {
+      const MutationObserver: any =
+        window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+      var observer = new MutationObserver(() => {
+        animation();
+      });
+      const ele = document.getElementsByClassName('collapse-wrapper')[0];
+      if (ele) {
+        observer.observe(ele, {
+          childList: true,
+          subtree: true
+        });
+      }
+
       init();
       // proxyData.classDirection = parent.props.expandIconPosition;
       // if (parent.props.icon && parent.props.icon != 'none') {
@@ -283,5 +303,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

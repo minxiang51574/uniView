@@ -1,12 +1,16 @@
-import { getPropByPath, isFunction, isObject, isPromise } from '../../utils/util';
-import { computed, provide, reactive, VNode, watch } from 'vue';
+import { getPropByPath, isObject, isPromise } from '@/components/packages/utils/util';
+import { computed, PropType, provide, reactive, VNode, watch } from 'vue';
 import { FormItemRule } from '../formitem/types';
-import { ErrorMessage, FormRule } from './types';
-import { ref } from 'vue'
+import { ErrorMessage, FormRule, FormRules } from './types';
+
 export const component = {
   props: {
     modelValue: {
       type: Object,
+      default: {}
+    },
+    rules: {
+      type: Object as PropType<import('./types').FormRules>,
       default: {}
     }
   },
@@ -16,14 +20,7 @@ export const component = {
   setup(props: any, { emit, slots }: any) {
     const formErrorTip = computed(() => reactive<any>({}));
     provide('formErrorTip', formErrorTip);
-    
-    const slotNodes = ref([])
-    provide('addNode', (item)=>{
-        slotNodes.value.push(item)
-        //slots.default = ()=>slotNodes.value
-    });
-    
-    const clearErrorTips = (value = props.modelValue) => {
+    const clearErrorTips = () => {
       Object.keys(formErrorTip.value).forEach((item) => {
         formErrorTip.value[item] = '';
       });
@@ -35,18 +32,18 @@ export const component = {
 
     watch(
       () => props.modelValue,
-      (value: any) => {
-        clearErrorTips(value);
+      () => {
+        clearErrorTips();
       },
       { immediate: true }
     );
 
     const findFormItem = (vnodes: VNode[]) => {
       let task: FormRule[] = [];
-      vnodes.forEach((vnode: VNode, index: number) => {
+      vnodes.forEach((vnode: VNode) => {
         let type = vnode.type;
         type = (type as any).name || type;
-        if (type == 'nut-form-item') {
+        if (type == 'nut-form-item' || type?.toString().endsWith('form-item')) {
           task.push({
             prop: vnode.props?.['prop'],
             rules: vnode.props?.['rules'] || []
@@ -76,8 +73,12 @@ export const component = {
 
       const _Promise = (errorMsg: ErrorMessage): Promise<ErrorMessage> => {
         return new Promise((resolve, reject) => {
-          tipMessage(errorMsg);
-          resolve(errorMsg);
+          try {
+            tipMessage(errorMsg);
+            resolve(errorMsg);
+          } catch (error) {
+            reject(error);
+          }
         });
       };
 
@@ -85,13 +86,16 @@ export const component = {
         console.warn('[NutUI] <FormItem> 使用 rules 校验规则时 , 必须设置 prop 参数');
       }
 
-      let value = getPropByPath(props.modelValue, prop || '');
+      const value = getPropByPath(props.modelValue, prop || '');
 
       // clear tips
       tipMessage({ prop, message: '' });
-      let _rules = [...rules];
+      const formRules: FormRules = props.rules || {};
+      const _rules = [...(formRules?.[prop] || []), ...rules];
       while (_rules.length) {
-        const { required, validator, regex, message } = _rules.shift() as FormItemRule;
+        const rule = _rules.shift() as FormItemRule;
+        const { validator, ...ruleWithoutValidator } = rule;
+        const { required, regex, message } = ruleWithoutValidator;
         const errorMsg = { prop, message };
         if (required) {
           if (!value) {
@@ -102,17 +106,19 @@ export const component = {
           return _Promise(errorMsg);
         }
         if (validator) {
-          const result = validator(value);
+          const result = validator(value, ruleWithoutValidator);
           if (isPromise(result)) {
             return new Promise((r, j) => {
-              result.then((res) => {
-                if (!res) {
-                  tipMessage(errorMsg);
-                  r(errorMsg);
-                } else {
-                  r(true);
-                }
-              });
+              result
+                .then((res) => {
+                  if (!res) {
+                    tipMessage(errorMsg);
+                    r(errorMsg);
+                  } else {
+                    r(true);
+                  }
+                })
+                .catch((e) => j(e));
             });
           } else {
             if (!result) {
@@ -129,37 +135,41 @@ export const component = {
      * @param customProp 指定校验，用于用户自定义场景时触发，例如 blur、change 事件
      * @returns
      */
-    const validate = (customProp: string = '') => {
+    const validate = (customProp = '') => {
       return new Promise((resolve, reject) => {
-        //let task = findFormItem(slots.default());
-        let task = findFormItem(slotNodes.value);
-        let errors = task.map((item) => {
-          if (customProp) {
-            if (customProp == item.prop) {
-              return checkRule(item);
-            } else {
-              return Promise.resolve(true);
-            }
-          } else {
-            return checkRule(item);
-          }
-        });
+        try {
+          const task = findFormItem(slots.default());
 
-        Promise.all(errors).then((errorRes) => {
-          errorRes = errorRes.filter((item) => item != true);
-          const res = { valid: true, errors: [] };
-          if (errorRes.length) {
-            res.valid = false;
-            res.errors = errorRes as any;
-          }
-          resolve(res);
-        });
+          const errors = task.map((item) => {
+            if (customProp) {
+              if (customProp == item.prop) {
+                return checkRule(item);
+              } else {
+                return Promise.resolve(true);
+              }
+            } else {
+              return checkRule(item);
+            }
+          });
+
+          Promise.all(errors).then((errorRes) => {
+            errorRes = errorRes.filter((item) => item != true);
+            const res = { valid: true, errors: [] };
+            if (errorRes.length) {
+              res.valid = false;
+              res.errors = errorRes as any;
+            }
+            resolve(res);
+          });
+        } catch (error) {
+          reject(error);
+        }
       });
     };
-    const onSubmit = () => {
+    const submit = () => {
       validate();
       return false;
     };
-    return { validate, reset, onSubmit, formErrorTip };
+    return { validate, reset, submit, formErrorTip };
   }
 };

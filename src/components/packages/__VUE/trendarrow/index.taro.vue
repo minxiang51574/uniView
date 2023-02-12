@@ -18,8 +18,8 @@
 </template>
 <script lang="ts">
 import { reactive, toRefs, computed } from 'vue';
-import { myFixed } from '@/packages/utils/util';
-import { createComponent } from '@/packages/utils/create';
+import { myFixed } from '@/components/packages/utils/util';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('trendarrow');
 
 export default create({

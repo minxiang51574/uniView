@@ -1,10 +1,10 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <div class="elevator-wrapper">
       <nut-elevator :index-list="temp" :height="260" @click-item="clickItem" @click-index="clickIndex"></nut-elevator>
     </div>
-    <h2 class="h2">{{ translate('customIndex') }}</h2>
+    <h2>{{ translate('customIndex') }}</h2>
     <div class="elevator-wrapper">
       <nut-elevator
         :index-list="dataList2"
@@ -14,7 +14,7 @@
         @click-index="clickIndex"
       ></nut-elevator>
     </div>
-    <h2 class="h2">{{ translate('sticky') }}</h2>
+    <h2>{{ translate('sticky') }}</h2>
     <div class="elevator-wrapper">
       <nut-elevator
         :index-list="dataList3"
@@ -24,7 +24,7 @@
         @click-index="clickIndex"
       ></nut-elevator>
     </div>
-    <h2 class="h2">{{ translate('customContent') }}</h2>
+    <h2>{{ translate('customContent') }}</h2>
     <div class="elevator-wrapper">
       <nut-elevator :index-list="temp" :height="260" @click-item="clickItem" @click-index="clickIndex">
         <template v-slot:default="slotProps">
@@ -38,9 +38,9 @@
 
 <script lang="ts">
 import { computed, reactive, toRefs } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('elevator');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { reactive, toRefs, onMounted, onUnmounted, h, defineComponent } from 'vue';
-import { TableColumnProps } from '@/packages/__VUE/table/types';
+import { TableColumnProps } from '@/components/packages/__VUE/table/types';
 import Button from './../../../../../../../packages/__VUE/button/index.taro.vue';
 import Icon from './../../../../../../../packages/__VUE/icon/index.taro.vue';
 export default defineComponent({

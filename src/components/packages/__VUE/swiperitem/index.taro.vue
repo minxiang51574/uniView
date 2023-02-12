@@ -5,9 +5,9 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, inject, getCurrentInstance, onUnmounted } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useExpose } from '../../utils/useExpose/index';
+import { computed, reactive, inject, getCurrentInstance, onUnmounted, ComputedRef } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
+import { useExpose } from '@/components/packages/utils/useExpose/index';
 const { create, componentName } = createComponent('swiper-item');
 interface IStyle {
   width?: string;
@@ -29,7 +29,7 @@ export default create({
       };
     });
 
-    const style = computed(() => {
+    const style: ComputedRef = computed(() => {
       const style: IStyle = {};
       const direction = parent?.props.direction;
       if (parent?.size.value) {

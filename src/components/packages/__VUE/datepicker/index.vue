@@ -1,38 +1,39 @@
 <template>
-    <view v-if="show">
-        <nut-picker
-          v-model="selectedValue"
-          v-model:visible="show"
-          :okText="okText"
-          :cancelText="cancelText"
-          @close="closeHandler"
-          :columns="columns"
-          @change="changeHandler"
-          :title="title"
-          @confirm="confirm"
-          :isWrapTeleport="isWrapTeleport"
-          :threeDimensional="threeDimensional"
-        >
-          <template #top>
-            <slot name="top"></slot>
-          </template>
-          <slot></slot>
-        </nut-picker>
-    </view>
+  <nut-picker
+    v-model="selectedValue"
+    v-model:visible="show"
+    :okText="okText"
+    :cancelText="cancelText"
+    @close="closeHandler"
+    :columns="columns"
+    @change="changeHandler"
+    :title="title"
+    @confirm="confirm"
+    :teleportDisable="teleportDisable"
+    :threeDimensional="threeDimensional"
+    :swipeDuration="swipeDuration"
+    :safeAreaInsetBottom="safeAreaInsetBottom"
+    :destroyOnClose="destroyOnClose"
+  >
+    <template #top>
+      <slot name="top"></slot>
+    </template>
+    <slot></slot>
+  </nut-picker>
 </template>
 <script lang="ts">
 import { toRefs, watch, computed, reactive, onBeforeMount } from 'vue';
 import type { PropType } from 'vue';
 import Picker from '../picker/index.vue';
-import { popupProps } from '../popup/index.vue';
+import { popupProps } from '../popup/props';
 import { PickerOption } from '../picker/types';
-import { createComponent } from '../../utils/create';
-import { padZero } from './utils';
+import { createComponent } from '@/components/packages/utils/create';
+import { padZero, isDate as isDateU } from '@/components/packages/utils/util';
 const { componentName, create, translate } = createComponent('datepicker');
 
 const currentYear = new Date().getFullYear();
 function isDate(val: Date): val is Date {
-  return Object.prototype.toString.call(val) === '[object Date]' && !isNaN(val.getTime());
+  return isDateU(val) && !isNaN(val.getTime());
 }
 
 const zhCNType: {
@@ -95,9 +96,14 @@ export default create({
       type: Boolean,
       default: true
     },
+    // 惯性滚动 时长
+    swipeDuration: {
+      type: [Number, String],
+      default: 1000
+    },
     filter: Function as PropType<import('./type').Filter>
   },
-  emits: ['click', 'update:visible', 'change', 'confirm', 'update:moduleValue'],
+  emits: ['click', 'update:visible', 'change', 'confirm', 'update:modelValue'],
 
   setup(props, { emit }) {
     const state = reactive({
@@ -106,11 +112,6 @@ export default create({
       title: props.title,
       selectedValue: []
     });
-    
-    
-
-    
-    
     const formatValue = (value: Date) => {
       if (!isDate(value)) {
         value = props.minDate;
@@ -121,9 +122,6 @@ export default create({
       return new Date(timestmp);
     };
 
-    state.currentDate = formatValue(props.modelValue);
-    
-    
     function getMonthEndDay(year: number, month: number): number {
       return 32 - new Date(year, month - 1, 32).getDate();
     }
@@ -253,11 +251,11 @@ export default create({
           formatDate.push(item);
         });
         if (props.type == 'month-day' && formatDate.length < 3) {
-          formatDate.unshift(new Date(props.modelValue || props.minDate || props.maxDate).getFullYear());
+          formatDate.unshift(new Date(state.currentDate || props.minDate || props.maxDate).getFullYear());
         }
 
         if (props.type == 'year-month' && formatDate.length < 3) {
-          formatDate.push(new Date(props.modelValue || props.minDate || props.maxDate).getDate());
+          formatDate.push(new Date(state.currentDate || props.minDate || props.maxDate).getDate());
         }
 
         const year = Number(formatDate[0]);
@@ -338,13 +336,27 @@ export default create({
       emit('confirm', val);
     };
     onBeforeMount(() => {
-      //state.currentDate = formatValue(props.modelValue);
+      state.currentDate = formatValue(props.modelValue);
     });
 
     watch(
       () => props.modelValue,
       (value) => {
-        state.currentDate = formatValue(value);
+        const newValues = formatValue(value);
+        const isSameValue = JSON.stringify(newValues) === JSON.stringify(state.currentDate);
+        if (!isSameValue) {
+          state.currentDate = newValues;
+        }
+      }
+    );
+
+    watch(
+      () => state.currentDate,
+      (newValues) => {
+        const isSameValue = JSON.stringify(newValues) === JSON.stringify(props.modelValue);
+        if (!isSameValue) {
+          emit('update:modelValue', newValues);
+        }
       }
     );
 
@@ -358,11 +370,9 @@ export default create({
     watch(
       () => props.visible,
       (val) => {
-          state.show = val
+        state.show = val;
       }
     );
- 
-
 
     return {
       ...toRefs(state),
@@ -375,5 +385,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="demo">
-    <h2 class="h2">基础用法</h2>
+    <h2>基础用法</h2>
     <nut-cell>
       <nut-temp name="wifi"></nut-temp>
       <nut-temp name="mail" txt="test txt"></nut-temp>
@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo } = createComponent('temp');
 export default createDemo({
   props: {},

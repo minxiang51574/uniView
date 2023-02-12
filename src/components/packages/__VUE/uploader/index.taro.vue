@@ -9,14 +9,22 @@
 
     <view class="nut-uploader__preview" :class="[listType]" v-for="(item, index) in fileList" :key="item.uid">
       <view class="nut-uploader__preview-img" v-if="listType == 'picture' && !$slots.default">
-        <view class="nut-uploader__preview__progress" v-if="item.status == 'ready'">
+        <view class="nut-uploader__preview__progress" v-if="item.status != 'success'">
+          <nut-icon
+            color="#fff"
+            :name="item.status == 'error' ? 'failure' : 'loading'"
+            v-if="item.status != 'ready'"
+          ></nut-icon>
           <view class="nut-uploader__preview__progress__msg">{{ item.message }}</view>
         </view>
-        <view class="nut-uploader__preview__progress" v-else-if="item.status != 'success'">
-          <nut-icon color="#fff" :name="item.status == 'error' ? 'failure' : 'loading'"></nut-icon>
-          <view class="nut-uploader__preview__progress__msg">{{ item.message }}</view>
-        </view>
-        <nut-icon v-if="isDeletable" @click="onDelete(item, index)" class="close" name="failure"></nut-icon>
+
+        <nut-icon
+          v-if="isDeletable"
+          v-bind="$attrs"
+          @click="onDelete(item, index)"
+          class="close"
+          :name="deleteIcon"
+        ></nut-icon>
         <img
           class="nut-uploader__preview-img__c"
           @click="fileItemClick(item)"
@@ -35,6 +43,7 @@
           <nut-icon name="link" />&nbsp;{{ item.name }}
         </view>
         <nut-icon
+          v-if="isDeletable"
           class="nut-uploader__preview-img__file__del"
           @click="onDelete(item, index)"
           color="#808080"
@@ -55,7 +64,7 @@
       :class="[listType]"
       v-if="listType == 'picture' && !$slots.default && maximum - fileList.length"
     >
-      <nut-icon :size="uploadIconSize" color="#808080" :name="uploadIcon"></nut-icon>
+      <nut-icon v-bind="$attrs" :size="uploadIconSize" color="#808080" :name="uploadIcon"></nut-icon>
       <nut-button class="nut-uploader__input" @click="chooseImage" />
     </view>
   </view>
@@ -63,11 +72,13 @@
 
 <script lang="ts">
 import { computed, PropType, reactive } from 'vue';
-import { createComponent } from '../../utils/create';
-import { Uploader, UploadOptions } from './uploader';
+import { createComponent } from '@/components/packages/utils/create';
+import { UploaderTaro, UploadOptions } from './uploader';
 import { FileItem } from './type';
+import { funInterceptor, Interceptor } from '@/components/packages/utils/util';
 const { componentName, create, translate } = createComponent('uploader');
 import Taro from '@tarojs/taro';
+
 export default create({
   props: {
     name: { type: String, default: 'file' },
@@ -98,14 +109,20 @@ export default create({
     uploadIcon: { type: String, default: 'photograph' },
     uploadIconSize: { type: [String, Number], default: '' },
     xhrState: { type: [Number, String], default: 200 },
+    multiple: { type: Boolean, default: true },
     disabled: { type: Boolean, default: false },
     autoUpload: { type: Boolean, default: true },
+    deleteIcon: { type: String, default: 'failure' },
     beforeUpload: {
       type: Function,
       default: null
     },
-    beforeDelete: {
+    beforeXhrUpload: {
       type: Function,
+      default: null
+    },
+    beforeDelete: {
+      type: Function as PropType<Interceptor>,
       default: (file: import('./type').FileItem, files: import('./type').FileItem[]) => {
         return true;
       }
@@ -125,7 +142,7 @@ export default create({
   ],
   setup(props, { emit }) {
     const fileList = reactive(props.fileList) as Array<import('./type').FileItem>;
-    let uploadQueue: Promise<Uploader>[] = [];
+    let uploadQueue: Promise<UploaderTaro>[] = [];
 
     const classes = computed(() => {
       const prefixCls = componentName;
@@ -138,9 +155,24 @@ export default create({
       if (props.disabled) {
         return;
       }
+
+      if (Taro.getEnv() == 'WEB') {
+        let el = document.getElementById('taroChooseImage');
+        if (el) {
+          el?.setAttribute('accept', props.accept);
+        } else {
+          const obj = document.createElement('input');
+          obj.setAttribute('type', 'file');
+          obj.setAttribute('id', 'taroChooseImage');
+          obj.setAttribute('accept', props.accept);
+          obj.setAttribute('style', 'position: fixed; top: -4000px; left: -3000px; z-index: -300;');
+          document.body.appendChild(obj);
+        }
+      }
+
       Taro.chooseImage({
         // 选择数量
-        count: (props.maximum as number) * 1 - props.fileList.length,
+        count: props.multiple ? (props.maximum as number) * 1 - props.fileList.length : 1,
         // 可以指定是原图还是压缩图，默认二者都有
         sizeType: props.sizeType,
         sourceType: props.sourceType,
@@ -164,6 +196,7 @@ export default create({
       uploadOption.method = props.method;
       uploadOption.headers = props.headers;
       uploadOption.taroFilePath = fileItem.path;
+      uploadOption.beforeXhrUpload = props.beforeXhrUpload;
       uploadOption.onStart = (option: UploadOptions) => {
         fileItem.status = 'ready';
         fileItem.message = translate('readyUpload');
@@ -198,7 +231,7 @@ export default create({
           fileItem
         });
       };
-      let task = new Uploader(uploadOption);
+      let task = new UploaderTaro(uploadOption);
       if (props.autoUpload) {
         task.uploadTaro(Taro.uploadFile, Taro.getEnv());
       } else {
@@ -215,6 +248,7 @@ export default create({
         uploadQueue.splice(index, 1);
       } else {
         uploadQueue = [];
+        fileList.splice(0, fileList.length);
       }
     };
     const submit = () => {
@@ -228,7 +262,7 @@ export default create({
       files.forEach((file: Taro.chooseImage.ImageFile, index: number) => {
         let fileType = file.type;
         const fileItem = reactive(new FileItem());
-        if (!fileType && imgReg.test(file.path)) {
+        if (!fileType && (imgReg.test(file.path) || file.path.includes('data:image'))) {
           fileType = 'image';
         }
         fileItem.path = file.path;
@@ -277,18 +311,22 @@ export default create({
       }
       return files;
     };
+
+    const deleted = (file: import('./type').FileItem, index: number) => {
+      fileList.splice(index, 1);
+      emit('delete', {
+        file,
+        fileList,
+        index
+      });
+    };
+
     const onDelete = (file: import('./type').FileItem, index: number) => {
       clearUploadQueue(index);
-      if (props.beforeDelete(file, fileList)) {
-        fileList.splice(index, 1);
-        emit('delete', {
-          file,
-          fileList,
-          index
-        });
-      } else {
-        // console.log('用户阻止了删除！');
-      }
+      funInterceptor(props.beforeDelete, {
+        args: [file, fileList],
+        done: () => deleted(file, index)
+      });
     };
 
     const onChange = (res: Taro.chooseImage.SuccessCallbackResult) => {
@@ -296,18 +334,19 @@ export default create({
       const { tempFilePaths, tempFiles } = res;
 
       if (props.beforeUpload) {
-        props.beforeUpload(tempFiles).then((f: Array<Taro.chooseImage.ImageFile>) => {
-          const _files: Taro.chooseImage.ImageFile[] = filterFiles(f);
-          readFile(_files);
-        });
+        props.beforeUpload(tempFiles).then((f: Array<Taro.chooseImage.ImageFile>) => changeReadFile(f));
       } else {
-        const _files: Taro.chooseImage.ImageFile[] = filterFiles(tempFiles);
-        readFile(_files);
+        changeReadFile(tempFiles);
       }
 
       emit('change', {
         fileList
       });
+    };
+
+    const changeReadFile = (f: any) => {
+      const _files: Taro.chooseImage.ImageFile[] = filterFiles(f);
+      readFile(_files);
     };
 
     return {

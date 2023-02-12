@@ -1,11 +1,6 @@
-<template>
-    <view :class="classes">
-        <slot></slot>
-    </view>
-</template>
 <script lang="ts">
 import { provide, computed, reactive, h, ComponentInternalInstance } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { create, componentName } = createComponent('steps');
 
 export default create({
@@ -22,9 +17,6 @@ export default create({
       type: Boolean,
       default: false
     }
-  },
-  options: {
-      virtualHost: true
   },
   emits: ['click-step'],
   setup(props, { emit, slots }) {
@@ -56,14 +48,18 @@ export default create({
       onEmit
     });
 
-
-    return {
-        classes
-    }
-   
+    return () => {
+      return h(
+        'view',
+        {
+          class: classes.value
+        },
+        slots.default?.()
+      );
+    };
   }
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

@@ -1,23 +1,23 @@
 <template>
   <view class="nut-badge">
-    <view class="slot-icons">
+    <view class="slot-icons" v-show="!hidden && !dot" :style="stl">
       <slot name="icons"></slot>
     </view>
     <slot></slot>
     <view
       v-show="!hidden && (content || dot)"
+      v-text="content"
       class="nut-badge__content sup"
-      :class="{ 'is-dot': dot }"
+      :class="{ 'is-dot': dot, 'is-bubble': !dot && bubble }"
       :style="stl"
     >
-    {{content}}
     </view>
   </view>
 </template>
 
 <script lang="ts">
 import { computed, reactive } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { create } = createComponent('badge');
 export default create({
   props: {
@@ -29,6 +29,10 @@ export default create({
       default: 10000
     },
     dot: {
+      type: Boolean,
+      default: false
+    },
+    bubble: {
       type: Boolean,
       default: false
     },
@@ -84,6 +88,3 @@ export default create({
   }
 });
 </script>
-<style lang="scss">
-@import './index.scss'
-</style>

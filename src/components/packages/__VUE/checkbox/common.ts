@@ -1,4 +1,4 @@
- import { h, computed, inject, getCurrentInstance, onMounted, reactive, watch } from 'vue';
+import { h, computed, inject, getCurrentInstance, onMounted, reactive, watch } from 'vue';
 
 export const component = (componentName: string, nutIcon: object) => {
   return {
@@ -49,6 +49,10 @@ export const component = (componentName: string, nutIcon: object) => {
       indeterminate: {
         type: Boolean,
         default: false
+      },
+      shape: {
+        type: String,
+        default: 'round' // button
       }
     },
     emits: ['change', 'update:modelValue'],
@@ -88,10 +92,8 @@ export const component = (componentName: string, nutIcon: object) => {
 
       const emitChange = (value: string | boolean, label?: string) => {
         updateType = 'click';
-        console.log('value',value)
         emit('update:modelValue', value);
-        //emit('change', value, label);
-        emit('change', value);
+        emit('change', value, label);
       };
 
       watch(
@@ -107,39 +109,49 @@ export const component = (componentName: string, nutIcon: object) => {
 
       const renderIcon = () => {
         const { iconName, iconSize, iconActiveName, iconClassPrefix, iconFontClassName, iconIndeterminateName } = props;
-        return h(nutIcon, );
+        return h(nutIcon, {
+          name: !pValue.value ? iconName : state.partialSelect ? iconIndeterminateName : iconActiveName,
+          size: iconSize,
+          class: color.value,
+          classPrefix: iconClassPrefix,
+          fontClassName: iconFontClassName
+        });
       };
-      
-      const iconParams = computed(()=>{
-          const { iconName, iconSize, iconActiveName, iconClassPrefix, iconFontClassName, iconIndeterminateName } = props;
-          return {
-              name: !pValue.value ? iconName : state.partialSelect ? iconIndeterminateName : iconActiveName,
-              size: iconSize,
-              class: color.value,
-              classPrefix: iconClassPrefix,
-              fontClassName: iconFontClassName
-            }
-      })
 
-    
-      const getLabelClass = computed(()=>{
-          return `${componentName}__label ${pDisabled.value ? `${componentName}__label--disabled` : ''}`
-      })
+      const renderLabel = () => {
+        return h(
+          'view',
+          {
+            class: `${componentName}__label ${pDisabled.value ? `${componentName}__label--disabled` : ''}`
+          },
+          slots.default?.()
+        );
+      };
+
+      const renderButton = () => {
+        return h(
+          'view',
+          {
+            class: `${componentName}__button ${pValue.value && `${componentName}__button--active`} ${
+              pDisabled.value ? `${componentName}__button--disabled` : ''
+            }`
+          },
+          slots.default?.()
+        );
+      };
 
       const handleClick = (e: MouseEvent | TouchEvent) => {
         if (pDisabled.value) return;
         if (checked.value && state.partialSelect) {
           state.partialSelect = false;
-          //emitChange(checked.value, slots.default?.()[0]?.children as string);
-          emitChange(checked.value);
+          emitChange(checked.value, slots.default?.()[0].children as string);
           return;
         }
-        //emitChange(!checked.value, slots.default?.()[0]?.children as string);
-        emitChange(!checked.value);
+        emitChange(!checked.value, slots.default?.()[0].children as string);
         if (hasParent.value) {
-          let value = parent.value.value;
-          let max = parent.max.value;
-          let { label } = props;
+          const value = parent.value.value;
+          const max = parent.max.value;
+          const { label } = props;
           const index = value.indexOf(label);
           if (index > -1) {
             value.splice(index, 1);
@@ -161,27 +173,18 @@ export const component = (componentName: string, nutIcon: object) => {
         }
       );
 
-      const getClass =   computed(()=>{
-          return `${componentName} ${props.textPosition === 'left' ? `${componentName}--reverse` : ''}`
-      })
-      return {
-          getClass,
-          iconParams,
-          getLabelClass,
-          handleClick
-      }
-      /**
       return () => {
         return h(
           'view',
           {
-            class: `${componentName} ${props.textPosition === 'left' ? `${componentName}--reverse` : ''}`,
+            class: `${componentName} ${componentName}--${props.shape} ${
+              props.textPosition === 'left' ? `${componentName}--reverse` : ''
+            }`,
             onClick: handleClick
           },
-          [renderIcon(), renderLabel()]
+          [props.shape == 'button' ? renderButton() : [renderIcon(), renderLabel()]]
         );
       };
-      **/
     }
   };
 };

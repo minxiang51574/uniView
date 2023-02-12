@@ -20,8 +20,13 @@
   }
 }
 .nut-inputnumber {
-  display: flex;
+  display: $inputnumber-display;
   align-items: center;
+  border: $inputnumber-border;
+  border-radius: $inputnumber-border-radius;
+  height: $inputnumber-height;
+  line-height: $inputnumber-line-height;
+  box-sizing: $inputnumber-border-box;
 
   &--disabled {
     input {
@@ -39,11 +44,20 @@
     }
   }
 
+  input {
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+  }
+
   input,
-  &__text--readonly {
+  &__text--readonly,
+  &__text--input {
     width: $inputnumber-input-width;
     height: 100%;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     outline: none;
     border: $inputnumber-input-border;
     font-size: $inputnumber-input-font-size;

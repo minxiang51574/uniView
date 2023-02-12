@@ -40,6 +40,7 @@
       "
       v-model:visible="show"
       :is-show-chinese="true"
+      :threeDimensional="false"
     ></nut-datepicker>
     <!-- 选择月日 -->
     <nut-datepicker
@@ -135,9 +136,9 @@
 
 <script lang="ts">
 import { toRefs, watch, ref, reactive } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('datepicker');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

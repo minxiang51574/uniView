@@ -15,7 +15,9 @@ import { Comment,Icon,Rate } from '@nutui/nutui';
 import { Comment,Icon,Rate } from '@nutui/nutui-taro';
 
 const app = createApp();
-app.use(Comment).use(Icon).use(Rate);
+app.use(Comment);
+app.use(Icon);
+app.use(Rate);
 
 ```
 
@@ -30,7 +32,6 @@ app.use(Comment).use(Icon).use(Rate);
     :images="cmt.images"
     :videos="cmt.videos"
     :info="cmt.info"
-    :labels="labels"
     @click="handleclick"
     @clickImages="clickImages"
     :operation="['replay']"
@@ -43,14 +44,11 @@ app.use(Comment).use(Icon).use(Rate);
     </template>
 </nut-comment>
 </template>
-<script>
+<script lang="ts">
 import { reactive, ref,onMounted } from 'vue';
 export default {
   setup() {
     let cmt = ref({});
-    const labels = () => {
-      return '<nut-icon name="dongdong" color="#fa2c19"></nut-icon>';
-    };
     onMounted(()=>{
       fetch('//storage.360buyimg.com/nutui/3x/comment_data.json')
         .then((response) => response.json())
@@ -67,12 +65,12 @@ export default {
     }
     return {
       cmt,
-      labels,
       handleclick,
       clickImages
     };
   }
 }
+</script>
 
 ```
 :::
@@ -110,7 +108,7 @@ export default {
 </nut-comment>
 
 </template>
-<script>
+<script lang="ts">
 import { reactive, ref,onMounted } from 'vue';
 export default {
   setup() {
@@ -132,6 +130,7 @@ export default {
     };
   }
 }
+</script>
 
 ```
 :::
@@ -151,7 +150,7 @@ export default {
 ></nut-comment>
 
 </template>
-<script>
+<script lang="ts">
 import { reactive, ref,onMounted } from 'vue';
 export default {
   setup() {
@@ -173,7 +172,7 @@ export default {
     };
   }
 }
-
+</script>
 ```
 :::
 ## API
@@ -244,4 +243,16 @@ const info = [{
   "replay":23, // 此评论的回复数
   "like":1, // 此评论的点赞数
 }]
+```
+
+### follow 对象
+
+用于存放追评相关的信息。
+
+```javascript
+const follow = {
+  "days": 0, // 购买多少天后进行追评
+  "content": "", // 追评内容
+  "images": [] // 追评图片
+}
 ```

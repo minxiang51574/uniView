@@ -1,16 +1,16 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <div class="show-demo">
       <nut-countup :init-num="0" :end-num="200"></nut-countup>
       <nut-countup :init-num="150.0" :end-num="0.0" :speed="6.18" :to-fixed="2"></nut-countup>
       <nut-countup :init-num="500.0" :end-num="0.0" :speed="50" :to-fixed="2"></nut-countup>
     </div>
-    <h2 class="h2">{{ translate('title') }}</h2>
+    <h2>{{ translate('title') }}</h2>
     <div class="show-demo">
       <nut-countup :scrolling="true" :init-num="18.618" :during="600"></nut-countup>
     </div>
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title1') }}</h2>
     <div class="show-demo">
       <nut-countup
         :custom-change-num="customNumber"
@@ -22,7 +22,7 @@
       >
       </nut-countup>
     </div>
-    <h2 class="h2">{{ translate('title2') }}</h2>
+    <h2>{{ translate('title2') }}</h2>
     <div class="show-demo">
       <nut-countup
         ref="countupMachine"
@@ -48,10 +48,11 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { createComponent } from '../../utils/create';
-import { reactive, toRefs,onMounted } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
+import { reactive, toRefs } from '@vue/reactivity';
+import { onMounted } from '@vue/runtime-core';
 const { createDemo, translate } = createComponent('countup');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -138,7 +139,11 @@ export default createDemo({
 }
 .show-demo {
   background: #ffffff;
-  padding: 0 20px;
+}
+.nut-theme-dark {
+  .show-demo {
+    background: $dark-background;
+  }
 }
 h2 {
   padding: 0 20px;

@@ -1,37 +1,37 @@
 <template>
   <div class="demo full">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <div>
       <nut-cell>
         <nut-progress percentage="30" />
       </nut-cell>
     </div>
 
-    <h2 class="h2">{{ translate('customStyle') }}</h2>
+    <h2>{{ translate('customStyle') }}</h2>
     <div>
       <nut-cell>
         <nut-progress percentage="30" stroke-color=" rgba(250,44,25,0.47)" stroke-width="20" text-color="red" />
       </nut-cell>
     </div>
-    <h2 class="h2">{{ translate('noShowPercentage') }}</h2>
+    <h2>{{ translate('noShowPercentage') }}</h2>
     <div>
       <nut-cell>
         <nut-progress percentage="50" :show-text="false" stroke-height="24" />
       </nut-cell>
     </div>
-    <h2 class="h2">{{ translate('showPercentage') }}</h2>
+    <h2>{{ translate('showPercentage') }}</h2>
     <div>
       <nut-cell>
         <nut-progress percentage="30" />
       </nut-cell>
     </div>
-    <h2 class="h2">{{ translate('showInsidePercentage') }}</h2>
+    <h2>{{ translate('showInsidePercentage') }}</h2>
     <div>
       <nut-cell>
         <nut-progress percentage="60" :text-inside="true" />
       </nut-cell>
     </div>
-    <h2 class="h2">{{ translate('customContent') }}</h2>
+    <h2>{{ translate('customContent') }}</h2>
     <div>
       <nut-cell>
         <nut-progress percentage="60" :text-inside="true">
@@ -43,7 +43,7 @@
         </nut-progress>
       </nut-cell>
     </div>
-    <h2 class="h2">{{ translate('customSize') }}</h2>
+    <h2>{{ translate('customSize') }}</h2>
     <div>
       <nut-cell>
         <nut-progress percentage="30" :text-inside="true" size="small"> </nut-progress>
@@ -55,7 +55,7 @@
         <nut-progress percentage="70" :text-inside="true" size="large"> </nut-progress>
       </nut-cell>
     </div>
-    <h2 class="h2">{{ translate('statusDisplay') }}</h2>
+    <h2>{{ translate('statusDisplay') }}</h2>
     <div>
       <nut-cell>
         <nut-progress
@@ -78,7 +78,7 @@
         />
       </nut-cell>
     </div>
-    <h2 class="h2">{{ translate('dynamicChange') }}</h2>
+    <h2>{{ translate('dynamicChange') }}</h2>
     <div>
       <nut-cell>
         <nut-progress :percentage="val" />
@@ -93,20 +93,20 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('progress');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
-      basic: '基本用法',
-      customStyle: '线形进度条-设置颜色高度',
-      noShowPercentage: '百分比不显示',
-      showPercentage: '百分比外显',
-      showInsidePercentage: '百分比内显',
-      customContent: '百分比内显自定义',
-      customSize: '百分比内显自定义',
-      statusDisplay: '状态显示',
+      basic: '基础用法',
+      customStyle: '设置高度和颜色',
+      noShowPercentage: '设置百分比不显示',
+      showPercentage: '设置百分比外显',
+      showInsidePercentage: '设置百分比内显',
+      customContent: '设置百分比内显自定义内容',
+      customSize: '自定义尺寸',
+      statusDisplay: '设置状态显示',
       dynamicChange: '动态改变',
       reduce: '减少',
       add: '增加'

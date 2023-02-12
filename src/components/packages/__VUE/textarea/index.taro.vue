@@ -6,7 +6,7 @@
     <textarea
       v-else
       ref="textareaRef"
-      class="nut-textarea__textarea"
+      :class="['nut-textarea__textarea', env == 'ALIPAY' && 'nut-textarea__ali']"
       :style="styles"
       :rows="rows"
       :disabled="disabled"
@@ -15,6 +15,7 @@
       @input="change"
       @blur="blur"
       @focus="focus"
+      :show-count="false"
       :maxlength="maxLength"
       :placeholder="placeholder || translate('placeholder')"
       :auto-focus="autofocus"
@@ -25,7 +26,7 @@
 </template>
 <script lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 import Taro, { eventCenter, getCurrentInstance as getCurrentInstanceTaro } from '@tarojs/taro';
 const { componentName, create, translate } = createComponent('textarea');
 
@@ -88,7 +89,6 @@ export default create({
       return {
         textAlign: props.textAlign,
         height: props.autosize ? heightSet.value : 'null'
-        // resize: props.autosize ? 'vertical' : 'none'
       };
     });
 
@@ -120,9 +120,7 @@ export default create({
       if (props.disabled) return;
       if (props.readonly) return;
       const input = event.target as HTMLInputElement;
-
       let value = input.value;
-
       emitChange(value, event);
       emit('blur', event);
     };
@@ -178,10 +176,9 @@ export default create({
 
     const getRefHeight = () => {
       const query = Taro.createSelectorQuery();
-      // const query = Taro.createSelectorQuery();
       query.selectAll('.nut-textarea__textarea').boundingClientRect();
       let uid = textareaRef.value ? textareaRef.value.uid : '0';
-      query.exec((res) => {
+      query.exec((res: any) => {
         if (res[0] && textareaRef.value) {
           let _item: any = Array.from(res[0]).filter((item: any) => item.id == uid);
           textareaHeight.value = _item[0]['height'] || 20;
@@ -191,18 +188,33 @@ export default create({
       });
     };
 
+    const getRefWidth = () => {
+      const query = Taro.createSelectorQuery();
+      query.select('.nut-textarea__textarea').boundingClientRect();
+      query.exec((res: any) => {
+        if (res[0] && textareaRef.value) {
+          copyTxtStyle.value.width = res[0]['width'] + 'px';
+        }
+      });
+    };
+    const env = Taro.getEnv();
     onMounted(() => {
       if (props.autosize) {
-        eventCenter.once((getCurrentInstanceTaro() as any).router.onReady, () => {
-          getRefHeight();
-          // setTimeout(() => {
-          //   nextTick(getContentHeight);
-          // }, 300);
+        Taro.nextTick(() => {
+          setTimeout(() => {
+            if (Taro.getEnv() === 'ALIPAY') {
+              getRefWidth();
+              copyHeight();
+            } else {
+              getRefHeight();
+            }
+          }, 300);
         });
       }
     });
 
     return {
+      env,
       textareaRef,
       classes,
       styles,

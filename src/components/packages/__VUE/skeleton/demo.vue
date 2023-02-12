@@ -1,28 +1,28 @@
 <template>
   <view class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
 
     <nut-skeleton width="250px" height="15px" animated> </nut-skeleton>
     <nut-skeleton width="250px" height="15px"> </nut-skeleton>
 
-    <h2 class="h2">{{ translate('title') }}</h2>
+    <h2>{{ translate('title') }}</h2>
 
     <nut-skeleton width="250px" height="15px" title animated row="3"> </nut-skeleton>
 
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title1') }}</h2>
     <nut-skeleton width="250px" height="15px" title animated avatar avatarSize="100px" row="3"> </nut-skeleton>
 
-    <h2 class="h2">{{ translate('title2') }}</h2>
+    <h2>{{ translate('title2') }}</h2>
     <nut-skeleton width="250px" height="15px" animated round></nut-skeleton>
 
-    <h2 class="h2">{{ translate('title3') }}</h2>
+    <h2>{{ translate('title3') }}</h2>
 
     <div class="pic-compose">
       <nut-skeleton width="250px" height="15px" title animated row="3" class="item"> </nut-skeleton>
       <nut-skeleton width="250px" height="15px" title animated row="3" class="item"> </nut-skeleton>
     </div>
 
-    <h2 class="h2">{{ translate('title4') }}</h2>
+    <h2>{{ translate('title4') }}</h2>
 
     <view class="content">
       <nut-switch v-model="checked" size="15px" />
@@ -45,9 +45,9 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('skeleton');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

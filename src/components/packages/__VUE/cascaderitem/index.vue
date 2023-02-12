@@ -322,6 +322,6 @@ export default create({
   }
 });
 </script>
-<style :scoped="false" lang="scss">
-    @import './index.scss';
+<style lang="scss">
+@import './index.scss' 
 </style>

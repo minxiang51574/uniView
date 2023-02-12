@@ -1,9 +1,9 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-image :src="src" width="100" height="100"></nut-image>
 
-    <h2 class="h2">{{ translate('fill') }}</h2>
+    <h2>{{ translate('fill') }}</h2>
     <nut-row :gutter="10" flex-wrap="wrap">
       <nut-col :span="8" v-for="fit in fits" :key="fit">
         <nut-image :src="src" width="100" height="100" :fit="fit"></nut-image>
@@ -11,7 +11,7 @@
       </nut-col>
     </nut-row>
 
-    <h2 class="h2">{{ translate('position') }}</h2>
+    <h2>{{ translate('position') }}</h2>
     <nut-row :gutter="10" flex-wrap="wrap">
       <nut-col :span="8" v-for="pos in position2" :key="pos">
         <nut-image :src="src" width="100" height="100" fit="contain" :position="pos"></nut-image>
@@ -26,7 +26,7 @@
       </nut-col>
     </nut-row>
 
-    <h2 class="h2">{{ translate('circle') }}</h2>
+    <h2>{{ translate('circle') }}</h2>
     <nut-row :gutter="10">
       <nut-col :span="8">
         <nut-image :src="src" width="100" height="100" fit="contain" round></nut-image>
@@ -42,7 +42,7 @@
       </nut-col>
     </nut-row>
 
-    <h2 class="h2">{{ translate('loading') }}</h2>
+    <h2>{{ translate('loading') }}</h2>
     <nut-cell>
       <nut-row :gutter="10">
         <nut-col :span="8">
@@ -60,7 +60,7 @@
       </nut-row>
     </nut-cell>
 
-    <h2 class="h2">{{ translate('error') }}</h2>
+    <h2>{{ translate('error') }}</h2>
     <nut-cell>
       <nut-row :gutter="10">
         <nut-col :span="8">
@@ -79,9 +79,9 @@
 </template>
 <script lang="ts">
 import { ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('image');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

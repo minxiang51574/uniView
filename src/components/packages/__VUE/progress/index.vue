@@ -34,12 +34,12 @@
         </div>
       </div>
     </div>
-    <div class="nut-progress-text" :style="{ lineHeight: height }" v-if="showText && !textInside">
+    <div class="nut-progress-text" v-if="showText && !textInside">
       <template v-if="status == 'active' || status == ''">
         <span :style="textStyle">{{ percentage }}{{ isShowPercentage ? '%' : '' }}</span>
       </template>
       <template v-else-if="status == 'icon'">
-        <nut-icon size="16px" :name="iconName" :color="iconColor"></nut-icon>
+        <nut-icon v-bind="$attrs" size="16px" :name="iconName" :color="iconColor"></nut-icon>
       </template>
     </div>
   </div>
@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import { computed, onMounted, useSlots, ref, watch } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { create } = createComponent('progress');
 export default create({
   props: {
@@ -101,17 +101,17 @@ export default create({
       default: true
     }
   },
-  options: {
-      virtualHost: true
-  },
-  setup(props, { emit }) {
+  setup(props) {
     const slotDefault = !!useSlots().default;
     const height = ref(props.strokeWidth + 'px');
     const progressOuter = ref();
     const insideText = ref();
+    const percentage = computed(() => {
+      return props.percentage >= 100 ? 100 : props.percentage;
+    });
     const bgStyle = computed(() => {
       return {
-        width: props.percentage + '%',
+        width: percentage.value + '%',
         background: props.strokeColor || ''
       };
     });
@@ -125,6 +125,7 @@ export default create({
       height,
       bgStyle,
       textStyle,
+      percentage,
       progressOuter,
       insideText,
       slotDefault
@@ -133,5 +134,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

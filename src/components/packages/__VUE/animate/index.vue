@@ -7,7 +7,7 @@
 </template>
 <script lang="ts">
 import { reactive, toRefs, computed, PropType } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('animate');
 export default create({
   props: {
@@ -60,5 +60,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

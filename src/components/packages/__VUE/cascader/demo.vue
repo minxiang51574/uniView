@@ -1,6 +1,6 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
 
     <nut-form>
       <nut-form-item :label="translate('addressTip')">
@@ -9,7 +9,6 @@
           @click="demo1.visible = true"
           :value="demo1.value"
           readonly
-          disabled
           :placeholder="translate('addressTip1')"
           type="text"
         />
@@ -26,7 +25,7 @@
       </nut-form-item>
     </nut-form>
 
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title1') }}</h2>
     <nut-form>
       <nut-form-item :label="translate('addressTip')">
         <input
@@ -34,7 +33,6 @@
           @click="demo2.visible = true"
           :value="demo2.value"
           readonly
-          disabled
           :placeholder="translate('addressTip1')"
           type="text"
         />
@@ -42,7 +40,7 @@
           :title="translate('addressTip')"
           v-model:visible="demo2.visible"
           v-model="demo2.value"
-          label-key="text"
+          text-key="text"
           @change="events.change"
           @path-change="events.pathChange"
           value-key="text"
@@ -52,8 +50,7 @@
       </nut-form-item>
     </nut-form>
 
-<!--
-    <h2 class="h2">{{ translate('title2') }}</h2>
+    <h2>{{ translate('title2') }}</h2>
     <nut-form>
       <nut-form-item :label="translate('addressTip')">
         <input
@@ -75,8 +72,8 @@
         ></nut-cascader>
       </nut-form-item>
     </nut-form>
--->
-    <h2 class="h2">{{ translate('title3') }}</h2>
+
+    <h2>{{ translate('title3') }}</h2>
     <nut-form>
       <nut-form-item :label="translate('addressTip')">
         <input
@@ -84,7 +81,6 @@
           @click="demo4.visible = true"
           :value="demo4.value"
           readonly
-          disabled
           :placeholder="translate('addressTip1')"
           type="text"
         />
@@ -101,7 +97,7 @@
       </nut-form-item>
     </nut-form>
 
-    <h2 class="h2">{{ translate('title4') }}</h2>
+    <h2>{{ translate('title4') }}</h2>
     <nut-form>
       <nut-form-item :label="translate('addressTip')">
         <input
@@ -109,7 +105,6 @@
           @click="demo5.visible = true"
           :value="demo5.value"
           readonly
-          disabled
           :placeholder="translate('addressTip1')"
           type="text"
         />
@@ -129,9 +124,9 @@
 
 <script lang="ts">
 import { onMounted, reactive, watch } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('cascader');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -346,6 +341,3 @@ export default createDemo({
   }
 });
 </script>
-<style lang="scss">
-    @import '../../__VUE/cascader/index.scss'
-</style>

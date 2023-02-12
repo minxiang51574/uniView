@@ -1,11 +1,11 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-cell>
       <nut-switch v-model="checked" />
     </nut-cell>
 
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title1') }}</h2>
     <nut-cell>
       <nut-switch
         :v-model="translate('text1')"
@@ -15,32 +15,32 @@
       />
     </nut-cell>
 
-    <h2 class="h2">{{ translate('title2') }}</h2>
+    <h2>{{ translate('title2') }}</h2>
     <nut-cell>
       <nut-switch v-model="checked" disable />
     </nut-cell>
 
-    <h2 class="h2">{{ translate('title3') }}</h2>
+    <h2>{{ translate('title3') }}</h2>
     <nut-cell>
       <nut-switch v-model="checked" loading color="red" />
     </nut-cell>
 
-    <h2 class="h2">{{ translate('title4') }}</h2>
+    <h2>{{ translate('title4') }}</h2>
     <nut-cell>
       <nut-switch v-model="checked" @change="change" />
     </nut-cell>
 
-    <h2 class="h2">{{ translate('title5') }}</h2>
+    <h2>{{ translate('title5') }}</h2>
     <nut-cell>
       <nut-switch :model-value="checkedAsync" @change="changeAsync" :loading="loadingAsync" />
     </nut-cell>
 
-    <h2 class="h2">{{ translate('title6') }}</h2>
+    <h2>{{ translate('title6') }}</h2>
     <nut-cell>
       <nut-switch v-model="checked" @change="change" active-color="blue" />
     </nut-cell>
 
-    <h2 class="h2">{{ translate('title7') }}</h2>
+    <h2>{{ translate('title7') }}</h2>
     <nut-cell>
       <nut-switch
         v-model="checked"
@@ -55,9 +55,9 @@
 
 <script lang="ts">
 import { ref, getCurrentInstance } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('switch');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

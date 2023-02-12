@@ -1,8 +1,13 @@
 .nut-ellipsis {
+  display: flex;
   .nut-ellipsis-text {
     cursor: hand;
     color: $ellipsis-expand-collapse-color;
     display: inline;
+  }
+
+  .nut-ellipsis-wordbreak {
+    word-break: break-all;
   }
 }
 

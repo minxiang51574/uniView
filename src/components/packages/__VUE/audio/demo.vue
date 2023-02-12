@@ -1,6 +1,6 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-audio
       style="margin-left: 20px"
       url="//storage.360buyimg.com/jdcdkh/SMB/VCG231024564.wav"
@@ -10,23 +10,24 @@
       type="icon"
     ></nut-audio>
 
-    <h2 class="h2">{{ translate('voicePlay') }}</h2>
+    <h2>{{ translate('voicePlay') }}</h2>
     <nut-audio
       style="margin-left: 20px"
       url="//storage.360buyimg.com/jdcdkh/SMB/VCG231024564.wav"
       :muted="muted"
       :autoplay="autoplay"
       :loop="false"
+      @can-play="onCanplay"
       type="none"
       ref="audioDemo"
     >
       <div class="nut-voice">
-        <div><nut-icon name="voice"></nut-icon></div>
+        <div style="display: flex"><nut-icon name="voice"></nut-icon></div>
         <div>{{ duration }}"</div>
       </div>
     </nut-audio>
 
-    <h2 class="h2">{{ translate('progress') }}</h2>
+    <h2>{{ translate('progress') }}</h2>
     <nut-audio
       style="margin-left: 20px"
       url="//storage.360buyimg.com/jdcdkh/SMB/VCG231024564.wav"
@@ -43,7 +44,7 @@
       </div>
     </nut-audio>
 
-    <h2 class="h2">{{ translate('customControl') }}</h2>
+    <h2>{{ translate('customControl') }}</h2>
     <nut-audio
       style="margin-left: 20px"
       url="http://storage.360buyimg.com/jdcdkh/SMB/VCG231024564.wav"
@@ -71,9 +72,9 @@
 <script lang="ts">
 import { reactive, toRefs, ref } from '@vue/reactivity';
 import { onMounted } from '@vue/runtime-core';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('audio');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 
 const initTranslate = () =>
   useTranslate({
@@ -124,11 +125,12 @@ export default createDemo({
       console.log('改变进度条', val);
     };
 
+    const onCanplay = (e: Event) => {
+      duration.value = audioDemo.value.second.toFixed();
+    };
+
     onMounted(() => {
       console.log(audioDemo.value);
-      setTimeout(() => {
-        duration.value = audioDemo.value.second.toFixed();
-      }, 500);
     });
 
     return {
@@ -141,16 +143,31 @@ export default createDemo({
       ended,
       duration,
       changeProgress,
-      translate
+      translate,
+      onCanplay
     };
   }
 });
 </script>
 <style lang="scss" scoped>
+.nut-theme-dark {
+  .demo {
+    .nut-voice {
+      background: $dark-color;
+      border: 1px solid $dark-color;
+      border-radius: 18px;
+    }
+
+    .nut-audio-operate {
+      color: $dark-color;
+    }
+  }
+}
 .demo {
   .nut-voice {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100px;
     height: 20px;
     padding: 8px;

@@ -1,12 +1,7 @@
-<template>
-    <view :class="getClass">
-        <slot></slot>
-    </view>
-</template>
 <script lang="ts">
 import { h, watch, provide, computed, ComponentInternalInstance, reactive, ComponentPublicInstance } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useExpose } from '../../utils/useExpose/index';
+import { createComponent } from '@/components/packages/utils/create';
+import { useExpose } from '@/components/packages/utils/useExpose/index';
 const { create, componentName } = createComponent('checkboxgroup');
 
 export default create({
@@ -36,7 +31,7 @@ export default create({
       }
     };
 
-    const updateValue = (value: any[]) => {
+    const updateValue = (value: string[]) => {
       emit('update:modelValue', value);
       emit('change', value);
     };
@@ -85,15 +80,18 @@ export default create({
 
     useExpose({ toggleAll, toggleReverse });
 
-    const getClass = computed(()=>`${componentName}`)
-
-    return {
-        getClass
-    }
-   
+    return () => {
+      return h(
+        'view',
+        {
+          class: `${componentName}`
+        },
+        slots.default?.()
+      );
+    };
   }
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

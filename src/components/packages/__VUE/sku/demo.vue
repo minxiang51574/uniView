@@ -1,15 +1,15 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-cell :title="translate('basic')" desc="" @click="base = true"></nut-cell>
 
-    <h2 class="h2">{{ translate('noSell') }}</h2>
+    <h2>{{ translate('noSell') }}</h2>
     <nut-cell :title="translate('noSell')" desc="" @click="notSell = true"></nut-cell>
 
-    <h2 class="h2">{{ translate('customStepper') }}</h2>
+    <h2>{{ translate('customStepper') }}</h2>
     <nut-cell :title="translate('customStepper')" desc="" @click="customStepper = true"></nut-cell>
 
-    <h2 class="h2">{{ translate('slots') }}</h2>
+    <h2>{{ translate('slots') }}</h2>
     <nut-cell :title="translate('slots')" desc="" @click="customBySlot = true"></nut-cell>
 
     <nut-sku
@@ -33,12 +33,8 @@
     >
       <template #sku-operate>
         <div class="sku-operate-box">
-            <view style="flex:1;margin-right: 18px;">
-                <nut-button block class="sku-operate-box-dis" type="warning">查看相似商品</nut-button>
-            </view>
-            <view style="flex:1;">
-                <nut-button block class="sku-operate-box-dis" type="info">到货通知</nut-button>
-            </view>
+          <nut-button class="sku-operate-box-dis" type="warning">查看相似商品</nut-button>
+          <nut-button class="sku-operate-box-dis" type="info">到货通知</nut-button>
         </div>
       </template>
     </nut-sku>
@@ -112,10 +108,9 @@
 <script lang="ts">
 import { reactive, ref, toRefs, onMounted } from 'vue';
 
-import { createComponent } from '../../utils/create';
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
-import { Toast } from '../../nutui.js';
-import {Sku, Goods, imagePathMap} from './data';
+import { createComponent } from '@/components/packages/utils/create';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
+import { Toast } from '@/components/packages/nutui.vue';
 const { createDemo, translate } = createComponent('sku');
 
 const initTranslate = () =>
@@ -230,9 +225,15 @@ export default createDemo({
     });
 
     const getData = () => {
-      data.skuData = Sku;
-      data.goodsInfo = Goods;
-      data.imagePathMap = imagePathMap;
+      fetch('//storage.360buyimg.com/nutui/3x/data.js')
+        .then((response) => response.json())
+        .then((res) => {
+          const { Sku, Goods, imagePathMap } = res;
+          data.skuData = Sku;
+          data.goodsInfo = Goods;
+          data.imagePathMap = imagePathMap;
+        }) //执行结果是 resolve就调用then方法
+        .catch((err) => console.log('Oh, error', err)); //执行结果是 reject就调用catch方法
     };
     const selectSku = (s: any) => {
       const { sku, parentIndex } = s;

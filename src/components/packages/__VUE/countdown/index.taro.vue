@@ -10,8 +10,9 @@
 </template>
 <script lang="ts">
 import { toRefs, computed, watch, reactive, onBeforeMount, onMounted } from 'vue';
-import { createComponent } from '../../utils/create';
-import { padZero, getTimeStamp } from './util';
+import { createComponent } from '@/components/packages/utils/create';
+import { getTimeStamp } from './util';
+import { padZero } from '@/components/packages/utils/util';
 const { componentName, create, translate } = createComponent('countdown');
 
 export default create({
@@ -262,7 +263,6 @@ export default create({
       ...toRefs(props),
       slots,
       classes,
-      getTimeStamp,
       start,
       pause,
       renderTime,

@@ -7,10 +7,10 @@
 
 <script lang="ts">
 import { ref, reactive } from 'vue';
-import { createComponent } from '@/packages/utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('invoice');
-import { useTranslate } from '@/sites/assets/util/useTranslate';
-import { Toast } from '@/packages/nutui.vue';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
+import { Toast } from '@/components/packages/nutui.vue';
 
 const initTranslate = () =>
   useTranslate({

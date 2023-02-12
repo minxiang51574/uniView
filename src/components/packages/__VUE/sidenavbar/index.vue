@@ -9,7 +9,7 @@
 </template>
 <script lang="ts">
 import { computed, onMounted, reactive, ref, toRefs, Ref, watch } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('sidenavbar');
 export default create({
   props: {
@@ -18,11 +18,8 @@ export default create({
       default: 15
     }
   },
-  options: {
-      addGlobalClass: true,
-  },
   emits: [],
-  setup: (props: any, context: any) => {
+  setup: (props) => {
     const list = ref(null) as Ref;
     const state = reactive({
       count: 1,
@@ -36,10 +33,10 @@ export default create({
       };
     });
 
-    const setPaddingLeft = (nodeList: any, level: number = 1) => {
+    const setPaddingLeft = (nodeList: any[], level: number = 1) => {
       for (let i = 0; i < nodeList.length; i++) {
         let item = nodeList[i];
-        item.children[0].style.paddingLeft = props.offset * level + 'px';
+        item.children[0].style.paddingLeft = +props.offset * level + 'px';
         if (!item.className.includes('nut-sidenavbaritem')) {
           setPaddingLeft(Array.from(item.children[1].children), ++state.count);
         }
@@ -74,12 +71,6 @@ export default create({
       });
     });
 
-    // watch(context.slots?.default(), () => {
-    //   console.log(123)
-    //   state.count = 1;
-    //   handleSlots();
-    // });
-
     return {
       ...toRefs(state),
       list,
@@ -89,5 +80,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

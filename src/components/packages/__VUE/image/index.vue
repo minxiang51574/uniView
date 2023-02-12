@@ -1,6 +1,6 @@
 <template>
   <view :class="classes" :style="stylebox" @click="imageClick">
-    <image class="nut-img" :src="src" :alt="alt" @load="load" @error="error" :style="styles" />
+    <img class="nut-img" :src="src" :alt="alt" @load="load" @error="error" :style="styles" />
 
     <view class="nut-img-loading" v-if="loading">
       <nut-icon name="image" v-if="!slotLoding"></nut-icon>
@@ -15,7 +15,7 @@
 </template>
 <script lang="ts">
 import { reactive, toRefs, computed, PropType, useSlots, watch } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 import { pxCheck } from '../../utils/pxCheck';
 const { componentName, create } = createComponent('image');
 export default create({
@@ -129,5 +129,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

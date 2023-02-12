@@ -66,11 +66,11 @@
 </template>
 <script lang="ts">
 import { reactive, ref, watch, toRefs, computed, PropType, onMounted } from 'vue';
-import { createComponent } from '@/packages/utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { create, translate } = createComponent('calendar-item');
-import Utils from '@/packages/utils/date';
-import requestAniFrame from '@/packages/utils/raf';
-import { useExpose } from '@/packages/utils/useExpose/index';
+import Utils from '@/components/packages/utils/date';
+import requestAniFrame from '@/components/packages/utils/raf';
+import { useExpose } from '@/components/packages/utils/useExpose/index';
 import Taro from '@tarojs/taro';
 const TARO_ENV = Taro.getEnv();
 

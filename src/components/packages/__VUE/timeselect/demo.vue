@@ -1,6 +1,6 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-cell @click="handleClick1">
       <span
         ><label>{{ translate('deliveryTime') }}</label></span
@@ -21,7 +21,7 @@
         <nut-timedetail :times="times1" @select="selectTime1"></nut-timedetail>
       </template>
     </nut-timeselect>
-    <h2 class="h2">{{ translate('title') }}</h2>
+    <h2>{{ translate('title') }}</h2>
     <nut-cell @click="handleClick2">
       <span
         ><label>{{ translate('deliveryTime') }}</label></span
@@ -42,7 +42,7 @@
         <nut-timedetail :times="times2" @select="selectTime2"></nut-timedetail>
       </template>
     </nut-timeselect>
-    <h2 class="h2">{{ translate('changeTitle') }}</h2>
+    <h2>{{ translate('changeTitle') }}</h2>
     <nut-cell @click="handleClick3">
       <span
         ><label>{{ translate('deliveryTime') }}</label></span
@@ -74,9 +74,9 @@
 
 <script lang="ts">
 import { reactive, toRefs, getCurrentInstance, onMounted } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('timeselect');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

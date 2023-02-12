@@ -1,8 +1,8 @@
-import { h, computed,provide,getCurrentInstance,onMounted } from 'vue';
+import { h, computed } from 'vue';
 import type { ExtractPropTypes, SetupContext, RenderFunction } from 'vue';
-import { createComponent } from '../../utils/create';
-import { pxCheck } from '../../utils/pxCheck';
-import { useProvide } from '../../utils/useRelation/useProvide';
+import { createComponent } from '@/components/packages/utils/create';
+import { pxCheck } from '@/components/packages/utils/pxCheck';
+import { useProvide } from '@/components/packages/utils/useRelation/useProvide';
 
 const { componentName } = createComponent('grid');
 
@@ -65,17 +65,9 @@ export type GridProps = ExtractPropTypes<typeof gridProps>;
 
 export const component = {
   props: gridProps,
-  options: { 
-      virtualHost: true
-  },
-  setup(props: GridProps,{slots}) {
-      console.log(slots,'slots')
-     
-    provide(GRID_KEY, { props });
+  setup(props: GridProps, { slots }: SetupContext): RenderFunction {
+    useProvide(GRID_KEY, `${componentName}-item`)({ props });
 
-    onMounted(()=>{
-        console.log(getCurrentInstance(),'getCurrentInstance')
-    })
     const rootClass = computed(() => {
       const prefixCls = componentName;
       return {
@@ -94,9 +86,15 @@ export const component = {
       return style;
     });
 
-    return {
-        rootStyle,
-        rootClass
-    }
+    return () => {
+      return h(
+        'view',
+        {
+          class: rootClass.value,
+          style: rootStyle.value
+        },
+        slots.default?.()
+      );
+    };
   }
 };

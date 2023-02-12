@@ -54,11 +54,13 @@
   &-title {
     display: block;
     margin-bottom: $steps-base-title-margin-bottom;
+    line-height: $steps-base-title-line-height;
     font-size: $steps-base-title-font-size;
     color: $steps-base-title-color;
   }
   &-content {
     display: block;
+    line-height: $steps-base-content-line-height;
     font-size: $steps-base-content-font-size;
     color: $steps-base-content-color;
   }
@@ -114,12 +116,69 @@
         color: $steps-wait-icon-color;
       }
     }
+    .nut-step-title {
+      color: $steps-wait-title-color;
+    }
     .nut-step-content {
       color: $steps-wait-content-color;
     }
   }
 }
+.nut-steps-horizontal {
+  padding: $steps-horizontal-padding;
+  &.nut-steps-dot {
+    .nut-step-head {
+      margin-top: 7px;
+      margin-bottom: 0;
+    }
+    .nut-step-line {
+      top: 50%;
+      bottom: -50%;
+    }
+    .nut-step-icon {
+      width: 8px;
+      height: 8px;
+      background: $primary-color;
+      border-radius: 50%;
+      box-sizing: content-box;
+    }
+    .nut-step-wait {
+      .nut-step-icon {
+        background-color: $steps-wait-icon-bg-color;
+      }
+      .nut-step-content {
+        color: $steps-wait-content-color;
+      }
+    }
+    .nut-step-finish {
+      .nut-step-icon {
+        background-color: $primary-color;
+      }
+    }
+    .nut-step-process {
+      .nut-step-icon {
+        position: relative;
+        background-color: $primary-color;
+        &:before {
+          content: '';
+          display: inline-block;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          margin-left: -7px;
+          margin-top: -7px;
+          width: 14px;
+          height: 14px;
+          background-color: $primary-color-end;
+          border-radius: 50%;
+          opacity: 0.23;
+        }
+      }
+    }
+  }
+}
 .nut-steps-vertical {
+  padding: $steps-vertical-padding;
   .nut-step {
     display: flex;
     height: 33.34%;
@@ -129,12 +188,22 @@
     display: inline-block;
     width: 1px;
     height: 100%;
-    background: #909ca4;
+    background: $steps-base-line-color;
   }
   .nut-step-main {
     display: inline-block;
-    padding-left: 6%;
+    padding: $steps-vertical-main-padding;
     text-align: left;
+  }
+  .nut-step-title {
+    line-height: $steps-vertical-title-line-height;
+    font-size: $steps-vertical-title-font-size;
+  }
+  .nut-step-icon {
+    width: $steps-vertical-icon-width;
+    height: $steps-vertical-icon-height;
+    line-height: $steps-vertical-icon-line-height;
+    font-size: $steps-vertical-icon-font-size;
   }
   &.nut-steps-dot {
     .nut-step-head {

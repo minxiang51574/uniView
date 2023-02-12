@@ -2,9 +2,9 @@
 
 <script lang="ts">
 import { computed } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useRouter } from '../../utils/useRoute';
-import { pxCheck } from '../../utils/pxCheck';
+import { createComponent } from '@/components/packages/utils/create';
+import { useRouter } from '@/components/packages/utils/useRoute';
+import { pxCheck } from '@/components/packages/utils/pxCheck';
 const { componentName, create } = createComponent('cell');
 export default create({
   props: {
@@ -18,20 +18,16 @@ export default create({
     roundRadius: { type: [String, Number], default: '' },
     url: { type: String, default: '' },
     icon: { type: String, default: '' },
+    rightIcon: { type: String, default: 'right' },
     center: { type: Boolean, default: false },
     size: { type: String, default: '' } // large
-  },
-  options: {
-      virtualHost : true,
-      addGlobalClass: true,
-      styleIsolation: 'shared'
   },
   emits: ['click'],
   setup(props, { emit }) {
     const classes = computed(() => {
       const prefixCls = componentName;
       return {
-        [`${prefixCls}`]: true,
+        [prefixCls]: true,
         [`${prefixCls}--clickable`]: props.isLink || props.to,
         [`${prefixCls}--center`]: props.center,
         [`${prefixCls}--large`]: props.size == 'large'
@@ -48,12 +44,8 @@ export default create({
     const handleClick = (event: Event) => {
       emit('click', event);
 
-      if (props.to) {
-          uni.navigateTo({
-              url: props.to
-          })
-          
-
+      if (props.to && router) {
+        router[props.replace ? 'replace' : 'push'](props.to);
         // if(props.replace){
         //   router.replace(props.to)
         // }else{
@@ -72,6 +64,6 @@ export default create({
   }
 });
 </script>
-<style lang="scss" :scoped="false">
-    @import './index.scss'
+<style lang="scss">
+@import './index.scss'
 </style>

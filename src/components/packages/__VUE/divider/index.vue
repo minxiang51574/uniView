@@ -6,7 +6,7 @@
 </template>
 <script lang="ts">
 import { computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('divider');
 
 export default create({
@@ -29,7 +29,7 @@ export default create({
     }
   },
   components: {},
- 
+
   setup(props, context) {
     const classes = computed(() => {
       const prefixCls = componentName;
@@ -64,5 +64,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

@@ -1,9 +1,8 @@
 <script lang="ts">
 import { reactive, computed, h, onMounted, onUnmounted, ref, Ref, unref, PropType, watch, CSSProperties } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useRect } from '../../utils/useRect';
+import { createComponent } from '@/components/packages/utils/create';
+import { useRect } from '@/components/packages/utils/useRect';
 const { componentName, create } = createComponent('sticky');
-import { onPageScroll } from '@dcloudio/uni-app'
 export default create({
   props: {
     position: {
@@ -145,30 +144,6 @@ export default create({
         emit('change', val);
       }
     );
-    
-    onPageScroll ((e) => {
-        const { container, position } = props;
-        const scrollTop = e.scrollTop
-        if (position === 'top') {
-          if (container) {
-           
-          } else {
-            state.fixed = offset.value > 0;
-          }
-        } else if (position === 'bottom') {
-          const clientHeight = uni.getWindowInfo().windowWidth
-          if (container) {
-           
-          } else {
-            state.fixed = clientHeight - +offset.value < 0;
-          }
-        }
-        
-        emit('scroll', {
-          top: scrollTop,
-          fixed: state.fixed
-        });
-    })
 
     onMounted(() => {
       window.addEventListener('scroll', onScroll);
@@ -193,5 +168,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

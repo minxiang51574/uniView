@@ -5,7 +5,7 @@ import '@/uni_modules/sky-nutui/components/sky-nutui/sites/assets/styles/reset.s
 import '@/uni_modules/sky-nutui/components/sky-nutui/sites/assets/styles/md-style.scss';
 import DemoBlock from './components/demo-block';
 import { Hover } from './directive/hover/hover';
-import NutUI from '@/packages/nutui.vue';
+import NutUI from '@/components/packages/nutui.vue';
 
 import { isMobile } from '@/uni_modules/sky-nutui/components/sky-nutui/sites/assets/util';
 

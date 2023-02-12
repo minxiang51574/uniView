@@ -1,14 +1,14 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-imagepreview :show="showPreview1" :images="imgData" @close="hideFn(1)" />
     <nut-cell isLink :title="translate('showPreview')" :showIcon="true" @click="showFn(1)"></nut-cell>
 
-    <h2 class="h2">{{ translate('withInitNo') }}</h2>
+    <h2>{{ translate('withInitNo') }}</h2>
     <nut-imagepreview :show="showPreview2" :images="imgData" :content-close="true" :init-no="3" @close="hideFn(2)" />
     <nut-cell isLink :title="translate('withInitNo')" :showIcon="true" @click="showFn(2)"></nut-cell>
 
-    <h2 class="h2">{{ translate('withPagination') }}</h2>
+    <h2>{{ translate('withPagination') }}</h2>
     <nut-imagepreview
       :show="showPreview3"
       :images="imgData"
@@ -18,21 +18,21 @@
     />
     <nut-cell isLink :title="translate('withPagination')" :showIcon="true" @click="showFn(3)"></nut-cell>
 
-    <h2 class="h2">{{ translate('withVideos') }}</h2>
+    <h2>{{ translate('withVideos') }}</h2>
     <nut-imagepreview :show="showPreview4" :videos="videoData" :images="imgData" @close="hideFn(4)" />
     <nut-cell isLink :title="translate('withVideos')" :showIcon="true" @click="showFn(4)"></nut-cell>
 
-    <h2 class="h2">{{ translate('functionalCall') }}</h2>
+    <h2>{{ translate('functionalCall') }}</h2>
     <nut-cell isLink :title="translate('functionalCall')" :showIcon="true" @click="fnShow"></nut-cell>
   </div>
 </template>
 
 <script lang="ts">
 import { reactive, toRefs } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('imagepreview');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
-import { ImagePreview } from '../../nutui.vue';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
+import { ImagePreview } from '@/components/packages/nutui.vue';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -116,12 +116,13 @@ export default createDemo({
       ImagePreview({
         show: true,
         images: resData.imgData,
-        onClose
+        onClose: () => onClose()
       });
     };
 
     const hideFn = (i: number) => {
       (resData as any)['showPreview' + i] = false;
+      console.log('guansebi');
     };
 
     return {

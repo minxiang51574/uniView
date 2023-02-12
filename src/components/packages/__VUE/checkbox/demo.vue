@@ -53,12 +53,12 @@
     </nut-cell-group>
     <nut-cell-group :title="translate('useGroup')">
       <nut-cell>
-        <nut-checkbox-group v-model="checkboxgroup1">
+        <nut-checkboxgroup v-model="checkboxgroup1">
           <nut-checkbox label="1" style="margin: 2px 20px 0 0">{{ translate('combine') }}</nut-checkbox>
           <nut-checkbox label="2">{{ translate('combine') }}</nut-checkbox>
           <nut-checkbox label="3" style="margin: 2px 20px 0 0">{{ translate('combine') }}</nut-checkbox>
           <nut-checkbox label="4">{{ translate('combine') }}</nut-checkbox>
-        </nut-checkbox-group>
+        </nut-checkboxgroup>
       </nut-cell>
       <nut-cell>
         <div class="demo-check">{{ translate('selected') }}</div>
@@ -67,21 +67,21 @@
     </nut-cell-group>
     <nut-cell-group :title="translate('disableGroup')">
       <nut-cell>
-        <nut-checkbox-group v-model="checkboxgroup1" disabled>
+        <nut-checkboxgroup v-model="checkboxgroup1" disabled>
           <nut-checkbox label="1" style="margin: 2px 20px 0 0">{{ translate('combine') }}</nut-checkbox>
           <nut-checkbox label="2">{{ translate('combine') }}</nut-checkbox>
           <nut-checkbox label="3" style="margin: 2px 20px 0 0">{{ translate('combine') }}</nut-checkbox>
           <nut-checkbox label="4">{{ translate('combine') }}</nut-checkbox>
-        </nut-checkbox-group>
+        </nut-checkboxgroup>
       </nut-cell>
     </nut-cell-group>
     <nut-cell-group :title="translate('selectGroup')">
       <nut-cell>
-        <nut-checkbox-group v-model="checkboxgroup3" ref="group" @change="changeBox4">
+        <nut-checkboxgroup v-model="checkboxgroup3" ref="group" @change="changeBox4">
           <nut-checkbox v-for="item in checkboxsource" :key="item.label" :label="item.label">{{
             item.value
           }}</nut-checkbox>
-        </nut-checkbox-group>
+        </nut-checkboxgroup>
       </nut-cell>
       <nut-cell>
         <nut-button type="primary" @click="toggleAll(true)" style="margin: 0 20px 0 0">{{
@@ -95,12 +95,12 @@
     </nut-cell-group>
     <nut-cell-group :title="translate('useGroupLimit')">
       <nut-cell>
-        <nut-checkbox-group v-model="checkboxgroup4" :max="2">
+        <nut-checkboxgroup v-model="checkboxgroup4" :max="2">
           <nut-checkbox label="1" style="margin: 2px 20px 0 0">{{ translate('combine') }}</nut-checkbox>
           <nut-checkbox label="2">{{ translate('combine') }}</nut-checkbox>
           <nut-checkbox label="3" style="margin: 2px 20px 0 0">{{ translate('combine') }}</nut-checkbox>
           <nut-checkbox label="4">{{ translate('combine') }}</nut-checkbox>
-        </nut-checkbox-group>
+        </nut-checkboxgroup>
       </nut-cell>
       <nut-cell>
         <div class="demo-check">{{ translate('selected') }}</div>
@@ -113,7 +113,7 @@
           translate('selectAll')
         }}</nut-checkbox>
       </nut-cell>
-      <nut-checkbox-group v-model="checkboxgroup5" ref="group2" @change="changeBox6">
+      <nut-checkboxgroup v-model="checkboxgroup5" ref="group2" @change="changeBox6">
         <nut-cell
           ><nut-checkbox label="1" style="margin: 2px 20px 0 0">{{ translate('combine') }}</nut-checkbox></nut-cell
         >
@@ -126,16 +126,25 @@
         <nut-cell
           ><nut-checkbox label="4">{{ translate('combine') }}</nut-checkbox></nut-cell
         >
-      </nut-checkbox-group>
+      </nut-checkboxgroup>
+    </nut-cell-group>
+
+    <nut-cell-group :title="translate('useShape')">
+      <nut-cell>
+        <nut-checkboxgroup v-model="checkboxgroup6">
+          <nut-checkbox label="1" shape="button">{{ translate('useShape') }}</nut-checkbox>
+          <nut-checkbox label="2" shape="button">{{ translate('useShape') }}</nut-checkbox>
+        </nut-checkboxgroup>
+      </nut-cell>
     </nut-cell-group>
   </div>
 </template>
 <script lang="ts">
 import { reactive, ref, toRefs, onMounted, Ref } from 'vue';
-import { createComponent } from '../../utils/create';
-import { Toast } from '../../nutui.js';
+import { createComponent } from '@/components/packages/utils/create';
+import { Toast } from '@/components/packages/nutui.vue';
 const { createDemo, translate } = createComponent('checkbox');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -158,7 +167,8 @@ const initTranslate = () =>
       checkbox: '复选框',
       selectedDisable: '选中时禁用状态',
       unselectDisable: '未选时禁用状态',
-      useGroupInte: '全选/半选/取消'
+      useGroupInte: '全选/半选/取消',
+      useShape: '按钮形状'
     },
     'en-US': {
       basic: 'Basic usage - left and right',
@@ -180,7 +190,8 @@ const initTranslate = () =>
       checkbox: 'check box',
       selectedDisable: 'Disabled when selected',
       unselectDisable: 'Disabled when not selected',
-      useGroupInte: 'Select all / half / cancel'
+      useGroupInte: 'Select all / half / cancel',
+      useShape: 'Button shape'
     }
   });
 export default createDemo({
@@ -204,6 +215,7 @@ export default createDemo({
       checkboxgroup3: ['2'],
       checkboxgroup4: ['2'],
       checkboxgroup5: [],
+      checkboxgroup6: [],
       checkboxsource: [
         { label: '1', value: translate('combine') },
         { label: '2', value: translate('combine') },
@@ -277,7 +289,7 @@ export default createDemo({
 .demo-check {
   margin-right: 10px;
 }
-.nut-checkbox-group {
+.nut-checkboxgroup {
   display: flex;
   flex-wrap: wrap;
 }

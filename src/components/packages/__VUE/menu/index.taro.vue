@@ -1,6 +1,6 @@
 <template>
   <view :class="classes">
-    <view class="nut-menu__bar" :class="{ opened: opened }" ref="barRef">
+    <view :id="'nut-menu__bar' + refRandomId" class="nut-menu__bar" :class="{ opened: opened }" ref="barRef">
       <template v-for="(item, index) in children" :key="index">
         <view
           class="nut-menu__item"
@@ -11,7 +11,8 @@
           <view class="nut-menu__title" :class="getClasses(item.state.showPopup)">
             <view class="nut-menu__title-text">{{ item.renderTitle() }}</view>
             <nut-icon
-              :name="item.titleIcon || (direction === 'up' ? 'arrow-up' : 'down-arrow')"
+              v-bind="$attrs"
+              :name="titleIcon || (direction === 'up' ? 'arrow-up' : 'down-arrow')"
               size="10"
               class="nut-menu__title-icon"
             ></nut-icon>
@@ -24,8 +25,9 @@
 </template>
 <script lang="ts">
 import { reactive, provide, computed, ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 import Taro, { usePageScroll } from '@tarojs/taro';
+import { useTaroRect } from '@/components/packages/utils/useTaroRect';
 const { componentName, create } = createComponent('menu');
 export default create({
   props: {
@@ -45,6 +47,8 @@ export default create({
       type: [Number, String],
       default: 0.3
     },
+    titleIcon: String,
+
     closeOnClickOverlay: {
       type: Boolean,
       default: true
@@ -61,6 +65,7 @@ export default create({
   },
   setup(props) {
     const barRef = ref<HTMLElement>();
+    const refRandomId = Math.random().toString(36).slice(-8);
     const offset = ref(0);
     const isScrollFixed = ref(false);
 
@@ -76,10 +81,25 @@ export default create({
           }
         };
 
+        const removeLink = (child: any) => {
+          if (child.proxy) {
+            let internalIndex = internalChildren.indexOf(child);
+            if (internalIndex > -1) {
+              internalChildren.splice(internalIndex, 1);
+            }
+
+            let publicIndex = publicChildren.indexOf(child.proxy);
+            if (internalIndex > -1) {
+              publicChildren.splice(publicIndex, 1);
+            }
+          }
+        };
+
         provide(
           'menuParent',
           Object.assign(
             {
+              removeLink,
               link,
               children: publicChildren,
               internalChildren
@@ -107,19 +127,17 @@ export default create({
       };
     });
 
-    const updateOffset = () => {
+    const updateOffset = (children: any) => {
       if (barRef.value) {
         setTimeout(() => {
-          Taro.createSelectorQuery()
-            .select('.nut-menu__bar.opened')
-            .boundingClientRect((rect) => {
-              if (props.direction === 'down') {
-                offset.value = rect.bottom;
-              } else {
-                offset.value = Taro.getSystemInfoSync().windowHeight - rect.top;
-              }
-            })
-            .exec();
+          useTaroRect(barRef, Taro).then((rect: any) => {
+            if (props.direction === 'down') {
+              offset.value = rect.bottom;
+            } else {
+              offset.value = Taro.getSystemInfoSync().windowHeight - rect.top;
+            }
+            children.toggle();
+          });
         }, 100);
       }
     };
@@ -129,8 +147,7 @@ export default create({
     const toggleItem = (active: number) => {
       children.forEach((item, index) => {
         if (index === active) {
-          updateOffset();
-          item.toggle();
+          updateOffset(item);
         } else if (item.state.showPopup) {
           item.toggle(false, { immediate: true });
         }
@@ -174,6 +191,7 @@ export default create({
       opened,
       classes,
       barRef,
+      refRandomId,
       getClasses
     };
   }

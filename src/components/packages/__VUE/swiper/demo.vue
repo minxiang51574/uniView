@@ -3,9 +3,7 @@
     <h2>{{ translate('basic') }}</h2>
     <view class="demo-box">
       <nut-swiper :init-page="page" :pagination-visible="true" pagination-color="#426543" auto-play="2000">
-        <nut-swiper-item v-for="item in list" :key="item">
-          <img :src="item" alt="" />
-        </nut-swiper-item>
+        <nut-swiper-item v-for="item in list" :key="item"> <img :src="item" alt="" /> </nut-swiper-item>
       </nut-swiper>
     </view>
     <h2>{{ translate('asyc') }}</h2>
@@ -86,37 +84,14 @@
         </nut-swiper-item>
       </nut-swiper>
     </view>
-    <h2>{{ translate('horizontalCenter') }}</h2>
-    <view class="demo-box">
-      <nut-swiper :init-page="page4" :loop="false" width="280" height="150" :is-center="true" style="height: 150px">
-        <nut-swiper-item v-for="item in list" :key="item">
-          <img :src="item" alt="" />
-        </nut-swiper-item>
-      </nut-swiper>
-    </view>
-    <h2>{{ translate('verticalCenter') }}</h2>
-    <view class="demo-box vertical-center">
-      <nut-swiper
-        :init-page="page4"
-        :loop="false"
-        direction="vertical"
-        height="220"
-        :is-center="true"
-        style="height: 300px"
-      >
-        <nut-swiper-item v-for="item in list" :key="item">
-          <img :src="item" alt="" />
-        </nut-swiper-item>
-      </nut-swiper>
-    </view>
   </div>
 </template>
 
 <script lang="ts">
 import { reactive, toRefs, onMounted, ref, Ref } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('swiper');
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -182,6 +157,7 @@ export default createDemo({
     const handleNext = () => {
       swiper.value.next();
     };
+
     onMounted(() => {
       setTimeout(() => {
         state.list1 = state.list.slice();

@@ -1,7 +1,7 @@
 <template>
   <view :class="classes" @click="onClick" :style="style">
     <view class="switch-button">
-      <nut-icon v-if="loading" :name="name" :size="size" :color="color"></nut-icon>
+      <nut-icon v-if="loading" :name="name" v-bind="$attrs" :size="size" :color="color"></nut-icon>
       <!-- <view v-show="!modelValue" class="close-line"></view> -->
       <template v-if="activeText">
         <view class="nut-switch-label open" v-show="modelValue">{{ activeText }}</view>
@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { computed, watch } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('switch');
 
 export default create({
@@ -116,5 +116,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

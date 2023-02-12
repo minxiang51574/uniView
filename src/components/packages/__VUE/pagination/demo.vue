@@ -1,12 +1,12 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-pagination v-model="currentPage" :total-items="25" :items-per-page="5" @change="pageChange" />
-    <h2 class="h2">{{ translate('simpleMode') }}</h2>
+    <h2>{{ translate('simpleMode') }}</h2>
     <nut-pagination v-model="currentPage1" :page-count="12" mode="simple" @change="pageChange" />
-    <h2 class="h2">{{ translate('showEllipses') }}</h2>
+    <h2>{{ translate('showEllipses') }}</h2>
     <nut-pagination v-model="currentPage2" :total-items="125" :show-page-size="3" force-ellipses @change="pageChange" />
-    <h2 class="h2">{{ translate('customButton') }}</h2>
+    <h2>{{ translate('customButton') }}</h2>
     <nut-pagination v-model="currentPage3" :total-items="500" :show-page-size="5" @change="pageChange">
       <template #prev-text>
         <nut-icon name="left" size="10px" />
@@ -22,10 +22,10 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, toRefs } from 'vue';
-import { createComponent } from '../../utils/create';
+import { reactive, toRefs } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('pagination');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -51,7 +51,7 @@ export default createDemo({
       currentPage3: 1
     });
     const pageChange = (value: number) => {
-      console.log(value);
+      console.log('page change', value);
     };
 
     return {

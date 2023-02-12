@@ -18,14 +18,15 @@
       </view>
     </view>
     <!-- content-->
-    <scroll-view
+    <Nut-Scroll-View
       :scroll-top="scrollTop"
       :scroll-y="true"
       class="nut-calendar-content"
       @scroll="mothsViewScroll"
+      :scroll-with-animation="scrollWithAnimation"
       ref="months"
     >
-      <view class="calendar-months-panel" style="{{heihgt:containerHeight}}">
+      <view class="calendar-months-panel" :style="{ height: containerHeight }">
         <view class="viewArea" :style="{ transform: `translateY(${translateY}px)` }">
           <view class="calendar-month" v-for="(month, index) of compConthsDatas" :key="index">
             <view class="calendar-month-title">{{ month.title }}</view>
@@ -48,7 +49,7 @@
                     <view class="calendar-curr-tip-curr" v-if="!bottomInfo && showToday && isCurrDay(day)">
                       {{ translate('today') }}
                     </view>
-                    <view :class="{ 'calendar-curr-tips-top': rangeTip(day, month), 'calendar-day-tip': true }">
+                    <view :class="{ 'calendar-curr-tips-top': rangeTip(), 'calendar-day-tip': true }">
                       {{ isStartTip(day, month) ? startText || translate('start') : '' }}
                     </view>
                     <view class="calendar-day-tip" v-if="isEndTip(day, month)">{{ endText || translate('end') }}</view>
@@ -59,7 +60,7 @@
           </view>
         </view>
       </view>
-    </scroll-view>
+    </Nut-Scroll-View>
     <!-- footer-->
     <view class="nut-calendar-footer" v-if="poppable && !isAutoBackFill">
       <view class="calendar-confirm-btn" @click="confirm">{{ confirmText || translate('confirm') }}</view>
@@ -67,14 +68,15 @@
   </view>
 </template>
 <script lang="ts">
-import { PropType, reactive, ref, watch, toRefs, computed, onMounted, nextTick } from 'vue';
-import { createComponent } from '../../utils/create';
+import { reactive, ref, watch, toRefs, computed, onMounted } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
 const { create, translate } = createComponent('calendar-item');
 import Taro from '@tarojs/taro';
-import Utils from '../../utils/date';
-import { useExpose } from '../../utils/useExpose/index';
-import requestAniFrame from '../../utils/raf';
-let TARO_ENV = process.env.TARO_ENV;
+import Utils from '@/components/packages/utils/date';
+import { useExpose } from '@/components/packages/utils/useExpose/index';
+import requestAniFrame from '@/components/packages/utils/raf';
+import NutScrollView from '../scrollView/index.taro.vue';
+const TARO_ENV = Taro.getEnv();
 
 type InputDate = string | string[];
 interface CalendarState {
@@ -112,11 +114,14 @@ interface MonthInfo {
   curData: string[] | string;
   title: string;
   monthData: Day[];
-  cssHeight?: Number;
-  cssScrollHeight?: Number;
+  cssHeight?: number;
+  cssScrollHeight?: number;
 }
 
 export default create({
+  components: {
+    NutScrollView
+  },
   props: {
     type: {
       type: String,
@@ -173,15 +178,22 @@ export default create({
     endDate: {
       type: String,
       default: Utils.getDay(365)
+    },
+    firstDayOfWeek: {
+      type: Number,
+      default: 0
     }
   },
   emits: ['choose', 'update', 'close', 'select'],
 
   setup(props, { emit, slots }) {
-    const weeks = ref(translate('weekdays'));
+    // 新增：自定义周起始日
+    const weekdays = translate('weekdays');
+    const weeks = ref([...weekdays.slice(props.firstDayOfWeek, 7), ...weekdays.slice(0, props.firstDayOfWeek)]);
     // element refs
     const scalePx = ref(2);
     const viewHeight = ref(0);
+    const scrollWithAnimation = ref(false);
     const months = ref<null | HTMLElement>(null);
     const showTopBtn = computed(() => {
       return slots.btn;
@@ -197,7 +209,7 @@ export default create({
       yearMonthTitle: '',
       defaultRange: [0, 1],
       compConthsDatas: [],
-      containerHeight: '',
+      containerHeight: '100%',
       currDate: '',
       propStartDate: '',
       propEndDate: '',
@@ -296,7 +308,7 @@ export default create({
     };
 
     // 选中数据
-    const chooseDay = (day: Day, month: MonthInfo, isFirst: boolean, isRange?: boolean) => {
+    const chooseDay = (day: Day, month: MonthInfo, isFirst: boolean) => {
       if (getClass(day, month) != `${state.dayPrefix}-disabled`) {
         const { type } = props;
         let days = [...month.curData];
@@ -398,6 +410,8 @@ export default create({
     };
     // 获取上一个月的最后一周天数，填充当月空白
     const getPreDaysStatus = (days: number, type: string, dateInfo: any, preCurrMonthDays: number) => {
+      // 新增：自定义周起始日
+      days = days - props.firstDayOfWeek;
       // 修复：当某个月的1号是周日时，月份下方会空出来一行
       let { year, month } = dateInfo;
       if (type == 'prev' && days >= 7) {
@@ -441,7 +455,7 @@ export default create({
         ]
       };
       let titleHeight, itemHeight;
-      if (TARO_ENV === 'h5') {
+      if (TARO_ENV === Taro.ENV_TYPE.WEB) {
         titleHeight = 46 * scalePx.value + 16 * scalePx.value * 2;
         itemHeight = 128 * scalePx.value;
       } else {
@@ -539,14 +553,14 @@ export default create({
         if (state.currDate.length > 0) {
           let defaultArr: string[] = [];
           let obj: any = {};
-          state.currDate.forEach((item: string, index: number) => {
+          state.currDate.forEach((item: string) => {
             if (
               propStartDate &&
               !Utils.compareDate(item, propStartDate) &&
               propEndDate &&
               !Utils.compareDate(propEndDate, item)
             ) {
-              if (!obj.hasOwnProperty(item)) {
+              if (!Object.hasOwnProperty.call(obj, item)) {
                 defaultArr.push(item);
                 obj[item] = item;
               }
@@ -609,9 +623,8 @@ export default create({
       let containerHeight = lastItem.cssHeight + lastItem.cssScrollHeight;
 
       state.containerHeight = `${containerHeight}px`;
-      state.scrollTop = state.monthsData[state.currentIndex].cssScrollHeight;
+      initPosition();
       state.avgHeight = Math.floor(containerHeight / (monthsNum + 1));
-
       if (months?.value) {
         viewHeight.value = months.value.clientHeight;
       }
@@ -625,36 +638,64 @@ export default create({
       let dateArr = splitDate(date);
       state.monthsData.forEach((item, index) => {
         if (item.title == translate('monthTitle', dateArr[0], dateArr[1])) {
-          if (props.toDateAnimation) {
-            Taro.createSelectorQuery()
-              .select('.nut-calendar-content')
-              .scrollOffset((res) => {
-                let scrollTop = res.scrollTop;
-                let distance = state.monthsData[index].cssScrollHeight - scrollTop;
-                let flag = 0;
-                let interval = setInterval(() => {
-                  flag++;
-                  if (months.value) {
-                    let offset = distance / 10;
-                    state.scrollTop = state.scrollTop + offset;
-                  }
-                  if (flag >= 10) {
-                    clearInterval(interval);
-                    if (months.value) {
-                      state.scrollTop = state.monthsData[index].cssScrollHeight;
-                    }
-                  }
-                }, 40);
-              })
-              .exec();
-          } else {
-            state.scrollTop = state.monthsData[index].cssScrollHeight;
-          }
+          // scrollTop 不会实时变更。当再次赋值时，scrollTop无变化时，不会触发滚动
+          state.scrollTop += 1;
+          scrollWithAnimation.value = props.toDateAnimation;
+          requestAniFrame(() => {
+            setTimeout(() => {
+              state.scrollTop = state.monthsData[index].cssScrollHeight;
+              setTimeout(() => {
+                scrollWithAnimation.value = false;
+              }, 200);
+            }, 10);
+          });
+          // if (Taro.getEnv() == 'ALIPAY') {
+          //   state.scrollTop = state.monthsData[index].cssScrollHeight;
+          // } else {
+          //   if (selectorQuery) {
+          //     selectorQuery
+          //       .select('.nut-calendar-content')
+          //       .scrollOffset((res) => {
+          //         if (props.toDateAnimation) {
+          //           let scrollTop = res.scrollTop;
+          //           let distance = state.monthsData[index].cssScrollHeight - scrollTop;
+          //           // state.scrollTop = res.scrollTop;
+          //           let flag = 0;
+          //           let interval = setInterval(() => {
+          //             flag++;
+          //             if (months.value) {
+          //               let offset = distance / 10;
+          //               state.scrollTop = state.scrollTop + offset;
+          //             }
+          //             if (flag >= 10) {
+          //               clearInterval(interval);
+          //               if (months.value) {
+          //                 state.scrollTop = state.monthsData[index].cssScrollHeight;
+          //               }
+          //             }
+          //           }, 40);
+          //         } else {
+          //           state.scrollTop = res.scrollTop;
+          //           setDefaultRange(state.monthsNum, index);
+          //           requestAniFrame(() => {
+          //             state.scrollTop = state.monthsData[index].cssScrollHeight;
+          //           });
+          //         }
+          //       })
+          //       .exec();
+          //   } else {
+          //     state.scrollTop = state.monthsData[index].cssScrollHeight;
+          //   }
+          // }
         }
       });
     };
+    const initPosition = () => {
+      state.scrollTop = Math.ceil(state.monthsData[state.currentIndex].cssScrollHeight);
+    };
     useExpose({
-      scrollToDate
+      scrollToDate,
+      initPosition
     });
     const setDefaultRange = (monthsNum: number, current: number) => {
       let rangeArr: any[] = [];
@@ -695,7 +736,7 @@ export default create({
       return false;
     };
     // 开始结束时间是否相等
-    const rangeTip = (day: Day, month: MonthInfo) => {
+    const rangeTip = () => {
       if (state.currDate.length >= 2) {
         return Utils.isEqual(state.currDate[0], state.currDate[1]);
       }
@@ -723,32 +764,39 @@ export default create({
         if (currentScrollTop < state.monthsData[current].cssScrollHeight) {
           current -= 1;
         }
-      } else {
-        if (!viewHeight.value || viewHeight.value < 0) {
-          Taro.createSelectorQuery()
-            .select('.nut-calendar-content')
-            .boundingClientRect((res) => {
-              viewHeight.value = res.height;
-            })
-            .exec();
-        }
-        const viewPosition = Math.round(currentScrollTop + viewHeight.value);
-        if (
-          viewPosition < state.monthsData[current].cssScrollHeight + state.monthsData[current].cssHeight &&
-          currentScrollTop < state.monthsData[current].cssScrollHeight
-        ) {
-          current -= 1;
-        }
-        if (
-          current + 1 <= state.monthsNum &&
-          viewPosition >= state.monthsData[current + 1].cssScrollHeight + state.monthsData[current + 1].cssHeight
-        ) {
-          current += 1;
-        }
-        if (current >= 1 && currentScrollTop < state.monthsData[current - 1].cssScrollHeight) {
-          current -= 1;
-        }
       }
+      // else {
+      //   if (!viewHeight.value || viewHeight.value < 0) {
+      //     if (TARO_ENV === Taro.ENV_TYPE.ALIPAY) {
+      //       if (months.value) {
+      //         viewHeight.value = months.value.clientHeight;
+      //       }
+      //     } else {
+      //       Taro.createSelectorQuery()
+      //         .select('.nut-calendar-content')
+      //         .boundingClientRect((res) => {
+      //           viewHeight.value = res.height;
+      //         })
+      //         .exec();
+      //     }
+      //   }
+      //   const viewPosition = Math.round(currentScrollTop + viewHeight.value);
+      //   if (
+      //     viewPosition < state.monthsData[current].cssScrollHeight + state.monthsData[current].cssHeight &&
+      //     currentScrollTop < state.monthsData[current].cssScrollHeight
+      //   ) {
+      //     current -= 1;
+      //   }
+      //   if (
+      //     current + 1 <= state.monthsNum &&
+      //     viewPosition >= state.monthsData[current + 1].cssScrollHeight + state.monthsData[current + 1].cssHeight
+      //   ) {
+      //     current += 1;
+      //   }
+      //   if (current >= 1 && currentScrollTop < state.monthsData[current - 1].cssScrollHeight) {
+      //     current -= 1;
+      //   }
+      // }
 
       if (state.currentIndex !== current) {
         state.currentIndex = current;
@@ -770,11 +818,12 @@ export default create({
           let scale = 2;
           let screenWidth = res.screenWidth;
           let toFixed = 3;
-          if (TARO_ENV === 'h5') {
+          if (TARO_ENV === Taro.ENV_TYPE.WEB) {
             toFixed = 5;
           }
           scale = Number((screenWidth / 750).toFixed(toFixed));
           scalePx.value = scale;
+          let transfromNum = Taro.pxTransform(64);
           initData();
         }
       });
@@ -808,11 +857,9 @@ export default create({
       months,
       ...toRefs(state),
       ...toRefs(props),
+      scrollWithAnimation,
       translate
     };
   }
 });
 </script>
-<style lang="scss">
-@import './index-old.scss'
-</style>

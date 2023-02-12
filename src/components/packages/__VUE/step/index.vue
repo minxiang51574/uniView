@@ -4,7 +4,7 @@
       <view class="nut-step-line"></view>
       <view class="nut-step-icon" :class="[!dot ? (icon ? 'is-icon' : 'is-text') : '']">
         <template v-if="icon">
-          <nut-icon class="nut-step-icon-inner" :color="iconColor" :name="icon" :size="size" />
+          <nut-icon class="nut-step-icon-inner" v-bind="$attrs" :color="iconColor" :name="icon" :size="size" />
         </template>
         <template v-else-if="dot"></template>
         <template v-else>
@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { reactive, computed, inject, toRefs, getCurrentInstance, ComponentInternalInstance } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { create, componentName } = createComponent('step');
 
 export default create({
@@ -53,15 +53,11 @@ export default create({
       default: '12px'
     }
   },
-  options: {
-      virtualHost: true
-  },
   emits: ['click-step'],
 
   setup(props, { emit, slots }) {
     const { proxy } = getCurrentInstance() as ComponentInternalInstance;
     const parent: any = inject('parent');
-    
     parent['relation'](proxy);
 
     const state = reactive({
@@ -102,5 +98,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

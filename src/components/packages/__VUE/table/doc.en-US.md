@@ -462,7 +462,7 @@ app.use(Table);
 
 ```html
 <template>
-  <h2 class="h2">Support asynchronous rendering(See the effect after 5S)</h2>
+  <h2>Support asynchronous rendering(See the effect after 5S)</h2>
   <nut-table :columns="columns" :data="data"></nut-table>
 </template>
 <script lang="ts">

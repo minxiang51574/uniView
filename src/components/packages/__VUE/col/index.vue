@@ -1,11 +1,11 @@
 <template>
-  <view :class="classes" :style="style" @click="handleClick">
+  <view :class="classes" :style="style">
     <slot></slot>
   </view>
 </template>
 <script lang="ts">
 import { computed, inject } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('col');
 
 export default create({
@@ -19,9 +19,8 @@ export default create({
       default: '0'
     }
   },
-  emits: ['click'],
-  options: {virtualHost:true},
-  setup(props, { emit }) {
+  emits: [],
+  setup(props) {
     const prefixCls = componentName;
     const gutter = inject('gutter') as number;
     const classes = computed(() => {
@@ -38,18 +37,13 @@ export default create({
         paddingRight: gutter / 2 + 'px'
       };
     });
-    const handleClick = (evt: MouseEvent) => {
-      evt.stopPropagation();
-      emit('click', evt);
-    };
     return {
       classes,
-      style,
-      handleClick
+      style
     };
   }
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

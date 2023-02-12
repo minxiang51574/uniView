@@ -1,25 +1,25 @@
 <template>
   <div class="demo full">
-    <h2 class="h2">{{ translate('basic') }}</h2>
-    <nut-tabs autoHeight @change="onChange" v-model="state.tab1value">
-      <nut-tabpane paneKey="0" title="Tab 1"> Tab 1 </nut-tabpane>
-      <nut-tabpane paneKey="1" title="Tab 2"> Tab 2 </nut-tabpane>
-      <nut-tabpane paneKey="2" title="Tab 3"> Tab 3 </nut-tabpane>
-    </nut-tabs>
-    <h2 class="h2">{{ translate('title1') }}</h2>
-    <nut-tabs  @change="onChange" v-model="state.tab11value" type="smile">
+    <h2>{{ translate('basic') }}</h2>
+    <nut-tabs v-model="state.tab1value">
       <nut-tabpane title="Tab 1"> Tab 1 </nut-tabpane>
       <nut-tabpane title="Tab 2"> Tab 2 </nut-tabpane>
       <nut-tabpane title="Tab 3"> Tab 3 </nut-tabpane>
     </nut-tabs>
-    <h2 class="h2">{{ translate('title2') }}</h2>
-    <nut-tabs  @change="onChange" v-model="state.tab2value">
+    <h2>{{ translate('title1') }}</h2>
+    <nut-tabs v-model="state.tab11value" type="smile">
+      <nut-tabpane title="Tab 1"> Tab 1 </nut-tabpane>
+      <nut-tabpane title="Tab 2"> Tab 2 </nut-tabpane>
+      <nut-tabpane title="Tab 3"> Tab 3 </nut-tabpane>
+    </nut-tabs>
+    <h2>{{ translate('title2') }}</h2>
+    <nut-tabs v-model="state.tab2value">
       <nut-tabpane title="Tab 1" pane-key="0"> Tab 1 </nut-tabpane>
       <nut-tabpane title="Tab 2" pane-key="1" :disabled="true"> Tab 2 </nut-tabpane>
       <nut-tabpane title="Tab 3" pane-key="2"> Tab 3 </nut-tabpane>
     </nut-tabs>
-    <h2 class="h2">{{ translate('title9') }}</h2>
-    <nut-tabs  @change="onChange" v-model="state.tab2value" :auto-height="true">
+    <h2>{{ translate('title9') }}</h2>
+    <nut-tabs v-model="state.tab2value" :auto-height="true">
       <nut-tabpane title="Tab 1" pane-key="0">
         <p>Tab 1</p>
         <p>Tab 1</p>
@@ -29,42 +29,42 @@
       <nut-tabpane title="Tab 2" pane-key="1"> Tab 2 </nut-tabpane>
       <nut-tabpane title="Tab 3" pane-key="2"> Tab 3 </nut-tabpane>
     </nut-tabs>
-    <h2 class="h2">{{ translate('title3') }}</h2>
-    <nut-tabs  @change="onChange" v-model="state.tab3value">
+    <h2>{{ translate('title3') }}</h2>
+    <nut-tabs v-model="state.tab3value">
       <nut-tabpane v-for="item in state.list3" :title="'Tab ' + item"> Tab {{ item }} </nut-tabpane>
     </nut-tabs>
 
-    <h2 class="h2">{{ translate('title4') }}</h2>
-    <nut-tabs  @change="onChange" v-model="state.tab4value" title-scroll title-gutter="10">
+    <h2>{{ translate('title4') }}</h2>
+    <nut-tabs v-model="state.tab4value" title-scroll title-gutter="10">
       <nut-tabpane v-for="item in state.list4" :title="'Tab ' + item"> Tab {{ item }} </nut-tabpane>
     </nut-tabs>
-    <h2 class="h2">{{ translate('title5') }}</h2>
-    <nut-tabs  style="height: 300px" v-model="state.tab5value" title-scroll direction="vertical">
+    <h2>{{ translate('title5') }}</h2>
+    <nut-tabs style="height: 300px" v-model="state.tab5value" title-scroll direction="vertical">
       <nut-tabpane v-for="item in state.list5" :title="'Tab ' + item"> Tab {{ item }} </nut-tabpane>
     </nut-tabs>
-    <h2 class="h2">{{ translate('title6') }}</h2>
-    <nut-tabs  style="height: 300px" v-model="state.tab6value" type="smile" title-scroll direction="vertical">
+    <h2>{{ translate('title6') }}</h2>
+    <nut-tabs style="height: 300px" v-model="state.tab6value" type="smile" title-scroll direction="vertical">
       <nut-tabpane v-for="item in state.list5" :title="'Tab ' + item"> Tab {{ item }} </nut-tabpane>
     </nut-tabs>
-    <h2 class="h2">{{ translate('title7') }}</h2>
-    <nut-tabs  @change="onChange" v-model="state.tab1value" size="large">
+    <h2>{{ translate('title7') }}</h2>
+    <nut-tabs v-model="state.tab8value" size="large">
       <nut-tabpane title="Tab 1"> Tab 1 </nut-tabpane>
       <nut-tabpane title="Tab 2"> Tab 2 </nut-tabpane>
       <nut-tabpane title="Tab 3"> Tab 3 </nut-tabpane>
     </nut-tabs>
-    <nut-tabs  @change="onChange" v-model="state.tab1value" size="normal">
+    <nut-tabs v-model="state.tab8value" size="normal">
       <nut-tabpane title="Tab 1"> Tab 1 </nut-tabpane>
       <nut-tabpane title="Tab 2"> Tab 2 </nut-tabpane>
       <nut-tabpane title="Tab 3"> Tab 3 </nut-tabpane>
     </nut-tabs>
-    <nut-tabs  @change="onChange" v-model="state.tab1value" size="small">
+    <nut-tabs v-model="state.tab8value" size="small">
       <nut-tabpane title="Tab 1"> Tab 1 </nut-tabpane>
       <nut-tabpane title="Tab 2"> Tab 2 </nut-tabpane>
       <nut-tabpane title="Tab 3"> Tab 3 </nut-tabpane>
     </nut-tabs>
-    <h2 class="h2">{{ translate('title8') }}</h2>
-    <nut-tabs  @change="onChange" v-model="state.tab7value">
-      <template class="nut-tabs__titles line normal" style="width: 100%;padding: 0;" v-slot:titles>
+    <h2>{{ translate('title8') }}</h2>
+    <nut-tabs v-model="state.tab7value">
+      <template v-slot:titles>
         <div
           class="nut-tabs__titles-item"
           @click="state.tab7value = item.paneKey"
@@ -86,10 +86,10 @@
 
 <script lang="ts">
 import { reactive, computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('tabs');
 
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -121,15 +121,6 @@ const initTranslate = () =>
   });
 export default createDemo({
   props: {},
-  data: function () {
-        return {
-        }
-  },
-  methods: {
-      onChange (e) {
-          console.log(e)
-      }
-  },
   setup() {
     initTranslate();
     const state = reactive({
@@ -141,6 +132,7 @@ export default createDemo({
       tab5value: '0',
       tab6value: '0',
       tab7value: 'c1',
+      tab8value: '0',
       list3: Array.from(new Array(2).keys()),
       list4: Array.from(new Array(10).keys()),
       list5: Array.from(new Array(2).keys()),
@@ -163,7 +155,6 @@ export default createDemo({
     });
     setTimeout(() => {
       state.list3.push(999);
-      state.tab1value = '2'
     }, 3000);
 
     return { state, translate };
@@ -171,6 +162,4 @@ export default createDemo({
 });
 </script>
 
-<style lang="scss">
-    @import '../../__VUE/tabs/index.scss'
-</style>
+<style lang="scss" scoped></style>

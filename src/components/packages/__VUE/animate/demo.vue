@@ -1,6 +1,6 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('click') }}</h2>
+    <h2>{{ translate('click') }}</h2>
 
     <div class="ani-demo-div">
       <nut-animate type="slide-right" action="click">
@@ -26,7 +26,7 @@
       </nut-animate>
     </div>
 
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
 
     <div class="ani-demo-div">
       <nut-animate type="shake" :loop="true">
@@ -72,10 +72,10 @@
   </div>
 </template>
 <script lang="ts">
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 
 const { createDemo, translate } = createComponent('animate');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 
 const initTranslate = () =>
   useTranslate({

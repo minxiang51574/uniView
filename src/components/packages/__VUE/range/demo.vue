@@ -1,34 +1,34 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('title') }}</h2>
+    <h2>{{ translate('title') }}</h2>
     <nut-cell class="cell">
       <nut-range v-model="value1" @change="onChange"></nut-range>
     </nut-cell>
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title1') }}</h2>
     <nut-cell class="cell">
       <nut-range range v-model="value2" @change="onChange"></nut-range>
     </nut-cell>
-    <h2 class="h2">{{ translate('title2') }}</h2>
+    <h2>{{ translate('title2') }}</h2>
     <nut-cell class="cell">
       <nut-range v-model="value3" :max="10" :min="-10" @change="onChange"></nut-range>
     </nut-cell>
-    <h2 class="h2">{{ translate('title3') }}</h2>
+    <h2>{{ translate('title3') }}</h2>
     <nut-cell class="cell">
       <nut-range v-model="value4" :step="5" @change="onChange"></nut-range>
     </nut-cell>
-    <h2 class="h2">{{ translate('title4') }}</h2>
+    <h2>{{ translate('title4') }}</h2>
     <nut-cell class="cell">
       <nut-range hidden-range v-model="value5" @change="onChange"></nut-range>
     </nut-cell>
-    <h2 class="h2">{{ translate('title5') }}</h2>
+    <h2>{{ translate('title5') }}</h2>
     <nut-cell class="cell">
       <nut-range hidden-tag v-model="value6" @change="onChange"></nut-range>
     </nut-cell>
-    <h2 class="h2">{{ translate('title6') }}</h2>
+    <h2>{{ translate('title6') }}</h2>
     <nut-cell class="cell">
       <nut-range disabled v-model="value7"></nut-range>
     </nut-cell>
-    <h2 class="h2">{{ translate('title7') }}</h2>
+    <h2>{{ translate('title7') }}</h2>
     <nut-cell class="cell">
       <nut-range
         v-model="value8"
@@ -38,7 +38,7 @@
         active-color="linear-gradient(315deg, rgba(73,143,242,1) 0%,rgba(73,101,242,1) 100%)"
       ></nut-range>
     </nut-cell>
-    <h2 class="h2">{{ translate('title8') }}</h2>
+    <h2>{{ translate('title8') }}</h2>
     <nut-cell class="cell">
       <nut-range v-model="value9" @change="onChange">
         <template #button>
@@ -47,16 +47,16 @@
       </nut-range>
     </nut-cell>
 
-    <h2 class="h2">{{ translate('title9') }}</h2>
+    <h2>{{ translate('title9') }}</h2>
     <nut-cell class="vertical_div">
-      <view class="div vertical_div">
+      <view class="div">
         <nut-range v-model="value10" @change="onChange" :vertical="true"></nut-range>
       </view>
-      <view style="margin-left:100rpx;" class="div vertical_div">
+      <view class="div">
         <nut-range range v-model="value11" @change="onChange" :vertical="true"></nut-range>
       </view>
     </nut-cell>
-    <h2 class="h2">{{ translate('title10') }}</h2>
+    <h2>{{ translate('title10') }}</h2>
     <nut-cell class="cell">
       <nut-range v-model="value12" @change="onChange" :marks="marks" :hiddenRange="true"></nut-range>
     </nut-cell>
@@ -65,10 +65,10 @@
     </nut-cell>
 
     <nut-cell class="vertical_div">
-      <view class="div vertical_div">
+      <view class="div">
         <nut-range v-model="value14" @change="onChange" :vertical="true" :marks="marks" :hiddenRange="true"></nut-range>
       </view>
-      <view style="margin-left:100rpx;" class="div vertical_div">
+      <view class="div">
         <nut-range
           range
           v-model="value15"
@@ -84,10 +84,10 @@
 
 <script lang="ts">
 import { toRefs, reactive } from 'vue';
-import { createComponent } from '../../utils/create';
-import { Toast } from '../../nutui.js';
+import { createComponent } from '@/components/packages/utils/create';
+import { Toast } from '@/components/packages/nutui.vue';
 const { createDemo, translate } = createComponent('range');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 
 const initTranslate = () =>
   useTranslate({

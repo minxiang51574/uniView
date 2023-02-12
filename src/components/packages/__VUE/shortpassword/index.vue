@@ -1,7 +1,7 @@
 <template>
   <view>
     <nut-popup
-      :popStyle="{
+      :style="{
         padding: '32px 24px 28px 24px',
         borderRadius: '12px',
         textAlign: 'center'
@@ -11,7 +11,7 @@
       @click-close-icon="closeIcon"
       :close-on-click-overlay="closeOnClickOverlay"
       @click-overlay="close"
-      :isWrapTeleport="isWrapTeleport"
+      :teleportDisable="teleportDisable"
     >
       <view class="nut-shortpsd-title">{{ title || translate('title') }}</view>
       <view class="nut-shortpsd-subtitle">{{ desc || translate('desc') }}</view>
@@ -22,8 +22,6 @@
           class="nut-input-real"
           type="number"
           maxlength="6"
-          :focus="isFocus"
-          @blur="onBlur"
           :style="systemStyle()"
           v-model="realInput"
           @input="changeValue"
@@ -51,7 +49,7 @@
 </template>
 <script lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { create, translate } = createComponent('shortpassword');
 export default create({
   props: {
@@ -91,7 +89,7 @@ export default create({
       type: [String, Number], //4～6
       default: 6
     },
-    isWrapTeleport: {
+    teleportDisable: {
       type: Boolean,
       default: true
     }
@@ -102,14 +100,12 @@ export default create({
     const realpwd = ref();
     const comLen = computed(() => range(Number(props.length)));
     const show = ref(props.visible);
-    const isFocus = ref(false)
     // 方法
     function sureClick() {
       emit('ok', realInput.value);
     }
     function focus() {
-        isFocus.value = true
-      //realpwd.value.focus();
+      realpwd.value.focus();
     }
     watch(
       () => props.visible,
@@ -129,9 +125,8 @@ export default create({
       }
     );
     function changeValue(e: Event) {
-      //const input = e.target as HTMLInputElement;
-      console.log(e)
-      let val = e.detail.value
+      const input = e.target as HTMLInputElement;
+      let val = input.value;
       if (val.length > comLen.value) {
         val = val.slice(0, comLen.value);
         realInput.value = val;
@@ -157,16 +152,22 @@ export default create({
       emit('tips');
     }
     function systemStyle() {
+      let u = navigator.userAgent;
+      let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
+      let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+      if (isIOS) {
         return {
           paddingRight: '1200px'
         };
-    }
-    
-    function onBlur () {
-        isFocus.value = false
+      }
+      if (isAndroid) {
+        return {
+          opacity: 0,
+          zindex: 10
+        };
+      }
     }
     return {
-      onBlur,
       comLen,
       sureClick,
       realInput,
@@ -179,12 +180,11 @@ export default create({
       show,
       systemStyle,
       closeIcon,
-      translate,
-      isFocus
+      translate
     };
   }
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

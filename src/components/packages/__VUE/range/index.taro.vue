@@ -2,11 +2,13 @@
   <view :class="containerClasses">
     <view class="min" v-if="!hiddenRange">{{ +min }}</view>
     <view ref="root" :id="'root-' + refRandomId" :style="wrapperStyle" :class="classes" @click.stop="onClick">
-      <view class="nut-range-mark" v-if="marksList.length > 0">
-        <span v-for="marks in marksList" :key="marks" :class="markClassName(marks)" :style="marksStyle(marks)">
-          {{ marks }}
-          <span class="nut-range-tick" :style="tickStyle(marks)"></span>
-        </span>
+      <view class="nut-range-mark">
+        <template v-if="marksList.length > 0">
+          <span v-for="marks in marksList" :key="marks" :class="markClassName(marks)" :style="marksStyle(marks)">
+            {{ marks }}
+            <span class="nut-range-tick" :style="tickStyle(marks)"></span>
+          </span>
+        </template>
       </view>
       <view class="nut-range-bar" :style="barStyle">
         <template v-if="range">
@@ -78,9 +80,9 @@
 <script lang="ts">
 import Taro from '@tarojs/taro';
 import { ref, toRefs, computed, PropType, CSSProperties } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useTouch } from '../../utils/useTouch';
-import { useTaroRect } from '../../utils/useTaroRect';
+import { createComponent } from '@/components/packages/utils/create';
+import { useTouch } from '@/components/packages/utils/useTouch';
+import { useTaroRect } from '@/components/packages/utils/useTaroRect';
 const { componentName, create } = createComponent('range');
 
 export default create({
@@ -216,8 +218,8 @@ export default create({
     const markClassName = (mark: any) => {
       const classPrefix = 'nut-range-mark';
       const { modelValue, max, min } = props;
-      let lowerBound: any = Number(min);
-      let upperBound: any = Number(max);
+      let lowerBound = Number(min);
+      let upperBound: number | number[] = Number(max);
       if (props.range) {
         const [left, right] = modelValue as any;
         lowerBound = left;
@@ -231,7 +233,7 @@ export default create({
         [`${classPrefix}-text-active`]: isActive
       };
     };
-    const marksStyle = (mark: any) => {
+    const marksStyle = (mark: number) => {
       const { max, min, vertical } = props;
       let style: any = {
         left: `${((mark - Number(min)) / scope.value) * 100}%`
@@ -243,10 +245,10 @@ export default create({
       }
       return style;
     };
-    const tickStyle = (mark: any) => {
+    const tickStyle = (mark: number) => {
       const { modelValue, max, min } = props;
-      let lowerBound: any = Number(min);
-      let upperBound: any = Number(max);
+      let lowerBound = Number(min);
+      let upperBound = Number(max);
       if (props.range) {
         const [left, right] = modelValue as any;
         lowerBound = left;
@@ -291,19 +293,25 @@ export default create({
       }
     };
 
-    const onClick = async (event: MouseEvent) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const onClick = async (event: any) => {
       if (props.disabled) {
         return;
       }
-
       const { min, modelValue } = props;
       const rect = await useTaroRect(root, Taro);
-      let delta = (event as any).touches[0].clientX - rect.left;
+      let clientX, clientY;
+      if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
+        clientX = event.clientX;
+        clientY = event.clientY;
+      } else {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+      }
+      let delta = clientX - rect.left;
       let total = rect.width;
-      console.log(delta);
-      console.log(total);
       if (props.vertical) {
-        delta = (event as any).touches[0].clientY - rect.top;
+        delta = clientY - rect.top;
         total = rect.height;
       }
       const value = Number(min) + (delta / total) * scope.value;

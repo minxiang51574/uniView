@@ -9,7 +9,11 @@
     @change="changeHandler"
     :title="title"
     @confirm="confirm"
-    :isWrapTeleport="isWrapTeleport"
+    :teleportDisable="teleportDisable"
+    :threeDimensional="threeDimensional"
+    :swipeDuration="swipeDuration"
+    :safeAreaInsetBottom="safeAreaInsetBottom"
+    :destroyOnClose="destroyOnClose"
   >
     <template #top>
       <slot name="top"></slot>
@@ -21,14 +25,14 @@
 import { toRefs, watch, computed, reactive, onBeforeMount } from 'vue';
 import type { PropType } from 'vue';
 import nutPicker from '../picker/index.taro.vue';
-import { popupProps } from '../popup/index.vue';
-import { createComponent } from '../../utils/create';
-import { padZero } from './utils';
+import { popupProps } from '../popup/props';
+import { createComponent } from '@/components/packages/utils/create';
+import { padZero, isDate as isDateU } from '@/components/packages/utils/util';
 const { componentName, create } = createComponent('datepicker');
 
 const currentYear = new Date().getFullYear();
 function isDate(val: Date): val is Date {
-  return Object.prototype.toString.call(val) === '[object Date]' && !isNaN(val.getTime());
+  return isDateU(val) && !isNaN(val.getTime());
 }
 
 const zhCNType: {
@@ -86,6 +90,16 @@ export default create({
       type: Function as PropType<import('./type').Formatter>,
       default: null
     },
+    // 是否开启3D效果
+    threeDimensional: {
+      type: Boolean,
+      default: true
+    },
+    // 惯性滚动 时长
+    swipeDuration: {
+      type: [Number, String],
+      default: 1000
+    },
     filter: Function as PropType<import('./type').Filter>
   },
   emits: ['click', 'update:visible', 'change', 'confirm', 'update:moduleValue'],
@@ -137,7 +151,6 @@ export default create({
           }
         }
       }
-
       return {
         [`${type}Year`]: year,
         [`${type}Month`]: month,

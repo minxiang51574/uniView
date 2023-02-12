@@ -1,8 +1,8 @@
 <template>
   <view :class="classes" @click="handleClick" ref="root">
     <view v-if="!exceeded">{{ content }}</view>
-    <view v-if="exceeded && !expanded">
-      {{ ellipsis.leading
+    <view v-if="exceeded && !expanded"
+      >{{ ellipsis.leading
       }}<span class="nut-ellipsis-text" v-if="expandText" @click.stop="clickHandle(1)">{{ expandText }}</span
       >{{ ellipsis.tailing }}
     </view>
@@ -14,7 +14,7 @@
 </template>
 <script lang="ts">
 import { ref, reactive, toRefs, computed, onMounted, PropType, watch } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('ellipsis');
 export type Direction = 'start' | 'end' | 'middle';
 
@@ -48,6 +48,10 @@ export default create({
     symbol: {
       type: String,
       default: '...'
+    },
+    lineHeight: {
+      type: [Number, String],
+      default: '20'
     }
   },
   emits: ['click', 'change'],
@@ -73,9 +77,6 @@ export default create({
       () => props.content,
       (newV, oldVal) => {
         if (newV != oldVal) {
-          if (container) {
-            document.body.appendChild(container);
-          }
           createContainer();
         }
       }
@@ -105,7 +106,7 @@ export default create({
       container.style.whiteSpace = 'normal';
       container.style.webkitLineClamp = 'unset';
       container.style.display = 'block';
-      const lineHeight = pxToNumber(originStyle.lineHeight);
+      const lineHeight = pxToNumber(originStyle.lineHeight === 'normal' ? props.lineHeight : originStyle.lineHeight);
       maxHeight = Math.floor(
         lineHeight * (Number(props.rows) + 0.5) +
           pxToNumber(originStyle.paddingTop) +
@@ -114,7 +115,6 @@ export default create({
 
       container.innerText = props.content;
       document.body.appendChild(container);
-
       calcEllipse();
     };
 
@@ -122,6 +122,7 @@ export default create({
     const calcEllipse = () => {
       if (container.offsetHeight <= maxHeight) {
         state.exceeded = false;
+        document.body.removeChild(container);
       } else {
         state.exceeded = true;
         const end = props.content.length;
@@ -202,9 +203,9 @@ export default create({
       }
     };
 
-    const pxToNumber = (value: string | null) => {
+    const pxToNumber = (value: string | null | number) => {
       if (!value) return 0;
-      const match = value.match(/^\d*(\.\d*)?/);
+      const match = (value as string).match(/^\d*(\.\d*)?/);
       return match ? Number(match[0]) : 0;
     };
 
@@ -229,5 +230,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

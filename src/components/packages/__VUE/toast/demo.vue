@@ -1,17 +1,17 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-cell :title="translate('toastText')" is-link @click="textToast(translate('toastText'))"></nut-cell>
     <nut-cell :title="translate('toastTitle')" is-link @click="titleToast(translate('toastText'))"></nut-cell>
     <nut-cell :title="translate('toastSuccess')" is-link @click="successToast(translate('toastSuccess'))"></nut-cell>
     <nut-cell :title="translate('toastError')" is-link @click="errorToast(translate('toastError'))"></nut-cell>
     <nut-cell :title="translate('toastWarning')" is-link @click="warningToast(translate('toastWarning'))"></nut-cell>
     <nut-cell :title="translate('toastLoading')" is-link @click="loadingToast(translate('toastLoading'))"></nut-cell>
-    <h2 class="h2">{{ translate('toastAll') }}</h2>
+    <h2>{{ translate('toastAll') }}</h2>
     <nut-cell :title="translate('toastAll')" is-link @click="NoToast(translate('toastAll'))"></nut-cell>
-    <h2 class="h2">{{ translate('toastBottom') }}</h2>
+    <h2>{{ translate('toastBottom') }}</h2>
     <nut-cell :title="translate('toastBottom')" is-link @click="BottomToast(translate('toastBottom'))"></nut-cell>
-    <h2 class="h2">{{ translate('toastTransparent') }}</h2>
+    <h2>{{ translate('toastTransparent') }}</h2>
     <nut-cell
       :title="translate('toastTransparent')"
       is-link
@@ -21,10 +21,10 @@
 </template>
 
 <script lang="ts">
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('toast');
-import { Toast } from '../../nutui.vue';
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { Toast } from '@/components/packages/nutui.vue';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 import { onUnmounted } from 'vue';
 const initTranslate = () =>
   useTranslate({
@@ -89,6 +89,7 @@ export default createDemo({
 
     const BottomToast = (msg: string) => {
       Toast.text(msg, {
+        id: 'taset11',
         center: false,
         bottom: '10%'
       });

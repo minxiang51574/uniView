@@ -1,10 +1,10 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-cell>
       <nut-countdown :endTime="end" @on-end="onend"></nut-countdown>
     </nut-cell>
-    <h2 class="h2">{{ translate('format') }}</h2>
+    <h2>{{ translate('format') }}</h2>
     <nut-cell>
       <nut-countdown
         :endTime="end"
@@ -12,25 +12,25 @@
       />
     </nut-cell>
 
-    <h2 class="h2">{{ translate('millisecond') }}</h2>
+    <h2>{{ translate('millisecond') }}</h2>
 
     <nut-cell>
       <nut-countdown :endTime="end" millisecond format="HH:mm:ss:SS" />
     </nut-cell>
 
-    <h2 class="h2">{{ translate('serverTime') }}</h2>
+    <h2>{{ translate('serverTime') }}</h2>
 
     <nut-cell>
       <nut-countdown :startTime="serverTime" :endTime="end" />
     </nut-cell>
 
-    <h2 class="h2">{{ translate('async') }}</h2>
+    <h2>{{ translate('async') }}</h2>
 
     <nut-cell>
       <nut-countdown :endTime="asyncEnd" />
     </nut-cell>
 
-    <h2 class="h2">{{ translate('controlTime') }}</h2>
+    <h2>{{ translate('controlTime') }}</h2>
 
     <nut-cell>
       <nut-countdown :endTime="end" :paused="paused" @on-paused="onpaused" @on-restart="onrestart" />
@@ -39,7 +39,7 @@
       </div>
     </nut-cell>
 
-    <h2 class="h2">{{ translate('customStyle') }}</h2>
+    <h2>{{ translate('customStyle') }}</h2>
 
     <nut-cell>
       <span>
@@ -56,7 +56,7 @@
       </span>
     </nut-cell>
 
-    <h2 class="h2">{{ translate('handleControl') }}</h2>
+    <h2>{{ translate('handleControl') }}</h2>
     <nut-cell>
       <nut-countdown time="20000" ref="CountDown" :autoStart="false" format="ss:SS" />
     </nut-cell>
@@ -77,9 +77,9 @@
 
 <script lang="ts">
 import { toRefs, onMounted, ref, reactive } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('countdown');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

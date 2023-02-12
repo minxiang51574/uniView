@@ -1,6 +1,6 @@
 <template>
   <view class="demo">
-    <h2 class="h2">{{ translate('title') }}</h2>
+    <h2>{{ translate('title') }}</h2>
     <nut-row>
       <nut-badge :value="8">
         <nut-avatar icon="my" shape="square"></nut-avatar>
@@ -11,11 +11,14 @@
       <nut-badge value="NEW">
         <nut-avatar icon="my" shape="square"></nut-avatar>
       </nut-badge>
+      <nut-badge value="NEW" bubble>
+        <nut-avatar icon="my" shape="square"></nut-avatar>
+      </nut-badge>
       <nut-badge dot>
         <nut-avatar icon="my" shape="square"></nut-avatar>
       </nut-badge>
     </nut-row>
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title1') }}</h2>
     <nut-row>
       <nut-badge :value="200" :max="9">
         <nut-avatar icon="my" shape="square"></nut-avatar>
@@ -28,7 +31,7 @@
       </nut-badge>
     </nut-row>
 
-    <h2 class="h2">{{ translate('title2') }}</h2>
+    <h2>{{ translate('title2') }}</h2>
     <nut-row>
       <nut-badge :value="8" color="linear-gradient(315deg, rgba(73,143,242,1) 0%,rgba(73,101,242,1) 100%)">
         <nut-avatar icon="my" shape="square"></nut-avatar>
@@ -44,7 +47,7 @@
       </nut-badge>
     </nut-row>
 
-    <h2 class="h2">{{ translate('title3') }}</h2>
+    <h2>{{ translate('title3') }}</h2>
     <nut-row>
       <nut-badge>
         <template #icons>
@@ -66,7 +69,7 @@
       </nut-badge>
     </nut-row>
 
-    <h2 class="h2">{{ translate('title4') }}</h2>
+    <h2>{{ translate('title4') }}</h2>
     <nut-row>
       <nut-badge :value="8" top="5" right="5">
         <nut-avatar icon="my" shape="square"></nut-avatar>
@@ -79,7 +82,7 @@
       </nut-badge>
     </nut-row>
 
-    <h2 class="h2">{{ translate('title5') }}</h2>
+    <h2>{{ translate('title5') }}</h2>
     <nut-row>
       <nut-badge :value="8"> </nut-badge>
       <nut-badge :value="76"> </nut-badge>
@@ -89,9 +92,9 @@
 </template>
 
 <script lang="ts">
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('badge');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -121,7 +124,7 @@ export default createDemo({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .nut-badge {
   margin-right: 40px;
 }

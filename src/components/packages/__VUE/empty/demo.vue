@@ -1,11 +1,11 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <div class="show">
       <nut-empty :description="translate('noData')"></nut-empty>
     </div>
 
-    <h2 class="h2">{{ translate('imageType') }}</h2>
+    <h2>{{ translate('imageType') }}</h2>
     <div class="show">
       <nut-tabs v-model="tabValue">
         <nut-tabpane :title="translate('noContent')">
@@ -20,7 +20,7 @@
       </nut-tabs>
     </div>
 
-    <h2 class="h2">{{ translate('customImg') }}</h2>
+    <h2>{{ translate('customImg') }}</h2>
     <div class="show">
       <nut-empty :description="translate('description')">
         <template #image>
@@ -29,7 +29,7 @@
       </nut-empty>
     </div>
 
-    <h2 class="h2">{{ translate('bottomContent') }}</h2>
+    <h2>{{ translate('bottomContent') }}</h2>
     <div class="show">
       <nut-empty image="error" :description="translate('fail')">
         <div style="margin-top: 10px">
@@ -42,9 +42,9 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('empty');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

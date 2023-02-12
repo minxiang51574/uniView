@@ -1,3 +1,45 @@
+.nut-theme-dark {
+  .nut-address {
+    &__header {
+      color: $dark-color;
+
+      &__title {
+        color: $dark-color;
+      }
+    }
+
+    .custom-address {
+      .nut-address-region-tab {
+        color: $dark-color;
+      }
+      .region-con {
+        .region-group {
+          .region-item {
+            color: $dark-color;
+          }
+        }
+      }
+    }
+
+    .exist-address {
+      .exist-address-group {
+        .exist-ul {
+          .exist-item {
+            color: $dark-color;
+          }
+        }
+      }
+
+      .choose-other {
+        border-top: 1px solid $dark-background;
+      }
+    }
+    &-custom-buttom {
+      border-top: 1px solid $dark-background;
+    }
+  }
+}
+
 .nut-address {
   display: block;
   &__header {
@@ -13,28 +55,29 @@
     line-height: 20px;
     &__title {
       display: block;
-      color: #262626;
-      font-size: 18px;
+      color: $address-header-title-color;
+      font-size: $address-header-title-font-size;
     }
   }
 
   // 请选择
   .custom-address {
     display: block;
-    .region-tab {
+    .nut-address-region-tab {
       position: relative;
       margin-top: 32px;
       padding: 0 20px;
       display: flex;
-      font-size: 13px;
-      color: #1d1e1e;
+      font-size: $address-region-tab-font-size;
+      color: $address-region-tab-color;
 
       .tab-item {
+        position: relative;
         min-width: 2px;
         margin-right: 30px;
         display: block;
         &.active {
-          font-weight: bold;
+          font-weight: $address-region-tab-active-item-font-weight;
         }
 
         view {
@@ -52,6 +95,22 @@
           overflow: hidden;
           text-overflow: ellipsis;
         }
+
+        .region-tab-line-mini {
+          position: absolute;
+          bottom: -10px;
+          left: 0px;
+          display: inline-block;
+          margin-top: 5px;
+          width: 0;
+          height: 3px;
+          background: $address-region-tab-line;
+          transition: 0.2s all linear;
+
+          &.active {
+            width: 26px;
+          }
+        }
       }
 
       .region-tab-line {
@@ -64,6 +123,8 @@
         height: 3px;
         background: $address-region-tab-line;
         transition: 0.2s all linear;
+        border-radius: $address-region-tab-line-border-radius;
+        opacity: $address-region-tab-line-opacity;
       }
     }
 
@@ -79,9 +140,9 @@
         .region-item {
           display: flex;
           align-items: center;
-          margin-bottom: 20px;
-          font-size: $font-size-1;
-          color: #333;
+
+          font-size: $address-region-item-font-size;
+          color: $address-region-item-color;
           &.active {
             font-weight: bold;
           }
@@ -89,6 +150,10 @@
           .region-item-icon {
             margin-right: 6px;
             color: $address-icon-color !important;
+          }
+
+          > div {
+            margin: 10px 0;
           }
         }
       }
@@ -123,7 +188,7 @@
             font-weight: bold;
           }
           .exist-item-icon {
-            margin-right: 9px;
+            margin-right: $address-item-margin-right;
             color: $address-icon-color !important;
           }
           span {
@@ -169,5 +234,10 @@
       font-size: 15px;
       color: $white;
     }
+  }
+
+  &-select-icon {
+    margin-right: $address-item-margin-right;
+    color: $address-icon-color !important;
   }
 }

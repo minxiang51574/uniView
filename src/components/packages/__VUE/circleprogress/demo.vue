@@ -1,28 +1,28 @@
 <template>
   <div class="demo full">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <div class="demo__piece">
       <nut-circleprogress :progress="20"> </nut-circleprogress>
     </div>
-    <h2 class="h2">{{ translate('customWidth') }}</h2>
+    <h2>{{ translate('customWidth') }}</h2>
     <div class="demo__piece">
       <nut-circleprogress :progress="50" strokeWidth="10"> </nut-circleprogress>
     </div>
 
-    <h2 class="h2">{{ translate('Gradient') }}</h2>
+    <h2>{{ translate('Gradient') }}</h2>
     <div class="demo__piece">
       <nut-circleprogress :progress="50" color="red" />
       <nut-circleprogress :progress="100" :color="gradientColor" />
     </div>
-    <h2 class="h2">{{ translate('customSize') }}</h2>
+    <h2>{{ translate('customSize') }}</h2>
     <div class="demo__piece">
       <nut-circleprogress :progress="50" radius="60"></nut-circleprogress>
     </div>
-    <h2 class="h2">{{ translate('customContent') }}</h2>
+    <h2>{{ translate('customContent') }}</h2>
     <div class="demo__piece">
       <nut-circleprogress :progress="50" radius="60">{{ translate('custom') }}</nut-circleprogress>
     </div>
-    <h2 class="h2">{{ translate('dynamicChange') }}</h2>
+    <h2>{{ translate('dynamicChange') }}</h2>
     <div class="demo__piece">
       <nut-circleprogress :progress="percent"> </nut-circleprogress>
     </div>
@@ -34,9 +34,9 @@
 </template>
 <script lang="ts">
 import { ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('circleprogress');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -111,5 +111,12 @@ export default createDemo({
   justify-content: center;
   background: rgba(255, 255, 255, 1);
   padding: 10px 0;
+}
+.nut-theme-dark {
+  .demo__piece,
+  .demo__btn {
+    background: black;
+    border-top: none;
+  }
 }
 </style>

@@ -1,21 +1,7 @@
 <template>
   <view :class="classes">
-    <scroll-view
-      class="nut-elevator__list scrollview"
-      :scroll-top="scrollTop"
-      :scroll-y="true"
-      :scroll-with-animation="true"
-      :scroll-anchoring="true"
-      ref="listview"
-      :style="{ height: isNaN(+height) ? height : `${height}px` }"
-      @scroll="listViewScroll"
-    >
-      <view
-        :class="['nut-elevator__list__item', `elevator__item__${index}`]"
-        v-for="(item, index) in indexList"
-        :key="item[acceptKey]"
-        :ref="setListGroup"
-      >
+    <view class="nut-elevator__list" ref="listview" :style="{ height: isNaN(+height) ? height : `${height}px` }">
+      <view class="nut-elevator__list__item" v-for="item in indexList" :key="item[acceptKey]" :ref="setListGroup">
         <view class="nut-elevator__list__item__code">{{ item[acceptKey] }}</view>
         <view
           class="nut-elevator__list__item__name"
@@ -33,10 +19,10 @@
       <view class="nut-elevator__list__fixed" :style="fixedStyle" v-show="scrollY > 0" v-if="isSticky">
         <span class="fixed-title">{{ indexList[currentIndex][acceptKey] }}</span>
       </view>
-    </scroll-view>
-    <view class="nut-elevator__code--current" v-show="scrollStart" v-if="indexList.length > 0">
-      {{ indexList[codeIndex][acceptKey] }}
     </view>
+    <view class="nut-elevator__code--current" v-show="scrollStart" v-if="indexList.length">{{
+      indexList[codeIndex][acceptKey]
+    }}</view>
     <view class="nut-elevator__bars" @touchstart="touchStart" @touchmove.stop.prevent="touchMove" @touchend="touchEnd">
       <view class="nut-elevator__bars__inner">
         <view
@@ -53,9 +39,9 @@
   </view>
 </template>
 <script lang="ts">
-import { computed, reactive, toRefs, nextTick, ref, Ref, watch,getCurrentInstance } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useExpose } from '../../utils/useExpose/index';
+import { computed, reactive, toRefs, nextTick, ref, Ref, watch, onMounted } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
+import { useExpose } from '@/components/packages/utils/useExpose/index';
 const { componentName, create } = createComponent('elevator');
 interface ElevatorData {
   name: string;
@@ -91,11 +77,9 @@ export default create({
       default: 35
     }
   },
-  emits: ['click-item', 'click-index'],
-  setup(props: any, context: any) {
-      const { proxy } = getCurrentInstance()
-    const spaceHeight = 23;
-    const listview: Ref<HTMLElement> = ref() as Ref<HTMLElement>;
+  emits: ['click-item', 'click-index', 'change'],
+  setup(props, context) {
+    const listview: Ref<any> = ref(null);
     const state = reactive({
       anchorIndex: 0,
       codeIndex: 0,
@@ -107,8 +91,6 @@ export default create({
       },
       scrollStart: false,
       currentIndex: 0,
-      //query: Taro.createSelectorQuery(),
-      scrollTop: 0,
       currentData: {} as ElevatorData,
       currentKey: '',
       scrollY: 0,
@@ -133,11 +115,9 @@ export default create({
       return listview.value.clientHeight;
     });
 
-    const getData = (el: HTMLElement): string | void => {
-      if (!el.dataset.index) {
-        return '0';
-      }
-      return el.dataset.index as string;
+    const getData = (el: HTMLElement, name: string): string | void => {
+      const prefix = 'data-';
+      return el.getAttribute(prefix + name) as string;
     };
 
     const setListGroup = (el: HTMLLIElement) => {
@@ -149,15 +129,12 @@ export default create({
     };
 
     const calculateHeight = () => {
-      state.listHeight = [];
       let height = 0;
       state.listHeight.push(height);
       for (let i = 0; i < state.listGroup.length; i++) {
-        uni.createSelectorQuery().in(proxy).selectAll(`.elevator__item__${i}`).boundingClientRect()
-        .exec((res: any) => {
-          height += res[i][0].height;
-          state.listHeight.push(height);
-        });
+        let item = state.listGroup[i];
+        height += Math.floor(item.clientHeight);
+        state.listHeight.push(height);
       }
     };
 
@@ -168,12 +145,12 @@ export default create({
       if (index < 0) index = 0;
       if (index > state.listHeight.length - 2) index = state.listHeight.length - 2;
       state.codeIndex = index;
-      state.scrollTop = state.listHeight[index];
+      listview.value.scrollTo(0, state.listHeight[index]);
     };
 
     const touchStart = (e: TouchEvent) => {
       state.scrollStart = true;
-      let index = getData(e.target as HTMLElement);
+      let index = getData(e.target as HTMLElement, 'index');
       let firstTouch = e.touches[0];
       state.touchState.y1 = firstTouch.pageY;
       state.anchorIndex = +index;
@@ -184,9 +161,9 @@ export default create({
     const touchMove = (e: TouchEvent) => {
       let firstTouch = e.touches[0];
       state.touchState.y2 = firstTouch.pageY;
-      let delta = ((state.touchState.y2 - state.touchState.y1) / spaceHeight) | 0;
+      let delta = ((state.touchState.y2 - state.touchState.y1) / props.spaceHeight) | 0;
       state.codeIndex = state.anchorIndex + delta;
-      scrollTo(state.currentIndex);
+      scrollTo(state.codeIndex);
     };
 
     const touchEnd = () => {
@@ -207,7 +184,7 @@ export default create({
       let target = e.target as Element;
       let scrollTop = target.scrollTop;
       const listHeight = state.listHeight;
-      state.scrollY = Math.floor(scrollTop);
+      state.scrollY = scrollTop;
       for (let i = 0; i < listHeight.length - 1; i++) {
         let height1 = listHeight[i];
         let height2 = listHeight[i + 1];
@@ -221,6 +198,10 @@ export default create({
       state.currentIndex = listHeight.length - 2;
     };
 
+    onMounted(() => {
+      listview.value.addEventListener('scroll', listViewScroll);
+    });
+
     useExpose({
       scrollTo
     });
@@ -228,6 +209,7 @@ export default create({
     watch(
       () => state.listGroup.length,
       () => {
+        state.listHeight = [];
         nextTick(calculateHeight);
       }
     );
@@ -245,6 +227,13 @@ export default create({
       }
     );
 
+    watch(
+      () => state.currentIndex,
+      (newVal: number) => {
+        context.emit('change', newVal);
+      }
+    );
+
     return {
       classes,
       ...toRefs(state),
@@ -256,13 +245,11 @@ export default create({
       touchMove,
       touchEnd,
       handleClickItem,
-      handleClickIndex,
-      listViewScroll
+      handleClickIndex
     };
   }
 });
 </script>
-
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

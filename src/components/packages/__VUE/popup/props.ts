@@ -1,66 +1,82 @@
-import overlayProps from './../overlay/props';
-import {
-  PropType
-} from 'vue';
+import { PropType, CSSProperties } from 'vue';
 export const popupProps = {
-  ...overlayProps,
+  visible: {
+    type: Boolean,
+    default: false
+  },
+  zIndex: {
+    type: [Number, String],
+    default: 2000
+  },
+  duration: {
+    type: [Number, String],
+    default: 0.3
+  },
+  lockScroll: {
+    type: Boolean,
+    default: false
+  },
+  closeOnClickOverlay: {
+    type: Boolean,
+    default: true
+  },
   position: {
     type: String,
     default: 'center'
   },
-
-  transition: String,
-
-  popStyle: {
-    type: Object as PropType<CSSProperties>
+  transition: {
+    type: String,
+    default: ''
   },
-
+  style: {
+    type: Object as PropType<CSSProperties>,
+    default: {}
+  },
   popClass: {
     type: String,
     default: ''
   },
-
   closeable: {
     type: Boolean,
     default: false
   },
-
   closeIconPosition: {
     type: String,
     default: 'top-right'
   },
-
   closeIcon: {
     type: String,
     default: 'close'
   },
-
   destroyOnClose: {
     type: Boolean,
     default: true
   },
-
   teleport: {
-    type: [String],
+    type: [String, Element],
     default: 'body'
   },
-
   overlay: {
     type: Boolean,
     default: true
   },
-
   round: {
     type: Boolean,
     default: false
   },
-
-  isWrapTeleport: {
+  teleportDisable: {
     type: Boolean,
-    default: true
+    default: false
   },
   safeAreaInsetBottom: {
     type: Boolean,
     default: false
+  },
+  overlayClass: {
+    type: String,
+    default: ''
+  },
+  overlayStyle: {
+    type: Object as PropType<CSSProperties>
   }
 };

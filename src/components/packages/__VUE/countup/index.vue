@@ -11,15 +11,15 @@
             :style="{
               width: numWidth + 'px',
               height: numHeight + 'px',
-              background: 'url(' + customBgImg + ') ',
-              backgroundPosition: '0 ' + prizeY[index] + 'px'
+              backgroundImage: 'url(' + customBgImg + ')',
+              backgroundPositionY: prizeY[index] + 'px'
             }"
           ></view>
           <!-- backgroundPositionY: prizeLevelTrun + 'px', -->
         </view>
       </template>
       <template v-else>
-        <view class="run-number-img" :style="{ height: numHeight + 'px' }">
+        <view ref="runNumberImg" class="run-number-img" :style="{ height: numHeight + 'px' }">
           <view
             class="run-number-img-li"
             v-for="(val, index) of num_total_len"
@@ -36,8 +36,10 @@
                     : index) +
                 'px',
               backgroundImage: 'url(' + customBgImg + ')',
-              backgroundPosition:
-                '0 ' + -(String(relNum)[index] * numHeight + customSpacNum * String(relNum)[index]) + 'px',
+              backgroundPositionX: '0',
+              backgroundPositionY: -(String(relNum)[index] * numHeight + customSpacNum * String(relNum)[index]) + 'px',
+              // backgroundPosition:
+              //   '0 ' + -(String(relNum)[index] * numHeight + customSpacNum * String(relNum)[index]) + 'px',
               transition: 'all linear ' + during / 10 + 'ms'
             }"
           ></view>
@@ -66,12 +68,11 @@
         }"
       >
         <view
-          ref="numberItem"
+          :ref="setRef"
           class="numberItem"
           v-for="(val, index) of num_total_len"
           :key="val"
           :style="{
-            all: turnNumber(index),
             top: topNumber(index),
             left: numWidth * (index > num_total_len - pointNum - 1 ? index * 1.1 : index) + 'px'
           }"
@@ -111,13 +112,13 @@
 </template>
 <script lang="ts">
 import { reactive, toRefs, ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useExtend } from '../../utils/useRelation/useRelation';
+import { createComponent } from '@/components/packages/utils/create';
+import { useExtend } from '@/components/packages/utils/useRelation/useRelation';
 const { componentName, create } = createComponent('countup');
 
 interface IData {
   valFlag: boolean;
-  current: number;
+  current: number | string;
   sortFlag: string;
   initDigit1: number;
   initDigit2: number;
@@ -208,7 +209,7 @@ export default create({
       type: Number,
       default: 0
     },
-    machineTrunMore: {
+    machineTurnMore: {
       type: Number,
       default: 0
     }
@@ -216,6 +217,11 @@ export default create({
   components: {},
   emits: ['click', 'scroll-end'],
   setup(props, { emit }) {
+    const runNumberImg = ref(null);
+    const numberItemRef = ref<any>([]);
+    const setRef = (el: Element) => {
+      numberItemRef.value.push(el);
+    };
     const data: IData = reactive({
       valFlag: false,
       current: 0,
@@ -347,22 +353,24 @@ export default create({
           //减少
           if (data.current <= endNum || data.current <= speed) {
             //数字减小，有可能导致current小于speed
-            data.current = Number(endNum.toFixed(toFixed));
+            data.current = endNum.toFixed(toFixed);
             clearInterval(countTimer);
             emit('scroll-end');
             data.valFlag = false;
           } else {
-            data.current = Number((parseFloat(String(data.current)) - parseFloat(String(speed))).toFixed(toFixed));
+            let num = parseFloat(String(data.current)) - parseFloat(String(speed));
+            data.current = num.toFixed(toFixed);
           }
         } else {
           //增加
           if (data.current >= endNum) {
-            data.current = Number(endNum.toFixed(toFixed));
+            data.current = endNum.toFixed(toFixed);
             clearInterval(countTimer);
             emit('scroll-end');
             data.valFlag = false;
           } else {
-            data.current = Number((parseFloat(String(data.current)) + parseFloat(String(speed))).toFixed(toFixed));
+            let num = parseFloat(String(data.current)) + parseFloat(String(speed));
+            data.current = num.toFixed(toFixed);
           }
         }
       }, props.during);
@@ -454,8 +462,8 @@ export default create({
           if (data.sortFlag == 'equal') {
             return false;
           }
-          let refsDom: HTMLCollectionOf<Element> = document.getElementsByClassName('numberItem');
-          let element = refsDom[data.num_total_len - 1];
+          // let refsDom: any = document.getElementsByClassName('numberItem');
+          let element = numberItemRef.value[data.num_total_len - 1];
           runTurn(element);
         });
       } else {
@@ -484,28 +492,29 @@ export default create({
     };
 
     const runStep = (el: any) => {
-      // let currentTurn = el.getAttribute('turn-number');
-      console.log(el,'el')
-      let currentTurn = el.style.all;
+      let currentTurn = el.getAttribute('turn-number');
+      // try {
+      //   currentTurn = el.getAttribute('turn-number');
+      // } catch (e) {
+      //   let _top = el.style.top.replace(/\-|\%/g, '');
+      //   let n = 10 - Number(_top) / 100;
+      //   currentTurn = n;
+      // }
       let turningNum: number;
       if (data.sortFlag == 'add') {
         turningNum = parseInt(String(currentTurn)) + 1;
       } else {
         turningNum = parseInt(String(currentTurn)) - 1 >= 0 ? parseInt(String(currentTurn)) - 1 : 9;
       }
-      // el.setAttribute('turn-number', String(turningNum));
-      el.style.all = String(turningNum);
-
-      if (el.style.transition == 'none' || turningNum == 1 || !el.style.transition) {
+      el.setAttribute('turn-number', String(turningNum));
+      if (el.style.transition == 'none 0s ease 0s' || turningNum == 1 || !el.style.transition) {
         el.style.transition = `all linear ${props.during}ms`;
       }
-
       if (turningNum == 10 || (data.sortFlag == 'reduce' && turningNum == 0)) {
         var timeOut: any = null;
         // el.style.top = `-${turningNum * 100}%`;
         el.style.top = `-${data.sortFlag == 'add' ? turningNum * 100 : (10 - turningNum) * 100}%`;
-        // el.setAttribute('turn-number', '0');
-        el.style.all = '0';
+        el.setAttribute('turn-number', '0');
         timeOut = setTimeout(() => {
           timeOut && clearTimeout(timeOut);
           el.style.transition = 'none';
@@ -533,11 +542,11 @@ export default create({
         m = Math.pow(10, data.pointNum);
       }
       nextTick(() => {
-        let f = document.getElementsByClassName('run-number-img')[0];
+        // var f = document.getElementsByClassName('run-number-img')[0];
         // setTimeout(() => {
         //   data.relNum = calculation(data.relNum, m * props.speed, '+');
         // }, props.during);
-        f.addEventListener('webkitTransitionEnd', () => {
+        (runNumberImg.value as any).addEventListener('webkitTransitionEnd', () => {
           emit('scroll-end');
           data.valFlag = false;
           // setTimeout(() => {
@@ -558,15 +567,14 @@ export default create({
     };
     // 抽奖
     const machineLuck = () => {
-      const machineTrunMoreNum = props.machineTrunMore < 0 ? 0 : props.machineTrunMore;
+      const machineTurnMoreNum = props.machineTurnMore < 0 ? 0 : props.machineTurnMore;
       let distance = props.numHeight * props.machinePrizeNum; // 所有奖品的高度，雪碧图的高度
       if (data.prizeLevelTrun < 0) {
         generateRandom();
       }
-
       for (let i = 0; i < props.machineNum; i++) {
         setTimeout(() => {
-          let turn = distance * (i + 1 + parseFloat(String(machineTrunMoreNum)));
+          let turn = distance * (i + 1 + parseFloat(String(machineTurnMoreNum)));
           if (data.prizeYPrev.length != 0) {
             // this.machineTransition = 'none';
             // console.log(this.prizeYPrev[i]-(this.numHeight * this.machinePrizeNum));
@@ -652,13 +660,14 @@ export default create({
     return {
       ...toRefs(data),
       ...toRefs(reactive(props)),
+      runNumberImg,
+      setRef,
       topNumber,
       turnNumber
     };
   }
 });
 </script>
-
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

@@ -462,7 +462,7 @@ app.use(Table);
 
 ```html
 <template>
-  <h2 class="h2">支持异步渲染(5s之后看效果)</h2>
+  <h2>支持异步渲染(5s之后看效果)</h2>
   <nut-table :columns="columns" :data="data"></nut-table>
 </template>
 <script lang="ts">

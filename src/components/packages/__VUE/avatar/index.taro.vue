@@ -2,7 +2,7 @@
   <view
     :style="!showMax ? styles : maxStyles"
     :class="classes"
-    @click="activeAvatar(e)"
+    @click="activeAvatar"
     ref="avatarRef"
     v-if="showMax || !avatarGroup?.props?.maxCount || index <= avatarGroup?.props?.maxCount"
   >
@@ -11,7 +11,7 @@
         <img :src="url" :alt="alt" @error="onError" />
       </template>
       <template v-else-if="icon">
-        <nut-icon class="icon" :name="iconStyles"></nut-icon>
+        <nut-icon v-bind="$attrs" class="icon" :name="iconStyles"></nut-icon>
       </template>
       <view class="text" v-if="isShowText">
         <slot></slot>
@@ -31,7 +31,7 @@
 </template>
 <script lang="ts">
 import { toRefs, onMounted, computed, inject, reactive, ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('avatar');
 export default create({
   props: {
@@ -127,8 +127,10 @@ export default create({
       for (let i = 0; i < children.length; i++) {
         children[i].setAttribute('data-index', i + 1);
       }
-      // state.index = avatarRef?.value?.dataset?.index;
-      state.index = avatarRef?.value?.props['data-index'];
+
+      if (avatarRef?.value?.props) {
+        state.index = avatarRef?.value?.props['data-index'];
+      }
       if (state.index == state.maxIndex && state.index != avatarGroup?.props?.maxCount) {
         state.showMax = true;
       }

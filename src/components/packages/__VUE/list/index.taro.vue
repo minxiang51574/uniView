@@ -1,8 +1,8 @@
 <template>
-  <scroll-view
+  <Nut-Scroll-View
     :class="classes"
     :scroll-y="true"
-    :style="{ height: containerHeight + 'px' }"
+    :style="{ height: `${getContainerHeight}px` }"
     scroll-top="0"
     @scroll="handleScrollEvent"
     ref="list"
@@ -13,18 +13,23 @@
         <slot :item="item" :index="index"></slot>
       </div>
     </div>
-  </scroll-view>
+  </Nut-Scroll-View>
 </template>
 <script lang="ts">
 import { reactive, toRefs, computed, ref, Ref, watch } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
+import NutScrollView from '../scrollView/index.taro.vue';
 import Taro from '@tarojs/taro';
 const { componentName, create } = createComponent('list');
+const clientHeight = Taro.getSystemInfoSync().windowHeight || 667;
 export default create({
+  components: {
+    NutScrollView
+  },
   props: {
     height: {
       type: [Number],
-      default: 0
+      default: 50
     },
     listData: {
       type: Array,
@@ -34,7 +39,7 @@ export default create({
     },
     containerHeight: {
       type: [Number],
-      default: Taro.getSystemInfoSync().windowHeight || 667
+      default: clientHeight
     }
   },
   emits: ['scroll', 'scroll-bottom'],
@@ -47,8 +52,12 @@ export default create({
       list: props.listData.slice()
     });
 
+    const getContainerHeight = computed(() => {
+      return Math.min(props.containerHeight, clientHeight);
+    });
+
     const visibleCount = computed(() => {
-      return Math.ceil(props.containerHeight / props.height);
+      return Math.ceil(getContainerHeight.value / props.height);
     });
 
     const end = computed(() => {
@@ -75,7 +84,7 @@ export default create({
     });
 
     const handleScrollEvent = async (e: any) => {
-      const scrollTop = e.detail ? e.detail.scrollTop : e.target.scrollTop;
+      const scrollTop = Math.max(e.detail ? e.detail.scrollTop : e.target.scrollTop, 0.1);
       state.start = Math.floor(scrollTop / props.height);
       if (end.value > state.list.length) {
         emit('scroll');
@@ -98,6 +107,7 @@ export default create({
       listHeight,
       visibleData,
       classes,
+      getContainerHeight,
       handleScrollEvent
     };
   }

@@ -2,7 +2,7 @@
 
 ### 介绍
     
-    基于Canvas的签名组件。
+基于Canvas的签名组件。默认竖屏模式使用，如使用横屏模式，请开发者自行设置旋转角度或者宽高。
     
 ### 安装
 
@@ -17,7 +17,6 @@ app.use(Signature);
 ```
     
     
-## 代码演示
     
 ### 基础用法
 
@@ -105,9 +104,12 @@ export default {
 | type | 图片格式 | String | 'png'
 | un-support-tpl | 不支持Canvas情况下的展示文案 | String | '对不起，当前浏览器不支持Canvas，无法使用本控件！'
 
-## Event
+### Events
 
 | 字段 | 说明 | 回调参数 
 |----- | ----- | ----- 
-| confirm | 点击确认按钮触发事件回调函数 | canvas和签名图片展示的 data URI
+| start `v3.2.0` | 签名开始回调函数（指某次笔画的开始） | 无
+| signing `v3.2.0` | 正在签名的回调函数（指某次笔画进行中） | event
+| end `v3.2.0` | 签名结束回调函数（指某次笔画的结束）| 无
+| confirm | 点击确认按钮触发事件回调函数 | canvas和签名图片展示的 data URI，<br>如未绘制，则返回提示信息和空 data URI
 | clear | 点击重签按钮触发事件回调函数 | 无

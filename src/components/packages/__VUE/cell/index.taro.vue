@@ -2,8 +2,8 @@
 
 <script lang="ts">
 import { computed } from 'vue';
-import { createComponent } from '@/packages/utils/create';
-import { pxCheck } from '@/packages/utils/pxCheck';
+import { createComponent } from '@/components/packages/utils/create';
+import { pxCheck } from '@/components/packages/utils/pxCheck';
 const { componentName, create } = createComponent('cell');
 
 export default create({
@@ -18,6 +18,7 @@ export default create({
     roundRadius: { type: [String, Number], default: '' },
     url: { type: String, default: '' },
     icon: { type: String, default: '' },
+    rightIcon: { type: String, default: 'right' },
     center: { type: Boolean, default: false },
     size: { type: String, default: '' } // large
   },

@@ -111,8 +111,8 @@
 </template>
 <script lang="ts">
 import { reactive, toRefs, ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useExtend } from '../../utils/useRelation/useRelation';
+import { createComponent } from '@/components/packages/utils/create';
+import { useExtend } from '@/components/packages/utils/useRelation/useRelation';
 const { componentName, create } = createComponent('countup');
 
 interface IData {

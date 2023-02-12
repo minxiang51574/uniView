@@ -1,32 +1,17 @@
 <template>
-  <view>
-    <scroll-view
-      :scroll-y="true"
-      :style="{ height }"
-      @scroll="scroll"
-      :scroll-top="scrollTop"
-      scroll-with-animation="true"
-    >
-      <slot name="content"></slot>
-    </scroll-view>
-    <view :class="classes" :style="style" @click.stop="click">
-      <slot name="icon">
-        <nut-icon size="19px" class="nut-backtop-main" name="top"></nut-icon>
-      </slot>
-    </view>
-  </view>
+  <div :class="classes" :style="style" @click.stop="click">
+    <slot>
+      <nut-icon size="19px" class="nut-backtop-main" name="top"></nut-icon>
+    </slot>
+  </div>
 </template>
 
 <script lang="ts">
-import { reactive, computed, toRefs } from 'vue';
-import { createComponent } from '../../utils/create';
+import { computed, onMounted, onUnmounted, onActivated, onDeactivated, reactive } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('backtop');
 export default create({
   props: {
-    height: {
-      type: String,
-      default: '100vh'
-    },
     bottom: {
       type: Number,
       default: 20
@@ -35,21 +20,38 @@ export default create({
       type: Number,
       default: 10
     },
+    elId: {
+      type: [String],
+      default: 'body'
+    },
+
+    distance: {
+      type: Number,
+      default: 200
+    },
     zIndex: {
       type: Number,
       default: 10
     },
-    distance: {
+    isAnimation: {
+      type: Boolean,
+      default: true
+    },
+    duration: {
       type: Number,
-      default: 200
+      default: 1000
     }
   },
   emits: ['click'],
   setup(props, { emit }) {
     const state = reactive({
       backTop: false,
-      scrollTop: 1
+      scrollTop: 0,
+      scrollEl: window as HTMLElement | Window,
+      startTime: 0,
+      keepAlive: false
     });
+    let scrollEl: Window | HTMLElement = window;
     const classes = computed(() => {
       const prefixCls = componentName;
       return {
@@ -65,27 +67,106 @@ export default create({
       };
     });
 
-    const scroll = (e) => {
-      state.scrollTop = 2;
-      state.backTop = e.detail.scrollTop >= props.distance;
-    };
+    function scrollListener() {
+      if (state.scrollEl instanceof Window) {
+        state.scrollTop = state.scrollEl.pageYOffset;
+      } else {
+        state.scrollTop = state.scrollEl.scrollTop;
+      }
+      state.backTop = state.scrollTop >= props.distance;
+    }
 
-    const click = (e: MouseEvent) => {
-      state.scrollTop = 1;
+    function scroll(y = 0) {
+      if (state.scrollEl instanceof Window) {
+        window.scrollTo(0, y);
+      } else {
+        state.scrollEl.scrollTop = y;
+      }
+    }
+
+    function scrollAnimation() {
+      let cid = requestAniFrame()(function fn() {
+        var t = props.duration - Math.max(0, state.startTime - +new Date() + props.duration);
+        var y = (t * -state.scrollTop) / props.duration + state.scrollTop;
+        scroll(y);
+        cid = requestAniFrame()(fn);
+        if (t == props.duration || y == 0) {
+          window.cancelAnimationFrame(cid);
+        }
+      });
+    }
+
+    function addEventListener() {
+      state.scrollEl.addEventListener('scroll', scrollListener, false);
+      state.scrollEl.addEventListener('resize', scrollListener, false);
+    }
+
+    function removeEventListener() {
+      state.scrollEl.removeEventListener('scroll', scrollListener, false);
+      state.scrollEl.removeEventListener('resize', scrollListener, false);
+    }
+
+    function initCancelAniFrame() {
+      window.cancelAnimationFrame = window.webkitCancelAnimationFrame;
+    }
+
+    function requestAniFrame() {
+      return (
+        window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        function (callback) {
+          window.setTimeout(callback, 1000 / 60);
+        }
+      );
+    }
+
+    function click(e: MouseEvent) {
+      state.startTime = +new Date();
+      props.isAnimation && props.duration > 0 ? scrollAnimation() : scroll();
       emit('click', e);
-    };
+    }
+
+    function init() {
+      if (props.elId && document.getElementById(props.elId)) {
+        state.scrollEl = document.getElementById(props.elId) as HTMLElement | Window;
+      }
+
+      addEventListener();
+      initCancelAniFrame();
+    }
+
+    onMounted(() => {
+      if (props.distance == 0) {
+        state.backTop = true;
+      }
+      init();
+    });
+
+    onUnmounted(() => {
+      removeEventListener();
+    });
+
+    onActivated(() => {
+      if (state.keepAlive) {
+        state.keepAlive = false;
+        init();
+      }
+    });
+
+    onDeactivated(() => {
+      state.keepAlive = true;
+      removeEventListener();
+    });
 
     return {
-      ...toRefs(state),
+      state,
       classes,
       style,
-      scroll,
       click
     };
   }
 });
 </script>
-
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

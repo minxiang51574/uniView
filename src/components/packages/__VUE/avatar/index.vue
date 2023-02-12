@@ -2,7 +2,7 @@
   <view
     :style="!showMax ? styles : maxStyles"
     :class="classes"
-    @click="activeAvatar(e)"
+    @click="activeAvatar"
     ref="avatarRef"
     v-if="showMax || !avatarGroup?.props?.maxCount || index <= avatarGroup?.props?.maxCount"
   >
@@ -11,7 +11,7 @@
         <img :src="url" :alt="alt" @error="onError" />
       </template>
       <template v-else-if="icon">
-        <nut-icon popClass="icon" :name="iconStyles"></nut-icon>
+        <nut-icon v-bind="$attrs" class="icon" :name="iconStyles"></nut-icon>
       </template>
       <view class="text" v-if="isShowText">
         <slot></slot>
@@ -31,7 +31,7 @@
 </template>
 <script lang="ts">
 import { toRefs, onMounted, computed, inject, reactive, ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('avatar');
 export default create({
   props: {
@@ -65,9 +65,6 @@ export default create({
     }
   },
   emits: ['active-avatar', 'onError'],
-  options: {
-      virtualHost: true
-  },
   setup(props, { emit, slots }) {
     const { size, shape, bgColor, color, icon } = toRefs(props);
     const sizeValue = ['large', 'normal', 'small'];
@@ -140,11 +137,11 @@ export default create({
       }
     };
 
-    const activeAvatar = (event: any) => {
+    const activeAvatar = (event: MouseEvent) => {
       emit('active-avatar', event);
     };
 
-    const onError = (event: any) => {
+    const onError = (event: MouseEvent) => {
       emit('onError', event);
     };
 
@@ -165,5 +162,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

@@ -45,7 +45,7 @@ export default {
 ```
 :::
 
-## Notify Type
+### Notify Type
 
 :::demo
 ```html
@@ -85,7 +85,7 @@ export default {
 </script>
 ```
 :::
-## Custom
+### Custom
 :::demo
 ```html
 <template>
@@ -94,6 +94,9 @@ export default {
   </nut-cell-group>
     <nut-cell-group title="Custom Duration">
       <nut-cell is-Link @click="timeNotify('Custom Duration')">Custom Duration</nut-cell>
+  </nut-cell-group>
+  <nut-cell-group title="Custom Postion">
+    <nut-cell is-Link @click="positionNotify('Custom Postion')">Custom Postion</nut-cell>
   </nut-cell-group>
 </template>
 <script lang="ts">
@@ -107,17 +110,54 @@ export default {
     const timeNotify = (msg: string) => {
       Notify.text(msg, { duration: 10000 });
     };
+    const positionNotify = (msg: string) => {
+      Notify.text(msg, { position: 'bottom' });
+    };
     return {
       cusBgNotify,
-      timeNotify
+      timeNotify,
+      positionNotify
     };
   }
 }
 </script>
 ```
 :::
+
+
+
+### Template use
+:::demo
+```html
+<template>
+  <nut-cell-group title="Template use">
+    <nut-cell is-Link @click="showNotify">Template use</nut-cell>
+    <nut-notify v-model:visible="show" :duration="2000">
+      <span>Content</span>
+    </nut-notify>
+  </nut-cell-group>
+</template>
+<script lang="ts">
+import { ref } from 'vue';
+import { Notify } from '@nutui/nutui';
+export default {
+  setup() {
+    const show = ref(false);
+    const showNotify = () => {
+      show.value = true;
+    };
+    return {
+      show,
+      showNotify
+    };
+  }
+}
+</script>
+```
+:::
+   
     
-## API
+### API
     
 ### Props
     
@@ -125,7 +165,7 @@ export default {
 |------------|----------------------------------------------------------|---------------|----------|
 | type       | Display Type（primary,success ,danger,warning）      | String        | 'danger' |
 | message    | Display copy, support line feed through \n              | Boolean       | false    |
-| duration   | Display duration (ms),value is 0 ,notify not disappear | String        | 3000     |
+| duration   | Display duration (ms),value is 0 ,notify not disappear | Number        | 3000     |
 | color      | Font Color                                               | String        | -        |
 | background | Background color                                         | String        | -        |
 | class-name | Custom class name                                        | String/Number | 1        |

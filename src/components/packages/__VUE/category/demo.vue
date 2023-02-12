@@ -1,16 +1,15 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title1') }}</h2>
     <nut-category :category="category" @change="change">
       <nut-categorypane :categoryChild="categoryChild" @onChange="onChange"> </nut-categorypane>
     </nut-category>
-
-    <h2 class="h2">{{ translate('title2') }}</h2>
+    <h2>{{ translate('title2') }}</h2>
     <nut-category :category="category" @change="changeText">
       <nut-categorypane type="text" :categoryChild="categoryChild" @onChange="onChange"> </nut-categorypane
     ></nut-category>
 
-    <h2 class="h2">{{ translate('title3') }}</h2>
+    <h2>{{ translate('title3') }}</h2>
     <nut-category
       ><nut-categorypane type="custom" :customCategory="customCategory" @onChange="changeCustom"> </nut-categorypane
     ></nut-category>
@@ -18,11 +17,10 @@
 </template>
 
 <script lang="ts">
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 import { reactive, toRefs, onMounted } from 'vue';
 const { createDemo, translate } = createComponent('cmt');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
-import { categoryInfo, categoryChild, customCategory } from './data.js'
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -54,22 +52,28 @@ export default createDemo({
     });
 
     const getData = () => {
-      data.categoryInfo = categoryInfo;
-      data.category = categoryInfo.category;
-      data.categoryChild = categoryChild;
-      data.customCategory = customCategory;
+      fetch('//storage.360buyimg.com/nutui/3x/categoryData.js')
+        .then((response) => response.json())
+        .then((res) => {
+          const { categoryInfo, categoryChild, customCategory } = res;
+          data.categoryInfo = categoryInfo;
+          data.category = categoryInfo.category;
+          data.categoryChild = categoryChild;
+          data.customCategory = customCategory;
+        })
+        .catch((err) => console.log('Oh, error', err));
     };
 
     const change = (index: any) => {
-      data.categoryChild = [].concat(data.categoryInfo.category[index + 1].children as any);
+      data.categoryChild = [].concat(data?.categoryInfo?.category[index + 1]?.children as any);
     };
 
     const changeText = (index: any) => {
       data.categoryChild = [].concat(data.categoryInfo.category[index + 1].children as any);
     };
 
-    const changeCustom = () => {
-      console.log('点击分类数据');
+    const changeCustom = (v: any) => {
+      console.log('点击分类数据:' + JSON.stringify(v));
     };
 
     const onChange = (v: any) => {

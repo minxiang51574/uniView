@@ -11,7 +11,8 @@
           <view class="nut-menu__title" :class="getClasses(item.state.showPopup)">
             <view class="nut-menu__title-text">{{ item.renderTitle() }}</view>
             <nut-icon
-              :name="item.titleIcon || (direction === 'up' ? 'arrow-up' : 'down-arrow')"
+              v-bind="$attrs"
+              :name="titleIcon || (direction === 'up' ? 'arrow-up' : 'down-arrow')"
               size="10"
               class="nut-menu__title-icon"
             ></nut-icon>
@@ -23,10 +24,10 @@
   </view>
 </template>
 <script lang="ts">
-import { reactive, provide, computed, ref,getCurrentInstance } from 'vue';
-import { createComponent } from '../../utils/create';
+import { reactive, provide, computed, ref, onMounted, onUnmounted } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
+import { useRect } from '@/components/packages/utils/useRect';
 const { componentName, create } = createComponent('menu');
-import { onPageScroll } from '@dcloudio/uni-app'
 export default create({
   props: {
     activeColor: {
@@ -43,8 +44,10 @@ export default create({
     },
     duration: {
       type: [Number, String],
-      default: 0.3
+      default: 0
     },
+    titleIcon: String,
+
     closeOnClickOverlay: {
       type: Boolean,
       default: true
@@ -59,35 +62,7 @@ export default create({
     },
     titleClass: [String]
   },
-  
-  methods: {
-      updateOffset () {
-          setTimeout(() => {
-            uni.createSelectorQuery().in(this)
-              .select('.nut-menu__bar.opened')
-              .boundingClientRect((rect) => {
-                if (this.direction === 'down') {
-                  this.offset = rect.bottom;
-                } else {
-                  this.offset = uni.getSystemInfoSync().windowHeight - rect.top;
-                }
-              })
-              .exec();
-          }, 100);
-      },
-      toggleItem (active) {
-          this.children.forEach((item, index) => {
-            if (index === active) {
-              this.updateOffset();
-              item.toggle();
-            } else if (item.state.showPopup) {
-              item.toggle(false, { immediate: true });
-            }
-          });
-      }
-  },
- 
-  setup(props) {
+  setup(props, { emit, slots }) {
     const barRef = ref<HTMLElement>();
     const offset = ref(0);
     const isScrollFixed = ref(false);
@@ -104,10 +79,25 @@ export default create({
           }
         };
 
+        const removeLink = (child: any) => {
+          if (child.proxy) {
+            let internalIndex = internalChildren.indexOf(child);
+            if (internalIndex > -1) {
+              internalChildren.splice(internalIndex, 1);
+            }
+
+            let publicIndex = publicChildren.indexOf(child.proxy);
+            if (internalIndex > -1) {
+              publicChildren.splice(publicIndex, 1);
+            }
+          }
+        };
+
         provide(
           'menuParent',
           Object.assign(
             {
+              removeLink,
               link,
               children: publicChildren,
               internalChildren
@@ -135,18 +125,39 @@ export default create({
       };
     });
 
-   
-    
-   
+    const updateOffset = () => {
+      if (barRef.value) {
+        const rect = useRect(barRef);
+
+        if (props.direction === 'down') {
+          offset.value = rect.bottom;
+        } else {
+          offset.value = window.innerHeight - rect.top;
+        }
+      }
+    };
 
     linkChildren({ props, offset });
 
-    
+    const toggleItem = (active: number) => {
+      children.forEach((item, index) => {
+        if (index === active) {
+          updateOffset();
+          item.toggle();
+        } else if (item.state.showPopup) {
+          item.toggle(false, { immediate: true });
+        }
+      });
+    };
 
-    const onScroll = (res: { scrollTop: number }) => {
+    const getScrollTop = (el: Element | Window) => {
+      return Math.max(0, 'scrollTop' in el ? el.scrollTop : el.pageYOffset);
+    };
+
+    const onScroll = () => {
       const { scrollFixed } = props;
 
-      const scrollTop = res.scrollTop;
+      const scrollTop = getScrollTop(window);
 
       isScrollFixed.value = scrollTop > (typeof scrollFixed === 'boolean' ? 30 : Number(scrollFixed));
     };
@@ -166,16 +177,24 @@ export default create({
       return str;
     };
 
-    onPageScroll((res) => {
+    onMounted(() => {
       const { scrollFixed } = props;
 
       if (scrollFixed) {
-        onScroll(res);
+        window.addEventListener('scroll', onScroll);
+      }
+    });
+
+    onUnmounted(() => {
+      const { scrollFixed } = props;
+
+      if (scrollFixed) {
+        window.removeEventListener('scroll', onScroll);
       }
     });
 
     return {
-        offset,
+      toggleItem,
       children,
       opened,
       classes,
@@ -186,5 +205,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-    @import './index.scss'
+@import './index.scss' 
 </style>

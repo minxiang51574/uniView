@@ -1,7 +1,7 @@
 <template>
   <div class="nut-card">
     <div class="nut-card__left">
-      <image style="height: 100%;width: 100%;" :src="imgUrl" alt="" />
+      <img :src="imgUrl" alt="" />
     </div>
     <div class="nut-card__right">
       <div class="nut-card__right__title">{{ title }}</div>
@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { computed, reactive } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { create } = createComponent('card');
 export default create({
   props: {
@@ -74,8 +74,6 @@ export default create({
   },
 
   setup(props, { emit, slots }) {
-    // console.log(slots['origin']);
-
     const isHaveSlot = (slot: string) => {
       return slots[slot];
     };
@@ -87,5 +85,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

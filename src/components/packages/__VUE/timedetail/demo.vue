@@ -1,6 +1,6 @@
 <template>
   <div class="demo">
-    <h2 class="h2">基本用法</h2>
+    <h2>基本用法</h2>
     <nut-cell @click="handleClick1">
       <span><label>时间配送</label></span>
       <div class="selected-option"> {{ val1 }} </div>
@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { reactive, toRefs } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo } = createComponent('timeselect');
 export default createDemo({
   setup() {
@@ -33,8 +33,3 @@ export default createDemo({
   }
 });
 </script>
-
-<style lang="scss" scoped>
-.demo {
-}
-</style>

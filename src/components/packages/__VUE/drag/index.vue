@@ -2,24 +2,18 @@
   <view
     :class="classes"
     ref="myDrag"
-    class="myDrag"
-    @touchstart="touchStart"
-    @touchmove="touchMove"
-    catchtouchmove="true"
-    :style="{
-      transform: ` translate(${state.left + 'px'}, ${state.top + 'px'})`,
-      top: initPosition.top + 'px',
-      left: initPosition.left + 'px'
-    }"
+    @touchstart="touchStart($event)"
+    @touchmove="touchMove($event)"
+    @touchend="touchEnd($event)"
   >
     <slot></slot>
   </view>
 </template>
 
 <script lang="ts">
-import { onMounted, onDeactivated, onActivated, reactive, ref, computed,getCurrentInstance } from 'vue';
-import { createComponent } from '../../utils/create';
-import requestAniFrame from '../../utils/raf';
+import { onMounted, onDeactivated, onActivated, reactive, ref, computed } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
+import requestAniFrame from '@/components/packages/utils/raf';
 const { componentName, create } = createComponent('drag');
 export default create({
   props: {
@@ -30,14 +24,6 @@ export default create({
     direction: {
       type: String,
       default: 'all'
-    },
-    top: {
-        type: Number,
-        default: 0
-    },
-    left: {
-        type: Number,
-        default: 0
     },
     boundary: {
       type: Object,
@@ -51,9 +37,9 @@ export default create({
       }
     }
   },
-  setup(props, { emit }) {
+  setup(props) {
     const myDrag = ref();
-    const state: any = reactive({
+    const state = reactive({
       keepAlive: false,
       elWidth: 0,
       elHeight: 0,
@@ -61,13 +47,10 @@ export default create({
       screenHeight: 0,
       startTop: 0,
       startLeft: 0,
-      initTop: 0,
       nx: 0,
       ny: 0,
       xPum: 0,
       yPum: 0,
-      top: 0,
-      left: 0,
       position: { x: 0, y: 0 },
       boundary: {
         top: 0,
@@ -76,102 +59,83 @@ export default create({
         bottom: 0
       } as Record<string, any>
     });
-    
-    const { proxy } = getCurrentInstance()
-    
-    const initPosition = {
-        top: props.top,
-        left: props.left
-    }
 
     const classes = computed(() => {
-      const prefixCls = 'nut-taro-drag';
+      const prefixCls = componentName;
       return {
         [prefixCls]: true
       };
     });
-    const domElem = uni.getSystemInfoSync();
-    function getInfo() {
-      const query = uni.createSelectorQuery().in(proxy);
-      query
-        .select('.myDrag')
-        .boundingClientRect((rec: any) => {
-          state.elWidth = rec.width;
-          state.elHeight = rec.height;
-          state.initTop = rec.top;
-        })
-        .exec();
-      // console.log(domElem.windowWidth);
 
-      state.screenWidth = domElem.screenWidth;
-      state.screenHeight = domElem.screenHeight;
+    function getInfo() {
+      const domElem = document.documentElement;
+      state.elWidth = myDrag.value.offsetWidth;
+      state.elHeight = myDrag.value.offsetHeight;
+      state.screenWidth = domElem.clientWidth || 375;
+      state.screenHeight = domElem.clientHeight || 667;
     }
 
-    function goLeft() {
+    function goLeft(target: HTMLElement) {
       if (state.boundary.left) {
-        if (+state.left.split('px')[0] > state.boundary.left) {
-          state.left = +state.left.split('px')[0] - 10 + 'px';
+        if (+target.style.left.split('px')[0] > state.boundary.left) {
+          target.style.left = +target.style.left.split('px')[0] - 10 + 'px';
           requestAniFrame(() => {
-            goLeft();
+            goLeft(target);
           });
         } else {
-          state.left = `${state.boundary.left}px`;
+          target.style.left = `${state.boundary.left}px`;
         }
       } else {
-        if (+state.left.split('px')[0] > 10) {
-          state.left = +state.left.split('px')[0] - 10 + 'px';
+        if (+target.style.left.split('px')[0] > 10) {
+          target.style.left = +target.style.left.split('px')[0] - 10 + 'px';
           requestAniFrame(() => {
-            goLeft();
+            goLeft(target);
           });
         } else {
-          state.left = '0px';
+          target.style.left = '0px';
         }
       }
     }
-    function goRight(rightLocation: number) {
-      if (rightLocation - parseInt(state.left.split('px')[0]) > 10) {
-        state.left = parseInt(state.left.split('px')[0]) + 10 + 'px';
+    function goRight(target: HTMLElement, rightLocation: number) {
+      if (rightLocation - parseInt(target.style.left.split('px')[0]) > 10) {
+        target.style.left = parseInt(target.style.left.split('px')[0]) + 10 + 'px';
         requestAniFrame(() => {
-          goRight(rightLocation);
+          goRight(target, rightLocation);
         });
       } else {
-        state.left = rightLocation + 'px';
+        target.style.left = rightLocation + 'px';
       }
     }
     function touchMove(e: TouchEvent) {
-      // const target = e.currentTarget as HTMLElement;
-      if (e.touches.length === 1) {
-        // const touch = e.targetTouches[0];
-        const touch = e.touches[0];
+      e.preventDefault();
+      const target = e.currentTarget as HTMLElement;
+      if (e.targetTouches.length === 1) {
+        const touch = e.targetTouches[0];
         state.nx = touch.clientX - state.position.x;
         state.ny = touch.clientY - state.position.y;
         state.xPum = state.startLeft + state.nx;
         state.yPum = state.startTop + state.ny;
-
         const rightLocation = state.screenWidth - state.elWidth - state.boundary.right;
-        if (Math.abs(state.xPum+initPosition.left) > rightLocation) {
-          state.xPum = rightLocation - initPosition.left;
-        } else if (state.xPum+initPosition.left <= state.boundary.left) {
-          state.xPum = state.boundary.left-initPosition.left;
+        if (Math.abs(state.xPum) > rightLocation) {
+          state.xPum = rightLocation;
+        } else if (state.xPum <= state.boundary.left) {
+          state.xPum = state.boundary.left;
         }
-        
-        if (state.yPum+initPosition.top < state.boundary.top) {
-          state.yPum = state.boundary.top-initPosition.top;
-        } else if (state.yPum + initPosition.top> state.screenHeight - state.elHeight - state.boundary.bottom) {
-          state.yPum = state.screenHeight - state.elHeight - state.boundary.bottom-initPosition.top;
+        if (state.yPum < state.boundary.top) {
+          state.yPum = state.boundary.top;
+        } else if (state.yPum > state.screenHeight - state.elHeight - state.boundary.bottom) {
+          state.yPum = state.screenHeight - state.elHeight - state.boundary.bottom;
         }
-
         if (props.direction != 'y') {
-          state.left = state.xPum;
+          target.style.left = state.xPum + 'px';
         }
         if (props.direction != 'x') {
-          state.top = state.yPum;
+          target.style.top = state.yPum + 'px';
         }
       }
     }
     function touchEnd(e: TouchEvent) {
-      // const target = e.currentTarget as HTMLElement;
-
+      const target = e.currentTarget as HTMLElement;
       const touch = e.changedTouches[0];
       let currX = touch.clientX;
       const rightLocation = state.screenWidth - state.elWidth - state.boundary.right;
@@ -185,45 +149,33 @@ export default create({
       if (props.direction != 'y' && props.attract) {
         if (currX < state.screenWidth / 2) {
           requestAniFrame(() => {
-            goLeft();
+            goLeft(target);
           });
         } else {
           requestAniFrame(() => {
-            goRight(rightLocation);
+            goRight(target, rightLocation);
           });
         }
       }
-      if (props.direction !== 'x') {
-        state.top = state.yPum;
+      if (props.direction != 'x') {
+        target.style.top = state.yPum + 'px';
       }
     }
     function touchStart(e: TouchEvent) {
-      const query = uni.createSelectorQuery().in(proxy);
-      let id = (e as any)?.mpEvent?.currentTarget.id;
-      let offsetTop = (e as any)?.currentTarget?.offsetTop;
-      let offsetLeft = (e as any)?.currentTarget?.offsetLeft;
+      const target = e.currentTarget as HTMLElement;
       const touches = e.touches[0];
-      const mobileTop = (e.touches[0]?.target as any)?.parentNode?.style.top;
-      const mobileLeft = (e.touches[0]?.target as any)?.parentNode?.style.left;
-      
-      query
-        .selectAll('.myDrag')
-        .boundingClientRect((rec: any) => {
-          // 判断当前是要拖拽哪个元素
-          rec.forEach((element: any) => {
-            // 微信环境
-            state.startTop = element.top - offsetTop;
-            state.startLeft = element.left - offsetLeft;
-          });
-        })
-        .exec();
+      const touch = e.targetTouches[0];
+      state.startTop = target.offsetTop;
+      state.startLeft = target.offsetLeft;
       state.position.x = touches.clientX;
       state.position.y = touches.clientY;
+      state.nx = touch.clientX - state.position.x;
+      state.ny = touch.clientY - state.position.y;
+      state.xPum = state.startLeft + state.nx;
+      state.yPum = state.startTop + state.ny;
     }
     onMounted(() => {
-      setTimeout(() => {
-        getInfo();
-      }, 200);
+      getInfo();
       state.boundary = props.boundary;
     });
     onActivated(() => {
@@ -233,25 +185,20 @@ export default create({
     });
     onDeactivated(() => {
       state.keepAlive = true;
-      /**
-      (myDrag as any).removeEventListener('touchstart', touchStart);
-      (myDrag as any).removeEventListener('touchmove', touchMove);
-      (myDrag as any).removeEventListener('touchend', touchEnd);
-      **/
+      myDrag.value.removeEventListener('touchstart', touchStart);
+      myDrag.value.removeEventListener('touchmove', touchMove);
+      myDrag.value.removeEventListener('touchend', touchEnd);
     });
     return {
       classes,
       myDrag,
       touchStart,
       touchMove,
-      touchEnd,
-      state,
-      initPosition
+      touchEnd
     };
   }
 });
 </script>
-
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

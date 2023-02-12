@@ -1,6 +1,6 @@
 <template>
   <div class="demo full">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-form>
       <nut-form-item :label="translate('name')">
         <input class="nut-input-text" :placeholder="translate('nameTip')" type="text" />
@@ -18,7 +18,7 @@
         <nut-textarea :placeholder="translate('remarksTip')" type="text" />
       </nut-form-item>
     </nut-form>
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title1') }}</h2>
     <nut-form :model-value="dynamicForm.state" ref="dynamicRefForm">
       <nut-form-item
         :label="translate('name')"
@@ -56,8 +56,19 @@
         <nut-button size="small" @click="dynamicForm.methods.reset">{{ translate('reset') }}</nut-button>
       </nut-cell>
     </nut-form>
-    <h2 class="h2">{{ translate('title2') }}</h2>
-    <nut-form :model-value="formData" ref="ruleForm">
+    <h2>{{ translate('title2') }}</h2>
+    <nut-form
+      :model-value="formData"
+      :rules="{
+        name: [
+          {
+            message: '名称两个字以上',
+            validator: nameLengthValidator
+          }
+        ]
+      }"
+      ref="ruleForm"
+    >
       <nut-form-item
         :label="translate('name')"
         prop="name"
@@ -79,6 +90,7 @@
         :rules="[
           { required: true, message: translate('ageTip') },
           { validator: customValidator, message: translate('ageTip2') },
+          { validator: customRulePropValidator, message: translate('ageTip2'), reg: /^\d+$/ },
           { regex: /^(\d{1,2}|1\d{2}|200)$/, message: translate('ageTip3') }
         ]"
       >
@@ -110,7 +122,7 @@
         <nut-button size="small" @click="reset"> {{ translate('reset') }}</nut-button>
       </nut-cell>
     </nut-form>
-    <h2 class="h2">{{ translate('title3') }}</h2>
+    <h2>{{ translate('title3') }}</h2>
     <nut-form>
       <nut-form-item :label="translate('switch')">
         <nut-switch v-model="formData2.switch"></nut-switch>
@@ -135,7 +147,13 @@
         <nut-range hidden-tag v-model="formData2.range"></nut-range>
       </nut-form-item>
       <nut-form-item :label="translate('uploader')">
-        <nut-uploader url="http://apiurl" v-model:file-list="formData2.defaultFileList" maximum="3" multiple>
+        <nut-uploader
+          url="http://apiurl"
+          accept="image/*"
+          v-model:file-list="formData2.defaultFileList"
+          maximum="3"
+          multiple
+        >
         </nut-uploader>
       </nut-form-item>
       <nut-form-item :label="translate('address')">
@@ -163,11 +181,12 @@
 </template>
 
 <script lang="ts">
-import { Toast } from '../../nutui.js';
+import { Toast } from '@/components/packages/nutui.vue';
 import { reactive, ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('form');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
+import { FormItemRuleWithoutValidator } from '../formitem/types';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {
@@ -276,6 +295,7 @@ export default createDemo({
             if (valid) {
               console.log('success', dynamicForm);
             } else {
+              Toast.warn(errors[0].message);
               console.log('error submit!!', errors);
             }
           });
@@ -391,6 +411,10 @@ export default createDemo({
     };
     // 函数校验
     const customValidator = (val: string) => /^\d+$/.test(val);
+    const customRulePropValidator = (val: string, rule: FormItemRuleWithoutValidator) => {
+      return (rule?.reg as RegExp).test(val);
+    };
+    const nameLengthValidator = (val: string) => val?.length >= 2;
     // Promise 异步校验
     const asyncValidator = (val: string) => {
       return new Promise((resolve) => {
@@ -406,6 +430,8 @@ export default createDemo({
       formData,
       validate,
       customValidator,
+      customRulePropValidator,
+      nameLengthValidator,
       asyncValidator,
       customBlurValidate,
       submit,

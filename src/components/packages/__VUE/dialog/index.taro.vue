@@ -13,7 +13,7 @@
     @click-close-icon="closed"
   >
     <view :class="classes">
-      <view v-if="title" class="nut-dialog__header">
+      <view v-if="$slots.header || title" class="nut-dialog__header">
         <slot v-if="$slots.header" name="header"></slot>
         <template v-else>{{ title }}</template>
       </view>
@@ -47,11 +47,12 @@
 </template>
 <script lang="ts">
 import { onMounted, computed, watch, ref, PropType, VNode, CSSProperties } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create, translate } = createComponent('dialog');
-import Popup, { popupProps } from '../popup/index.taro.vue';
+import Popup from '../popup/index.taro.vue';
+import { popupProps } from '../popup/props';
 import Button from '../button/index.taro.vue';
-import { isPromise } from '../../utils/util';
+import { isPromise } from '@/components/packages/utils/util';
 export default create({
   inheritAttrs: false,
   components: {

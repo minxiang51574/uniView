@@ -1,3 +1,13 @@
+.nut-theme-dark {
+  .nut-numberkeyboard {
+    background-color: $dark-background4;
+    .number-board-body .key-board-wrapper .key {
+      background-color: $dark-background5;
+      color: $dark-color;
+    }
+  }
+}
+
 .nut-numberkeyboard {
   width: $numberkeyboard-width;
   padding: $numberkeyboard-padding;
@@ -34,7 +44,7 @@
 
   .number-board-body {
     display: flex;
-    padding: 6px 0 0 6px;
+    padding: $numberkeyboard-body-padding;
 
     .number-board {
       display: flex;
@@ -47,7 +57,7 @@
       flex: 1;
       flex-basis: 33%;
       box-sizing: border-box;
-      padding: 0 6px 6px 0;
+      padding: $numberkeyboard-wrapper-padding;
 
       .key {
         display: flex;
@@ -59,6 +69,7 @@
         background-color: $numberkeyboard-key-background-color;
         color: $numberkeyboard-key-font-size-color;
         border-radius: $numberkeyboard-key-border-radius;
+        box-shadow: $numberkeyboard-key-box-shadow;
         cursor: pointer;
       }
 
@@ -66,7 +77,7 @@
         background-color: $numberkeyboard-key-active-background-color;
       }
 
-      image {
+      img {
         width: 30px;
         height: 24px;
       }

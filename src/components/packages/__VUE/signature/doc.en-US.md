@@ -17,7 +17,6 @@ app.use(Signature);
 ```
     
 
-## Code demonstration
 
 
 ### Basic usage
@@ -126,9 +125,12 @@ export default {
 | type | Picture format | String | 'png'
 | un-support-tpl | Display copy without canvas | String | 'sorry, the current browser doesn't support canvas, so we can't use this control! '
 
-## Event
+### Events
 
 | Event | Description   | Arguments   |
 |----- | ----- | ----- 
-| confirm | Click the confirm button to trigger the event callback function | Canvas and data URI displayed by signature image
+|start `v3.2.0` | signature start callback function (refers to the beginning of a stroke) | none
+|signing `v3.2.0`| the callback function being signed (refers to a stroke in progress) | event
+|end `v3.2.0`| signature end callback function (refers to the end of a stroke) | none
+| confirm | Click the confirm button to trigger the event callback function | `canvas and signature image display data URI，<br/>If not drawn, returns a tooltip and an empty data URI`
 | clear | Click the re sign button to trigger the event callback function | -

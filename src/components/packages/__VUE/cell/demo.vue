@@ -1,12 +1,12 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-cell :title="translate('title')" :desc="translate('desc')"></nut-cell>
     <nut-cell :title="translate('title')" :sub-title="translate('title1')" :desc="translate('desc')"></nut-cell>
     <nut-cell :title="translate('title3')" @click="testClick"></nut-cell>
     <nut-cell :title="translate('title4')" round-radius="0"></nut-cell>
 
-    <h2 class="h2">{{ translate('title9') }}</h2>
+    <h2>{{ translate('title9') }}</h2>
     <nut-cell size="large" :title="translate('title')" :desc="translate('desc')"></nut-cell>
     <nut-cell
       size="large"
@@ -15,13 +15,13 @@
       :desc="translate('desc')"
     ></nut-cell>
 
-    <h2 class="h2">{{ translate('title2') }}</h2>
+    <h2>{{ translate('title2') }}</h2>
 
     <nut-cell>
       <div>{{ translate('content') }}</div>
     </nut-cell>
 
-    <h2 class="h2">{{ translate('title8') }}</h2>
+    <h2>{{ translate('title8') }}</h2>
 
     <nut-cell :desc="translate('desc')">
       <template v-slot:title>
@@ -52,23 +52,29 @@
           />
         </template>
       </nut-cell>
+      <nut-cell :title="translate('image')" :sub-title="translate('title1')">
+        <template v-slot:icon>
+          <div style="height: 40px; width: 40px; border-radius: 50%; background: #e5e5e5"></div>
+        </template>
+      </nut-cell>
     </nut-cell-group>
 
-    <h2 class="h2">{{ translate('displayIcon') }}</h2>
+    <h2>{{ translate('displayIcon') }}</h2>
     <nut-cell :title="translate('name')" icon="my" :desc="translate('desc')" isLink> </nut-cell>
-    <h2 class="h2">{{ translate('title6') }}</h2>
+    <nut-cell :title="translate('name')" icon="my" :desc="translate('desc')" isLink size="large"> </nut-cell>
+    <h2>{{ translate('title6') }}</h2>
     <nut-cell desc-text-align="left" :desc="translate('desc')"></nut-cell>
 
-    <h2 class="h2">{{ translate('title7') }}</h2>
+    <h2>{{ translate('title7') }}</h2>
     <nut-cell center :title="translate('title')" :sub-title="translate('title1')" :desc="translate('desc')"></nut-cell>
   </div>
 </template>
 
 <script lang="ts">
 import { ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('cell');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

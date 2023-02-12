@@ -10,6 +10,7 @@
     :style="{ height: '85vh' }"
   >
     <nut-calendar-item
+      v-if="show"
       ref="calendarRef"
       :type="type"
       :is-auto-back-fill="isAutoBackFill"
@@ -22,13 +23,14 @@
       @close="close"
       @choose="choose"
       @select="select"
-      v-if="show"
       :confirm-text="confirmText"
       :start-text="startText"
       :end-text="endText"
       :show-today="showToday"
       :show-title="showTitle"
       :show-sub-title="showSubTitle"
+      :to-date-animation="toDateAnimation"
+      :first-day-of-week="firstDayOfWeek"
     >
       <template v-slot:btn v-if="showTopBtn">
         <slot name="btn"> </slot>
@@ -44,7 +46,6 @@
       </template>
     </nut-calendar-item>
   </nut-popup>
-
   <nut-calendar-item
     v-else
     :type="type"
@@ -62,7 +63,9 @@
     @select="select"
     :show-title="showTitle"
     :show-sub-title="showSubTitle"
+    :to-date-animation="toDateAnimation"
     :show-today="showToday"
+    :first-day-of-week="firstDayOfWeek"
   >
     <template v-slot:btn v-if="showTopBtn">
       <slot name="btn"> </slot>
@@ -79,11 +82,14 @@
   </nut-calendar-item>
 </template>
 <script lang="ts">
-import { ref, watch, computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { ref, watch, computed, reactive, toRefs } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
 const { create } = createComponent('calendar');
 import CalendarItem from '../calendaritem/index.taro.vue';
-import Utils from '../../utils/date';
+import Utils from '@/components/packages/utils/date';
+import { useExpose } from '@/components/packages/utils/useExpose/index';
+import Taro from '@tarojs/taro';
+
 export default create({
   components: {
     [CalendarItem.name]: CalendarItem
@@ -96,6 +102,10 @@ export default create({
     isAutoBackFill: {
       type: Boolean,
       default: false
+    },
+    toDateAnimation: {
+      type: Boolean,
+      default: true
     },
     poppable: {
       type: Boolean,
@@ -143,10 +153,19 @@ export default create({
     endDate: {
       type: String,
       default: Utils.getDay(365)
+    },
+    firstDayOfWeek: {
+      type: Number,
+      default: 0,
+      validator: (val: number) => val >= 0 && val <= 6
     }
   },
   emits: ['choose', 'close', 'update:visible', 'select'],
   setup(props, { emit, slots }) {
+    const state = reactive({
+      ENV: Taro.getEnv(),
+      ENV_TYPE: Taro.ENV_TYPE
+    });
     const showTopBtn = computed(() => {
       return slots.btn;
     });
@@ -162,7 +181,16 @@ export default create({
     let show = ref(props.visible);
     // element refs
     const calendarRef = ref<null | HTMLElement>(null);
-
+    const scrollToDate = (date: string) => {
+      calendarRef.value?.scrollToDate(date);
+    };
+    const initPosition = () => {
+      calendarRef.value?.initPosition();
+    };
+    useExpose({
+      scrollToDate,
+      initPosition
+    });
     // methods
     const update = () => {
       show.value = false;
@@ -195,6 +223,7 @@ export default create({
     );
 
     return {
+      ...toRefs(state),
       show,
       closePopup,
       update,

@@ -8,9 +8,8 @@
     @click-overlay="closePopup"
     @click-close-icon="closePopup"
     :destroy-on-close="true"
-    :popStyle="{ height: '85vh' }"
+    :style="{ height: '85vh' }"
   >
-  
     <nut-calendar-item
       v-if="visible"
       props
@@ -32,13 +31,14 @@
       :show-today="showToday"
       :show-title="showTitle"
       :show-sub-title="showSubTitle"
+      :to-date-animation="toDateAnimation"
+      :first-day-of-week="firstDayOfWeek"
     >
       <template v-slot:btn v-if="showTopBtn">
-        <slot  name="btn"></slot>
+        <slot name="btn"> </slot>
       </template>
-      <template v-slot:day="date" >
-        <slot v-if="dayInfo" name="day" :date="date.date"></slot>
-        <slot v-else name="day">{{date.date.day}}</slot>
+      <template v-slot:day="date" v-if="dayInfo">
+        <slot name="day" :date="date.date"> </slot>
       </template>
       <template v-slot:topInfo="date" v-if="topInfo">
         <slot name="topInfo" :date="date.date"> </slot>
@@ -67,14 +67,15 @@
     :show-today="showToday"
     :show-title="showTitle"
     :show-sub-title="showSubTitle"
+    :to-date-animation="toDateAnimation"
+    :first-day-of-week="firstDayOfWeek"
     ref="calendarRef"
   >
     <template v-slot:btn v-if="showTopBtn">
       <slot name="btn"> </slot>
     </template>
-    <template v-slot:day="date">
-      <slot v-if="dayInfo" name="day" :date="date.date"> </slot>
-      <slot v-else name="day" >{{date.date.day}}</slot>
+    <template v-slot:day="date" v-if="dayInfo">
+      <slot name="day" :date="date.date"> </slot>
     </template>
     <template v-slot:topInfo="date" v-if="topInfo">
       <slot name="topInfo" :date="date.date"> </slot>
@@ -86,20 +87,16 @@
 </template>
 <script lang="ts">
 import { PropType, ref, computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { create } = createComponent('calendar');
 import CalendarItem from '../calendaritem/index.vue';
-import Utils from '../../utils/date';
-import { useExpose } from '../../utils/useExpose/index';
+import Utils from '@/components/packages/utils/date';
+import { useExpose } from '@/components/packages/utils/useExpose/index';
 
 type InputDate = string | string[];
 export default create({
   components: {
     [CalendarItem.name]: CalendarItem
-  },
-  options: {
-    virtualHost: true,
-    addGlobalClass: true,
   },
   props: {
     type: {
@@ -109,6 +106,10 @@ export default create({
     isAutoBackFill: {
       type: Boolean,
       default: false
+    },
+    toDateAnimation: {
+      type: Boolean,
+      default: true
     },
     poppable: {
       type: Boolean,
@@ -156,6 +157,11 @@ export default create({
     endDate: {
       type: String,
       default: Utils.getDay(365)
+    },
+    firstDayOfWeek: {
+      type: Number,
+      default: 0,
+      validator: (val: number) => val >= 0 && val <= 6
     }
   },
   emits: ['choose', 'close', 'update:visible', 'select'],
@@ -177,8 +183,12 @@ export default create({
     const scrollToDate = (date: string) => {
       calendarRef.value?.scrollToDate(date);
     };
+    const initPosition = () => {
+      calendarRef.value?.initPosition();
+    };
     useExpose({
-      scrollToDate
+      scrollToDate,
+      initPosition
     });
     // methods
     const update = () => {
@@ -219,5 +229,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

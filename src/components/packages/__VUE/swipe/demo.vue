@@ -1,31 +1,31 @@
 <template>
   <div class="demo full">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-swipe>
       <nut-cell round-radius="0" :desc="translate('leftDel')" />
       <template #right>
-        <nut-button shape="square" height="100%" type="danger">{{ translate('delete') }}</nut-button>
+        <nut-button shape="square" style="height: 100%" type="danger">{{ translate('delete') }}</nut-button>
       </template>
     </nut-swipe>
-    <h2 class="h2">{{ translate('disable') }}</h2>
+    <h2>{{ translate('disable') }}</h2>
     <nut-swipe disabled>
       <nut-cell round-radius="0" :desc="translate('disable')" />
       <template #right>
-        <nut-button shape="square" height="100%" type="danger">{{ translate('delete') }}</nut-button>
+        <nut-button shape="square" style="height: 100%" type="danger">{{ translate('delete') }}</nut-button>
       </template>
     </nut-swipe>
-    <h2 class="h2">{{ translate('swipeLR') }}</h2>
+    <h2>{{ translate('swipeLR') }}</h2>
     <nut-swipe>
       <template #left>
-        <nut-button shape="square" height="100%" type="success">{{ translate('select') }}</nut-button>
+        <nut-button shape="square" style="height: 100%" type="success">{{ translate('select') }}</nut-button>
       </template>
       <nut-cell round-radius="0" :desc="translate('swipeLRDesc')" />
-      <template style="height: 100%;" #right>
-        <nut-button shape="square" height="100%" type="danger">{{ translate('delete') }}</nut-button>
-        <nut-button shape="square" height="100%" type="info">{{ translate('collect') }}</nut-button>
+      <template #right>
+        <nut-button shape="square" style="height: 100%" type="danger">{{ translate('delete') }}</nut-button>
+        <nut-button shape="square" style="height: 100%" type="info">{{ translate('collect') }}</nut-button>
       </template>
     </nut-swipe>
-    <h2 class="h2">{{ translate('async') }}</h2>
+    <h2>{{ translate('async') }}</h2>
     <nut-swipe ref="refSwipe" @open="open" @close="close">
       <nut-cell :title="translate('asyncDesc')">
         <template v-slot:link>
@@ -38,22 +38,22 @@
         </template>
       </nut-cell>
       <template #right>
-        <nut-button shape="square" height="100%" type="danger">{{ translate('delete') }}</nut-button>
+        <nut-button shape="square" style="height: 100%" type="danger">{{ translate('delete') }}</nut-button>
       </template>
     </nut-swipe>
-    <h2 class="h2">{{ translate('custom') }}</h2>
+    <h2>{{ translate('custom') }}</h2>
     <nut-swipe>
       <template #left>
-        <nut-button shape="square" height="100%" type="success">{{ translate('select') }}</nut-button>
+        <nut-button shape="square" style="height: 100%" type="success">{{ translate('select') }}</nut-button>
       </template>
       <nut-cell :title="translate('desc')">
         <template v-slot:link>
           <nut-inputnumber v-model="number" />
         </template>
       </nut-cell>
-      <template style="height: 100%;" #right>
-        <nut-button shape="square" height="100%" type="danger">{{ translate('delete') }}</nut-button>
-        <nut-button shape="square" height="100%" type="info">{{ translate('collect') }}</nut-button>
+      <template #right>
+        <nut-button shape="square" style="height: 100%" type="danger">{{ translate('delete') }}</nut-button>
+        <nut-button shape="square" style="height: 100%" type="info">{{ translate('collect') }}</nut-button>
       </template>
     </nut-swipe>
   </div>
@@ -61,9 +61,9 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('swipe');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

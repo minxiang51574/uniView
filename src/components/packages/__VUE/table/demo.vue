@@ -1,14 +1,14 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-table :columns="columns1" :data="data1"></nut-table>
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title1') }}</h2>
     <nut-table :columns="columns2" :data="data1" :bordered="bordered1"></nut-table>
-    <h2 class="h2">{{ translate('title2') }}</h2>
+    <h2>{{ translate('title2') }}</h2>
     <nut-table :columns="columns3" :data="data2" :summary="summary"></nut-table>
-    <h2 class="h2">{{ translate('title3') }}</h2>
+    <h2>{{ translate('title3') }}</h2>
     <nut-table :columns="columns3" :data="data2" :striped="striped"></nut-table>
-    <h2 class="h2">{{ translate('title4') }}</h2>
+    <h2>{{ translate('title4') }}</h2>
     <nut-table :columns="columns3" :data="data3"> </nut-table>
     <br />
     <nut-table :columns="columns3" :data="data3">
@@ -16,24 +16,24 @@
         <div class="no-data"> {{ translate('title5') }} </div>
       </template>
     </nut-table>
-    <h2 class="h2">{{ translate('title6') }}</h2>
+    <h2>{{ translate('title6') }}</h2>
     <nut-table :columns="columns4" :data="data4"> </nut-table>
-    <h2 class="h2">{{ translate('title7') }}</h2>
+    <h2>{{ translate('title7') }}</h2>
     <nut-table :columns="columns3" :data="data5"> </nut-table>
-    <h2 class="h2">{{ translate('title8') }}</h2>
+    <h2>{{ translate('title8') }}</h2>
     <nut-table :columns="columns6" :data="data6" @sorter="handleSorter"> </nut-table>
   </div>
 </template>
 
 <script lang="ts">
 import { reactive, toRefs, onMounted, onUnmounted, h } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 import { TableColumnProps } from './types';
-import { Toast } from '../../nutui.js';
-import Button from '../../__VUE/button/index.vue';
-import Icon from '../../__VUE/icon/index.vue';
+import { Toast } from '@/components/packages/nutui.vue';
+import Button from '@/components/packages/__VUE/button/index.vue';
+import Icon from '@/components/packages/__VUE/icon/index.vue';
 const { createDemo, translate } = createComponent('table');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

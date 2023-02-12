@@ -1,7 +1,7 @@
 import { computed, Ref, ref } from 'vue';
-import { createComponent } from '../../utils/create';
-import { pxCheck } from '../../utils/pxCheck';
-import { useTouch } from '../../utils/useTouch';
+import { createComponent } from '@/components/packages/utils/create';
+import { pxCheck } from '@/components/packages/utils/pxCheck';
+import { useTouch } from '@/components/packages/utils/useTouch';
 const { componentName } = createComponent('rate');
 const useComponent = (touchable: Boolean = true) => {
   return {
@@ -20,11 +20,11 @@ const useComponent = (touchable: Boolean = true) => {
       },
       activeColor: {
         type: String,
-        default: '#fa2c19'
+        default: ''
       },
       voidColor: {
         type: String,
-        default: '#cccccc'
+        default: ''
       },
       uncheckedIcon: {
         type: String,
@@ -106,7 +106,7 @@ const useComponent = (touchable: Boolean = true) => {
       const touch = useTouch();
       const touchMethods = {
         onTouchStart(event: Event) {
-          if (!props.touchable) return;
+          if (!props.touchable || props.readonly) return;
           touch.start(event);
         },
         onTouchMove(event: Event) {
@@ -133,7 +133,7 @@ const useComponent = (touchable: Boolean = true) => {
   };
 };
 
-// import { useTaroRect } from '../../utils/useTaroRect';
+// import { useTaroRect } from '@/components/packages/utils/useTaroRect';
 // const getScoreByPositionTaro = async (x: number, rateRefs: Ref<HTMLElement[]>, allowHalf: boolean) => {
 //     let v = 0;
 //     for (let index = rateRefs.value.length - 1; index >= 0; index--) {

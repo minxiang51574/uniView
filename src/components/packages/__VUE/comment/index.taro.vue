@@ -1,7 +1,7 @@
 <template>
   <view :class="classes" v-if="info && Object.keys(info)">
     <!-- 根据展示信息的多少，分为3种展示风格：simple，base，complex -->
-    <comment-header :type="headerType" :info="info" :labels="labels" @handleClick="handleClick">
+    <comment-header :type="headerType" :info="info" @handleClick="handleClick">
       <template #labels>
         <slot name="comment-labels"></slot>
       </template>
@@ -36,12 +36,12 @@
       @handleClick="handleClick"
     ></comment-bottom>
 
-    <slot name="cmt-shop-reply"></slot>
+    <slot name="comment-shop-reply"></slot>
   </view>
 </template>
 <script lang="ts">
 import { ref, onMounted, computed, watch } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('comment');
 
 import CommentHeader from './components/CmtHeader.vue';
@@ -82,11 +82,6 @@ export default create({
     follow: {
       type: Object,
       default: () => {}
-    },
-
-    labels: {
-      type: Function,
-      default: () => ''
     },
 
     operation: {

@@ -1,4 +1,4 @@
-import { Interceptor } from '@/packages/utils/util';
+import { Interceptor } from '@/components/packages/utils/util';
 
 export interface ImageInterface {
   src: string;

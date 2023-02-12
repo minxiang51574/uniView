@@ -18,8 +18,8 @@
 </template>
 <script lang="ts">
 import { reactive, toRefs, computed } from 'vue';
-import { myFixed } from '../../utils/util';
-import { createComponent } from '../../utils/create';
+import { myFixed } from '@/components/packages/utils/util';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('trendarrow');
 
 export default create({
@@ -120,5 +120,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

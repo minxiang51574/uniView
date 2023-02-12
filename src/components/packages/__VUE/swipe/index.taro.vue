@@ -22,10 +22,10 @@
 </template>
 <script lang="ts">
 import Taro from '@tarojs/taro';
-import { useTouch } from '../../utils/useTouch';
+import { useTouch } from '@/components/packages/utils/useTouch';
 import { computed, onMounted, reactive, Ref, ref } from 'vue';
-import { createComponent } from '../../utils/create';
-import { useTaroRect } from '../../utils/useTaroRect';
+import { createComponent } from '@/components/packages/utils/create';
+import { useTaroRect } from '@/components/packages/utils/useTaroRect';
 const { componentName, create } = createComponent('swipe');
 export type SwipePosition = 'left' | 'right' | '';
 export default create({

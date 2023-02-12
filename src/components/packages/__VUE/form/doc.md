@@ -75,6 +75,7 @@ app.use(CellGroup);
 </template>
 <script lang="ts">
 import { ref,reactive } from 'vue';
+import { Toast } from '@nutui/nutui';
 export default {
   setup(){
     const dynamicRefForm = ref<any>(null);
@@ -93,6 +94,7 @@ export default {
             if (valid) {
               console.log('success', dynamicForm);
             } else {
+              Toast.warn(errors[0].message);
               console.log('error submit!!', errors);
             }
           });
@@ -130,7 +132,10 @@ export default {
 
 ```html
 <template>
-<nut-form :model-value="formData" ref="ruleForm">
+<nut-form :model-value="formData" :rules="{name: [{
+            message: 'name 至少两个字符',
+            validator: nameLengthValidator
+          }]}" ref="ruleForm">
   <nut-form-item label="姓名" prop="name" required :rules="[{ required: true, message: '请填写姓名' }]">
     <input class="nut-input-text" @blur="customBlurValidate('name')" v-model="formData.name"
       placeholder="请输入姓名，blur 事件校验" type="text" />
@@ -138,6 +143,7 @@ export default {
   <nut-form-item label="年龄" prop="age" required :rules="[
       { required: true, message: '请填写年龄' },
       { validator: customValidator, message: '必须输入数字' },
+      { validator: customRulePropValidator, message: '必须输入数字', reg: /^\d+$/ },
       { regex: /^(\d{1,2}|1\d{2}|200)$/, message: '必须输入0-200区间' }
     ]">
     <input class="nut-input-text" v-model="formData.age" placeholder="请输入年龄，必须数字且0-200区间" type="text" />
@@ -159,6 +165,7 @@ export default {
 </template>
 <script lang="ts">
 import { ref,reactive } from 'vue';
+import { Toast } from '@nutui/nutui';
 export default {
 setup(){
     const formData = reactive({
@@ -196,6 +203,10 @@ setup(){
     };
     // 函数校验
     const customValidator = (val: string) => /^\d+$/.test(val);
+    const customRulePropValidator = (val: string, rule: FormItemRuleWithoutValidator) => {
+      return (rule?.reg as RegExp).test(val);
+    };
+    const nameLengthValidator = (val: string) => val?.length >= 2;
     // Promise 异步校验
     const asyncValidator = (val: string) => {
       return new Promise((resolve) => {
@@ -206,7 +217,7 @@ setup(){
         }, 1000);
       });
     };
-    return { ruleForm, formData, validate, customValidator, asyncValidator, customBlurValidate, submit, reset };
+    return { ruleForm, formData, validate, customValidator, customRulePropValidator, nameLengthValidator, asyncValidator, customBlurValidate, submit, reset };
 }
 }
 </script>
@@ -244,7 +255,7 @@ setup(){
         <nut-range hidden-tag v-model="formData2.range"></nut-range>
     </nut-form-item>
     <nut-form-item label="文件上传">
-        <nut-uploader url="http://服务地址" v-model:file-list="formData2.defaultFileList" maximum="3" multiple>
+        <nut-uploader url="http://服务地址" accept="image/*" v-model:file-list="formData2.defaultFileList" maximum="3" multiple>
         </nut-uploader>
     </nut-form-item>
     <nut-form-item label="地址">
@@ -332,12 +343,13 @@ setup(){
 ```
 :::
 
-
+## API
 ### Form Props
 
 | 参数        | 说明                                 | 类型   | 默认值 |
 |-------------|--------------------------------------|--------|--------|
 | model-value | 表单数据对象(使用表单校验时，_必填_) | object |        |
+| rules`v3.2.3` | 统一配置每个 FormItem 的 rules  | { prop: FormItemRule[] } |  {}      |
 
 ### Form Events
 
@@ -351,14 +363,15 @@ setup(){
 |---------------------|------------------------------------------------------------------|------------------|---------|
 | required            | 是否显示必填字段的标签旁边的红色星号                             | boolean          | `false` |
 | prop                | 表单域 v-model 字段， 在使用表单校验功能的情况下，该属性是必填的 | string           | -       |
+| rules               | 定义校验规则                                  | FormItemRule []          | [] |
 | label-width         | 表单项 label 宽度，默认单位为`px`                                | number \| string | `90px`  |
 | label-align         | 表单项 label 对齐方式，可选值为 `center` `right`                 | string           | `left`  |
-| body-align          | 输入框对齐方式，可选值为 `center` `right`                        | string           | `left`  |
+| body-align          | 右侧插槽对齐方式，可选值为 `center` `right`                        | string           | `left`  |
 | error-message-align | 错误提示文案对齐方式，可选值为 `center` `right`                  | string           | `left`  |
 | show-error-line     | 是否在校验不通过时标红输入框                                     | boolean          | `true`  |
 | show-error-message  | 是否在校验不通过时在输入框下方展示错误提示                       | boolean          | `true`  |
 
-### FormItem Rule 数据结构
+### FormItemRule 数据结构
 
 使用 FormItem 的`rules`属性可以定义校验规则，可选属性如下:
 
@@ -366,10 +379,10 @@ setup(){
 |-----------|------------------------|-----------------------------------------|
 | required  | 是否为必选字段         | boolean                                 |
 | message   | 错误提示文案           | string                                  |
-| validator | 通过函数进行校验       | (value) => boolean \| string \| Promise |
+| validator | 通过函数进行校验       | (value:string, rule?:FormItemRule ) => boolean \| string \| Promise |
 | regex     | 通过正则表达式进行校验 | RegExp                                  |
 
-## FormItem Slots
+### FormItem Slots
 
 | 名称            | 说明              |
 |-----------------|-------------------|
@@ -390,6 +403,6 @@ setup(){
 
 | 方法名            | 说明                                                               | 参数                | 返回值  |
 |-------------------|--------------------------------------------------------------------|---------------------|---------|
-| submit            | 提交表单进行校验的方法                                             | -                   | Promise |
+| submit`v3.2.8`    | 提交表单进行校验的方法                                               | -                   | - |
 | reset             | 清空校验结果                                                       | -                   | -       |
-| validate`v3.1.13` | 用户主动触发校验，用于用户自定义场景时触发，例如 blur、change 事件 | 同 FormItem prop 值 | -       |
+| validate`v3.1.13` | 用户主动触发校验，用于用户自定义场景时触发，例如 blur、change 事件 | 同 FormItem prop 值,不传值会校验全部 Rule | -       |

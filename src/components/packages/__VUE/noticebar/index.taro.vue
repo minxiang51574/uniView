@@ -24,7 +24,9 @@
         </view>
       </view>
       <view v-if="closeMode || rightIcon" class="right-icon" @click.stop="onClickIcon">
-        <slot name="right-icon"> <nut-icon :name="rightIcon ? rightIcon : 'close'" :color="color"></nut-icon></slot>
+        <slot name="right-icon">
+          <nut-icon v-bind="$attrs" :name="rightIcon ? rightIcon : 'close'" :color="color"></nut-icon
+        ></slot>
       </view>
     </view>
 
@@ -46,7 +48,7 @@
             class="horseLamp_list_item"
             v-for="(item, index) in scrollList"
             :key="index"
-            :style="{ height: height }"
+            :style="{ height: pxCheck(height) }"
             @click="go(item)"
           >
             {{ item }}
@@ -59,7 +61,7 @@
           <slot name="rightIcon"></slot>
         </template>
         <template v-else-if="closeMode">
-          <nut-icon type="cross" :color="color" size="11px"></nut-icon>
+          <nut-icon v-bind="$attrs" name="close" v-if="closeMode" :color="color" size="11px"></nut-icon>
         </template>
       </view>
     </view>
@@ -79,7 +81,8 @@ import {
   watch,
   h
 } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
+import { pxCheck } from '@/components/packages/utils/pxCheck';
 const { componentName, create } = createComponent('noticebar');
 import Taro from '@tarojs/taro';
 
@@ -407,7 +410,8 @@ export default create({
       onAnimationEnd,
       go,
       handleClickIcon,
-      slots
+      slots,
+      pxCheck
     };
   }
 });

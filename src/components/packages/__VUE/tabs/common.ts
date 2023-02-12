@@ -1,5 +1,8 @@
-import { pxCheck } from '../../utils/pxCheck';
-import { onMounted, provide, VNode, ref, Ref, computed, onActivated, watch } from 'vue';
+import { pxCheck } from '@/components/packages/utils/pxCheck';
+import { TypeOfFun, getScrollTopRoot } from '@/components/packages/utils/util';
+import { useRect } from '@/components/packages/utils/useRect';
+import { onMounted, provide, VNode, ref, Ref, computed, onActivated, watch, nextTick } from 'vue';
+import raf from '@/components/packages/utils/raf';
 export class Title {
   title: string = '';
   titleSlot?: VNode[];
@@ -9,10 +12,6 @@ export class Title {
 }
 export type TabsSize = 'large' | 'normal' | 'small';
 export const component = {
-    options: {
-        virtualHost: true,
-        addGlobalClass: true,
-    },
   props: {
     modelValue: {
       type: [String, Number],
@@ -58,9 +57,13 @@ export const component = {
       type: [Number, String],
       default: 0
     },
-    popClass: {
-        type: String,
-        default: ''
+    sticky: {
+      type: Boolean,
+      default: false
+    },
+    top: {
+      type: Number,
+      default: 0
     }
   },
 
@@ -68,42 +71,42 @@ export const component = {
   emits: ['update:modelValue', 'click', 'change'],
 
   setup(props: any, { emit, slots }: any) {
+    const container = ref(null);
+    let stickyFixed: boolean;
     provide('activeKey', { activeKey: computed(() => props.modelValue) });
     provide('autoHeight', { autoHeight: computed(() => props.autoHeight) });
-
-    const childVnodes = ref([])
-    provide('addNode',(nodeItem)=>{
-        childVnodes.value.push(nodeItem)
-        renderTitles(childVnodes.value)
-    })
-
-    //const titles = props.titles
     const titles: Ref<Title[]> = ref([]);
     const renderTitles = (vnodes: VNode[]) => {
-        titles.value = []
-          vnodes.forEach((vnode: VNode, index: number) => {
-            let type = vnode.type;
-            type = (type as any).name || type;
-            if (type == 'nut-tabpane') {
-              let title = new Title();
-              if (vnode.props?.title || vnode.props?.['pane-key'] || vnode.props?.['paneKey']) {
-                title.title = vnode.props?.title;
-                title.paneKey = vnode.props?.['pane-key'] || vnode.props?.['paneKey'] || index;
-                title.disabled = vnode.props?.disabled;
-              } else {
-                // title.titleSlot = vnode.children?.title() as VNode[];
-              }
-              titles.value.push(title);
-            } else {
-              renderTitles(vnode.children as VNode[]);
-            }
-          });
+      vnodes.forEach((vnode: VNode, index: number) => {
+        let type = vnode.type;
+        type = (type as any).name || type;
+        if (type == 'nut-tabpane') {
+          let title = new Title();
+          if (vnode.props?.title || vnode.props?.['pane-key'] || vnode.props?.['paneKey']) {
+            let paneKeyType = TypeOfFun(vnode.props?.['pane-key']);
+            let paneIndex =
+              paneKeyType == 'number' || paneKeyType == 'string' ? String(vnode.props?.['pane-key']) : null;
+            let camelPaneKeyType = TypeOfFun(vnode.props?.['paneKey']);
+            let camelPaneIndex =
+              camelPaneKeyType == 'number' || camelPaneKeyType == 'string' ? String(vnode.props?.['paneKey']) : null;
+            title.title = vnode.props?.title;
+            title.paneKey = paneIndex || camelPaneIndex || String(index);
+            title.disabled = vnode.props?.disabled;
+          } else {
+            // title.titleSlot = vnode.children?.title() as VNode[];
+          }
+          titles.value.push(title);
+        } else {
+          if (vnode.children == ' ') {
+            return;
+          }
+          renderTitles(vnode.children as VNode[]);
+        }
+      });
     };
 
     const currentIndex = ref((props.modelValue as number) || 0);
     const findTabsIndex = (value: string | number) => {
-        //console.log('find',value)
-       // console.log('find titles',titles.value)
       let index = titles.value.findIndex((item) => item.paneKey == value);
       if (titles.value.length == 0) {
         console.error('[NutUI] <Tabs> 当前未找到 TabPane 组件元素 , 请检查 .');
@@ -113,37 +116,75 @@ export const component = {
         currentIndex.value = index;
       }
     };
-    const init = (vnodes) => {
+
+    const navRef = ref<HTMLElement>();
+    const titleRef = ref([]) as Ref<HTMLElement[]>;
+    const scrollIntoView = (immediate?: boolean) => {
+      const nav = navRef.value;
+      const _titles = titleRef.value;
+      if (!nav || !_titles || !_titles[currentIndex.value]) {
+        return;
+      }
+      const title = _titles[currentIndex.value];
+      const to = title.offsetLeft - (nav.offsetWidth - title.offsetWidth) / 2;
+      scrollLeftTo(nav, to, immediate ? 0 : 0.3);
+    };
+
+    const scrollLeftTo = (nav: any, to: number, duration: number) => {
+      let count = 0;
+      const from = nav.scrollLeft;
+
+      const frames = duration === 0 ? 1 : Math.round((duration * 1000) / 16);
+
+      function animate() {
+        nav.scrollLeft += (to - from) / frames;
+
+        if (++count < frames) {
+          raf(animate);
+        }
+      }
+
+      animate();
+    };
+    const init = (vnodes: VNode[] = slots.default?.()) => {
       titles.value = [];
+      vnodes = vnodes?.filter((item) => typeof item.children !== 'string');
       if (vnodes && vnodes.length) {
         renderTitles(vnodes);
       }
       findTabsIndex(props.modelValue);
+      nextTick(() => {
+        scrollIntoView();
+      });
     };
-    
-    /**
+    const onStickyScroll = (params: { top: number; fixed: boolean }) => {
+      stickyFixed = params.fixed;
+    };
+
     watch(
-      () => slots.default,
-      () => {
-        init(childVnodes);
+      () => slots.default?.(),
+      (vnodes: VNode[]) => {
+        init(vnodes);
       }
     );
-    **/
-   
-    
+
     watch(
       () => props.modelValue,
       (value: string | number) => {
         findTabsIndex(value);
+        scrollIntoView();
+        if (stickyFixed) {
+          let top = useRect(container.value!).top + getScrollTopRoot();
+          let value = Math.ceil(top - props.top);
+          window.scrollTo({
+            top: value,
+            behavior: 'smooth'
+          });
+        }
       }
     );
-    
-    onMounted(()=>{
-       // init(childVnodes);
-    });
-    onActivated(()=>{
-        //init(childVnodes);
-    });
+    onMounted(init);
+    onActivated(init);
     const contentStyle = computed(() => {
       return {
         transform:
@@ -179,15 +220,20 @@ export const component = {
         currentIndex.value = index;
         emit('update:modelValue', item.paneKey);
         emit('change', item);
+      },
+      setTabItemRef: (el: HTMLElement, index: number) => {
+        titleRef.value[index] = el;
       }
     };
-
     return {
+      navRef,
       titles,
       contentStyle,
       tabsNavStyle,
       titleStyle,
       tabsActiveStyle,
+      container,
+      onStickyScroll,
       ...methods
     };
   }

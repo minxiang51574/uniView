@@ -1,5 +1,5 @@
 <template>
-  <view :class="classes" v-show="state.showWrapper">
+  <view :class="classes" v-show="state.showWrapper" :style="{ zIndex: state.zIndex }">
     <div
       v-show="state.isShowPlaceholderElement"
       @click="handleClickOutside"
@@ -12,43 +12,67 @@
       :style="
         parent.props.direction === 'down' ? { top: parent.offset.value + 'px' } : { bottom: parent.offset.value + 'px' }
       "
-      :overlayStyle="
-        parent.props.direction === 'down' ? { top: parent.offset.value + 'px' } : { bottom: parent.offset.value + 'px' }
+      :overlay-style="
+        parent.props.direction === 'down'
+          ? { top: parent.offset.value + 'px' }
+          : { bottom: parent.offset.value + 'px', top: 'auto' }
       "
+      transition="none"
       v-bind="$attrs"
       v-model:visible="state.showPopup"
       :position="parent.props.direction === 'down' ? 'top' : 'bottom'"
       :duration="parent.props.duration"
       pop-class="nut-menu__pop"
-      overlayClass="nut-menu__overlay"
+      :destroy-on-close="false"
       :overlay="parent.props.overlay"
       :lockScroll="parent.props.lockScroll"
       @closed="handleClose"
       :close-on-click-overlay="parent.props.closeOnClickOverlay"
     >
-      <view class="nut-menu-item__content">
-        <view
-          v-for="(option, index) in options"
-          :key="index"
-          class="nut-menu-item__option"
-          :class="[{ active: option.value === modelValue }]"
-          :style="{ 'flex-basis': 100 / cols + '%' }"
-          @click="onClick(option)"
-        >
-          <nut-icon :class="{ activeTitleClass: option.value === modelValue, inactiveTitleClass: option.value !== modelValue }" v-if="option.value === modelValue" :name="optionIcon" :color="parent.props.activeColor"></nut-icon>
-          <view :class="{ activeTitleClass: option.value === modelValue, inactiveTitleClass: option.value !== modelValue }" :style="{ color: option.value === modelValue ? parent.props.activeColor : '' }">{{ option.text }}</view>
+      <Nut-Scroll-View :scroll-y="true" style="height: 100%">
+        <view class="nut-menu-item__content">
+          <view
+            v-for="(option, index) in options"
+            :key="index"
+            class="nut-menu-item__option"
+            :class="[{ active: option.value === modelValue }]"
+            :style="{ 'flex-basis': 100 / cols + '%' }"
+            @click="onClick(option)"
+          >
+            <nut-icon
+              :class="{
+                activeTitleClass: option.value === modelValue,
+                inactiveTitleClass: option.value !== modelValue
+              }"
+              v-if="option.value === modelValue"
+              :name="optionIcon"
+              v-bind="$attrs"
+              :color="parent.props.activeColor"
+              :class-prefix="classPrefix"
+            ></nut-icon>
+            <view
+              :class="{
+                activeTitleClass: option.value === modelValue,
+                inactiveTitleClass: option.value !== modelValue
+              }"
+              :style="{ color: option.value === modelValue ? parent.props.activeColor : '' }"
+              >{{ option.text }}</view
+            >
+          </view>
+          <slot></slot>
         </view>
-        <slot></slot>
-      </view>
+      </Nut-Scroll-View>
     </nut-popup>
   </view>
 </template>
 <script lang="ts">
-import { reactive, PropType, inject, getCurrentInstance, computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { reactive, PropType, inject, getCurrentInstance, computed, onUnmounted } from 'vue';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('menu-item');
 import Icon from '../icon/index.taro.vue';
 import Popup from '../popup/index.taro.vue';
+import NutScrollView from '../scrollView/index.taro.vue';
+let _zIndex = 2000;
 
 export default create({
   props: {
@@ -66,21 +90,26 @@ export default create({
       type: Number,
       default: 1
     },
-    titleIcon: String,
     activeTitleClass: String,
     inactiveTitleClass: String,
     optionIcon: {
       type: String,
       default: 'Check'
+    },
+    classPrefix: {
+      type: String,
+      default: 'nut-icon'
     }
   },
   components: {
     [Icon.name]: Icon,
-    [Popup.name]: Popup
+    [Popup.name]: Popup,
+    NutScrollView
   },
-  emits: ['update:modelValue', 'change'],
+  emits: ['update:modelValue', 'change', 'open', 'close'],
   setup(props, { emit, slots }) {
     const state = reactive({
+      zIndex: _zIndex,
       showPopup: false,
       transition: true,
       showWrapper: false,
@@ -94,10 +123,15 @@ export default create({
         // 获取子组件自己的实例
         const instance = getCurrentInstance()!;
 
-        const { link } = parent;
+        const { link, removeLink } = parent;
 
         // @ts-ignore
         link(instance);
+
+        onUnmounted(() => {
+          // @ts-ignore
+          removeLink(instance);
+        });
 
         return {
           parent
@@ -135,6 +169,8 @@ export default create({
 
       if (show) {
         state.showWrapper = true;
+        emit('open');
+        state.zIndex = ++_zIndex;
       }
     };
 
@@ -159,12 +195,14 @@ export default create({
     };
 
     const handleClose = () => {
+      emit('close');
       state.showWrapper = false;
       state.isShowPlaceholderElement = false;
     };
 
     const handleClickOutside = () => {
       state.showPopup = false;
+      emit('close');
     };
 
     return {

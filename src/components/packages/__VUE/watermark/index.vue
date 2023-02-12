@@ -11,7 +11,7 @@
 </template>
 <script lang="ts">
 import { reactive, toRefs, computed, watch } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('watermark');
 export default create({
   props: {
@@ -110,7 +110,6 @@ export default create({
     const init = () => {
       const canvas = document.createElement('canvas');
       const ratio = window.devicePixelRatio;
-      console.log(ratio);
       const ctx = canvas.getContext('2d');
       const canvasWidth = `${(gapX + width) * ratio}px`;
       const canvasHeight = `${(gapY + height) * ratio}px`;
@@ -138,7 +137,6 @@ export default create({
             );
             ctx.restore();
             state.base64Url = canvas.toDataURL();
-            console.log(state.base64Url);
           };
         } else if (content) {
           ctx.textBaseline = 'middle';
@@ -154,7 +152,6 @@ export default create({
           ctx.fillText(content, 0, 0);
           ctx.restore();
           state.base64Url = canvas.toDataURL();
-          console.log(state.base64Url);
         }
       } else {
         throw new Error('当前环境不支持Canvas');
@@ -197,5 +194,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

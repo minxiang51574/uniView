@@ -6,13 +6,7 @@
       "style": {
         "navigationBarTitleText": "UniNutUI"
       }
-    },
-    {
-      "path": "components/packages/__VUE/configprovider/demo",
-      "style": {
-        "navigationBarTitleText": "ConfigProvider"
-      }
-    },
+    }
     {
       "path": "components/packages/__VUE/button/demo",
       "style": {
@@ -20,7 +14,7 @@
       }
     },
     {
-      "path": "components/packages/__VUE/cell/demo",
+      "path": "components/packages/__VUE/cell/demo", 
       "style": {
         "navigationBarTitleText": "Cell"
       }
@@ -80,13 +74,6 @@
       "path": "components/packages/__VUE/elevator/demo",
       "style": {
         "navigationBarTitleText": "Elevator"
-      }
-    },
-
-    {
-      "path": "components/packages/__VUE/fixednav/demo",
-      "style": {
-        "navigationBarTitleText": "FixedNav"
       }
     },
     {

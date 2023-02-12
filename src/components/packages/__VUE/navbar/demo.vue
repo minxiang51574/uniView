@@ -1,6 +1,6 @@
 <template>
   <div class="demo full">
-    <h2 class="h2">{{ translate('title1') }}</h2>
+    <h2>{{ translate('title1') }}</h2>
     <nut-navbar @on-click-back="back" @on-click-title="title" :title="translate('navTitle1')">
       <template #left>
         <div>{{ translate('back') }}</div>
@@ -33,7 +33,7 @@
       </template>
     </nut-navbar>
 
-    <h2 class="h2">{{ translate('title2') }}</h2>
+    <h2>{{ translate('title2') }}</h2>
     <nut-navbar @on-click-back="back" @on-click-title="title" @on-click-right="rightClick" :desc="translate('desc2')">
       <template #content>
         <nut-tabs v-model="tab1value" @click="changeTab">
@@ -47,7 +47,7 @@
       </template>
     </nut-navbar>
 
-    <h2 class="h2">{{ translate('title3') }}</h2>
+    <h2>{{ translate('title3') }}</h2>
     <nut-navbar @on-click-back="back">
       <template #content>
         <nut-tabs v-model="tab2value" @click="changeTabList">
@@ -69,9 +69,9 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('navbar');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

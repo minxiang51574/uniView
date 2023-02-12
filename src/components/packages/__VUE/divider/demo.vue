@@ -1,33 +1,33 @@
 <template>
   <div class="demo full bg-w">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-divider />
-    <h2 class="h2">{{ translate('withText') }}</h2>
+    <h2>{{ translate('withText') }}</h2>
     <nut-divider>{{ translate('text') }}</nut-divider>
-    <h2 class="h2">{{ translate('contentPosition') }}</h2>
+    <h2>{{ translate('contentPosition') }}</h2>
     <nut-divider content-position="left">{{ translate('text') }}</nut-divider>
     <nut-divider content-position="right">{{ translate('text') }}</nut-divider>
-    <h2 class="h2">{{ translate('dashed') }}</h2>
+    <h2>{{ translate('dashed') }}</h2>
     <nut-divider dashed>{{ translate('text') }}</nut-divider>
-    <h2 class="h2">{{ translate('customStyle') }}</h2>
+    <h2>{{ translate('customStyle') }}</h2>
     <nut-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">{{
       translate('text')
     }}</nut-divider>
-    <h2 class="h2">{{ translate('verticalDivider') }}</h2>
+    <h2>{{ translate('verticalDivider') }}</h2>
     <div :style="{ fontSize: '14px', marginLeft: '27px', color: '#909ca4' }">
       {{ translate('text') }}
       <nut-divider direction="vertical" />
-      <text href="#" :style="{ color: '#1989fa' }">{{ translate('link') }}</text>
+      <a href="#" :style="{ color: '#1989fa' }">{{ translate('link') }}</a>
       <nut-divider direction="vertical" />
-      <text href="#" :style="{ color: '#1989fa' }">{{ translate('link') }}</text>
+      <a href="#" :style="{ color: '#1989fa' }">{{ translate('link') }}</a>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('divider');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

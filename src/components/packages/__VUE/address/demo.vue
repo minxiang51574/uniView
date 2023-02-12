@@ -1,7 +1,6 @@
 <template>
   <div class="demo">
-      <!--
-    <h2 class="h2">{{ translate('customAddress') }}</h2>
+    <h2>{{ translate('customAddress') }}</h2>
     <nut-cell :title="translate('title')" :desc="one" is-link @click="showAddress"></nut-cell>
 
     <nut-address
@@ -14,7 +13,7 @@
       @close="close1"
     ></nut-address>
 
-    <h2 class="h2">{{ translate('selectCity') }}</h2>
+    <h2>{{ translate('selectCity') }}</h2>
     <nut-cell :title="translate('title')" :desc="six" is-link @click="showSelected"></nut-cell>
 
     <nut-address
@@ -29,9 +28,7 @@
       :columns-placeholder="placeholder"
     ></nut-address>
 
-
-
-    <h2 class="h2">{{ translate('customAddress2') }}</h2>
+    <h2>{{ translate('customAddress2') }}</h2>
     <nut-cell :title="translate('title')" :desc="five" is-link @click="showAddress2"></nut-cell>
 
     <nut-address
@@ -47,8 +44,8 @@
       @close="close5"
       :columns-placeholder="placeholder"
     ></nut-address>
--->
-    <h2 class="h2">{{ translate('existAddress') }}</h2>
+
+    <h2>{{ translate('existAddress') }}</h2>
     <nut-cell :title="translate('title')" :desc="two" is-link @click="showAddressExist"></nut-cell>
 
     <nut-address
@@ -61,7 +58,7 @@
       @selected="selected"
     ></nut-address>
 
-    <h2 class="h2">{{ translate('icon') }}</h2>
+    <h2>{{ translate('icon') }}</h2>
     <nut-cell :title="translate('title')" :desc="three" is-link @click="showCustomImg"></nut-cell>
 
     <nut-address
@@ -83,7 +80,7 @@
       </template>
     </nut-address>
 
-    <h2 class="h2">{{ translate('change') }}</h2>
+    <h2>{{ translate('change') }}</h2>
     <nut-cell :title="translate('title')" :desc="four" is-link @click="showAddressOther"></nut-cell>
 
     <nut-address
@@ -105,9 +102,9 @@
 </template>
 
 <script lang="ts">
-import { createComponent } from '../../utils/create';
-import { reactive, ref, toRefs } from 'vue';
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { createComponent } from '@/components/packages/utils/create';
+import { onMounted, reactive, ref, toRefs } from 'vue';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const { createDemo, translate } = createComponent('address');
 
 const initTranslate = () =>
@@ -171,20 +168,14 @@ export default createDemo({
   setup() {
     initTranslate();
     const address = reactive({
-      province: [
-        { id: 1, name: '北京', title: 'B' },
-        { id: 2, name: '广西', title: 'G' },
-        { id: 3, name: '江西', title: 'J' },
-        { id: 4, name: '四川', title: 'S' },
-        { id: 5, name: '浙江', title: 'Z' }
-      ],
+      province: [],
       city: [
         { id: 7, name: '朝阳区', title: 'C' },
         { id: 8, name: '崇文区', title: 'C' },
         { id: 9, name: '昌平区', title: 'C' },
         { id: 6, name: '石景山区', title: 'S' },
         { id: 3, name: '八里庄街道', title: 'B' },
-        { id: 9, name: '北苑', title: 'B' }
+        { id: 10, name: '北苑', title: 'B' }
       ],
       country: [
         { id: 3, name: '八里庄街道', title: 'B' },
@@ -192,6 +183,18 @@ export default createDemo({
         { id: 4, name: '常营乡', title: 'C' }
       ],
       town: []
+    });
+
+    onMounted(() => {
+      setTimeout(() => {
+        address.province = [
+          { id: 1, name: '北京', title: 'B' },
+          { id: 2, name: '广西', title: 'G' },
+          { id: 3, name: '江西', title: 'J' },
+          { id: 4, name: '四川', title: 'S' },
+          { id: 5, name: '浙江', title: 'Z' }
+        ];
+      }, 1000);
     });
 
     const placeholder = ref(['请选择省', '请选择市', '请选择县']);
@@ -272,6 +275,7 @@ export default createDemo({
     };
 
     const onChange = (cal: CalBack, tag: string) => {
+      console.log('地址选择', cal);
       const name = (address as any)[cal.next];
       if (name.length < 1) {
         (showPopup as any)[tag] = false;

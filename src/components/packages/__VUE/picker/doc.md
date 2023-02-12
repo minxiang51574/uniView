@@ -6,14 +6,7 @@
 
 ### 组件重构
 
-Picker 组件在 3.1.18 版本进行重构，调整了之前 API 设计不合理的地方，主要变更如下：
-
-* 支持通过 `v-model` 绑定当前选中的值，移除 `default-index` 属性
-* 重命名选项集合属性 `list-data` 为 `columns` 
-* 重新定义 `columns` 属性的数据格式，是由对象构成的一维或多维数组
-* 重新定义 `confirm`、`close`、`change` 事件的回调参数
-
-同时也对重构前的 Picker 组件进行了保留，如有需要可通过 [OldPicker 组件](https://nutui.jd.com/#/component/oldpicker) 进行查看。
+> 自 `v3.2.3` 起，@nutui/nutui-taro 中的 Picker 组件不在支持 3D 展示效果。依赖 Taro 版本 `V3.5.6`
 
 ### 安装
 
@@ -121,6 +114,8 @@ app.use(OverLay);
 
 ### 平铺展示
 
+`threeDimensional` 可关闭 3D 滚动效果。
+
 :::demo
 ```html
 <template>
@@ -171,15 +166,15 @@ columns 属性可以通过二维数组的形式配置多列选择。
 ```html
 <template>
   <nut-cell title="请选择城市" :desc="desc" @click="()=>{show=true}"></nut-cell>
-    <nut-picker
-      v-model="selectedTime"
-      v-model:visible="show"
-      :columns="multipleColumns"
-      title="城市选择"
-      @confirm="confirm"
-      @change="change"
-    >
-    </nut-picker>
+  <nut-picker
+    v-model="selectedTime"
+    v-model:visible="show"
+    :columns="multipleColumns"
+    title="城市选择"
+    @confirm="confirm"
+    @change="change"
+  >
+  </nut-picker>
 </template>
 <script>
   import { ref } from 'vue';
@@ -212,10 +207,11 @@ columns 属性可以通过二维数组的形式配置多列选择。
         console.log(selectedValue);
       };
 
-      return {show,desc,columns,change, confirm, selectedTime};
+      return {show,desc,change, confirm, selectedTime,multipleColumns};
     }
   };
 </script>
+
 ```
 :::
 
@@ -229,6 +225,7 @@ columns 属性可以通过二维数组的形式配置多列选择。
   <nut-cell title="请选择城市" :desc="desc" @click="()=>{show=true}"></nut-cell>
   <nut-picker
     v-model:visible="show"
+    v-model="selectedCascader"
     :columns="cascaderColumns"
     title="城市选择"
     @confirm="confirm"
@@ -241,6 +238,7 @@ columns 属性可以通过二维数组的形式配置多列选择。
     setup(props) {
       const show = ref(false);
       const desc = ref('');
+      const selectedCascader = ref(['FuJian', 'FuZhou','TaiJiang']);
       const cascaderColumns = ref([
         {
           text: '浙江',
@@ -295,7 +293,7 @@ columns 属性可以通过二维数组的形式配置多列选择。
         console.log(selectedValue);
       };
 
-      return {show,desc,cascaderColumns,change, confirm};
+      return {show,desc,selectedCascader,cascaderColumns,change, confirm};
     }
   };
 </script>
@@ -318,7 +316,7 @@ columns 属性可以通过二维数组的形式配置多列选择。
     @confirm="confirm"
   ></nut-picker>
 </template>
-<script>
+<script lang="ts">
   import { ref, onMounted } from 'vue';
   export default {
     setup(props) {
@@ -365,7 +363,7 @@ Picker 组件在底部和顶部分别设置了插槽，可进行自定义设置
   <nut-cell title="请选择截止时间" :desc="desc" @click="()=>{show=true}"></nut-cell>
   <nut-picker
     v-model:visible="show"
-    :columns="asyncColumns"
+    :columns="effectColumns"
     title="日期选择"
     @confirm="confirm"
   >
@@ -429,8 +427,13 @@ Picker 组件在底部和顶部分别设置了插槽，可进行自定义设置
 | title                  | 设置标题                   | String  | -      |
 | cancel-text            | 取消按钮文案               | String  | 取消   |
 | ok-text                | 确定按钮文案               | String  | 确定   |
-| three-dimensional`小程序不支持` `v3.1.23`          | 是否开启3D效果               | Boolean  | true   |
+| three-dimensional`v3.1.23`          | 是否开启3D效果               | Boolean  | true   |
+| swipe-duration`v3.2.2`          | 惯性滚动时长        | Number、String  | 1000   |
+| safe-area-inset-bottom `v3.2.4`	| 是否开启 iphone 系列全面屏底部安全区适配,仅当 `position` 为 `bottom` 时有效 |	Boolean	|`false`     |
+| show-ok-text `v3.3.1`	| 是否展示确定按钮 |	Boolean	|`true`     |
+| show-cancel-text `v3.3.1`	| 是否展示取消按钮 |	Boolean	|`true`     |
 
+> 注：自 `v3.2.3` 起，在 @nutui/nutui-taro 中，取消 3D 展示效果，`three-dimensional` 废弃。
 ### Columns 数据结构
 
 | 参数         | 说明                             | 类型   | 默认值           |

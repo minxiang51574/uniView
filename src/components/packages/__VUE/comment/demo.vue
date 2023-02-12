@@ -1,12 +1,11 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('single') }}</h2>
+    <h2>{{ translate('single') }}</h2>
     <nut-cell>
       <nut-comment
         :images="cmt.images"
         :videos="cmt.videos"
         :info="cmt.info"
-        :labels="labels"
         @click="handleclick"
         @clickImages="clickImages"
         :operation="['replay']"
@@ -20,7 +19,7 @@
       </nut-comment>
     </nut-cell>
 
-    <h2 class="h2">{{ translate('multiRow') }}</h2>
+    <h2>{{ translate('multiRow') }}</h2>
     <nut-cell>
       <nut-comment
         headerType="complex"
@@ -48,7 +47,7 @@
       </nut-comment>
     </nut-cell>
 
-    <h2 class="h2">{{ translate('additionalReview') }}</h2>
+    <h2>{{ translate('additionalReviewN') }}</h2>
     <nut-cell>
       <nut-comment
         imagesRows="multi"
@@ -63,8 +62,8 @@
 </template>
 <script lang="ts">
 import { onMounted, ref } from '@vue/runtime-core';
-import { createComponent } from '../../utils/create';
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { createComponent } from '@/components/packages/utils/create';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const { createDemo, translate } = createComponent('comment');
 
 const initTranslate = () =>
@@ -73,7 +72,7 @@ const initTranslate = () =>
       basic: '基本用法',
       single: '评论图片单行展示',
       multiRow: '评论图片多行展示',
-      additionalReview: '追评展示'
+      additionalReviewN: '追评展示'
     },
     'en-US': {
       basic: 'Basic Usage',
@@ -88,9 +87,6 @@ export default createDemo({
   setup() {
     initTranslate();
     let cmt = ref({});
-    const labels = () => {
-      return '<nut-icon name="dongdong" color="#fa2c19"></nut-icon>';
-    };
 
     const handleclick = (info: any) => {
       console.log('进行跳转', info);
@@ -115,7 +111,6 @@ export default createDemo({
 
     return {
       cmt,
-      labels,
       handleclick,
       clickImages,
       translate

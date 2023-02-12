@@ -14,7 +14,7 @@ const config = {
   plugins: ['@tarojs/plugin-html'],
   alias: {
     '@vue': path.resolve(__dirname, '../../../../../node_modules/@vue'),
-    '@/packages': path.resolve(__dirname, '../../../../../src/packages')
+    '@/components/packages': path.resolve(__dirname, '../../../../../src/packages')
   },
   sass: {
     resource: path.resolve(__dirname, '../../../../', 'packages/styles/variables.scss')

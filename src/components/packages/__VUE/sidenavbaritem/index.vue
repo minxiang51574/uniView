@@ -7,7 +7,7 @@
 </template>
 <script lang="ts">
 import { computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('sidenavbaritem');
 export default create({
   props: {
@@ -19,9 +19,6 @@ export default create({
       type: String,
       default: ''
     }
-  },
-  options: {
-      virtualHost : true,
   },
   emits: ['click'],
   setup: (props: any, context: any) => {
@@ -44,5 +41,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

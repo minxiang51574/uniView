@@ -17,11 +17,6 @@
         is-link
       ></nut-cell>
       <nut-cell
-        to="/components/packages/__VUE/configprovider/demo"
-        title="ConfigProvider 全局配置"
-        is-link
-      ></nut-cell>
-      <nut-cell
         to="/components/packages/__VUE/icon/demo"
         title="Icon 图标"
         is-link
@@ -62,18 +57,6 @@
     </nut-cell-group>
 
     <nut-cell-group title="导航组件">
-      <!--
-            <nut-cell to="/components/packages/__VUE/elevator/demo" title="Elevator 电梯楼层" is-link></nut-cell>
-            -->
-      <nut-cell
-        to="/components/packages/__VUE/fixednav/demo"
-        title="FixedNav 悬浮导航"
-        is-link
-      ></nut-cell>
-      <!--
-            
-            <nut-cell to="/components/packages/__VUE/fixednav/demo" title="Indicator 指示器" is-link></nut-cell>
-            -->
       <nut-cell
         to="/components/packages/__VUE/menu/demo"
         title="Menu 菜单"

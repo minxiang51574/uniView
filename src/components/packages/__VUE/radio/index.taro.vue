@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, h, inject } from 'vue';
 import nutIcon from '../icon/index.taro.vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create } = createComponent('radio');
 
 export default create({
@@ -15,7 +15,7 @@ export default create({
       default: 'round' // button
     },
     label: {
-      type: [String, Number],
+      type: [String, Number, Boolean],
       default: ''
     },
     iconName: {
@@ -43,7 +43,7 @@ export default create({
     let parent: any = inject('parent', null);
 
     const isCurValue = computed(() => {
-      return parent.label.value == props.label;
+      return parent.label.value === props.label;
     });
 
     const color = computed(() => {

@@ -1,26 +1,26 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('header') }}</h2>
+    <h2>{{ translate('header') }}</h2>
     <nut-cell>
       <nut-ellipsis :content="content" direction="start" class="elli"></nut-ellipsis>
     </nut-cell>
 
-    <h2 class="h2">{{ translate('end') }}</h2>
+    <h2>{{ translate('end') }}</h2>
     <nut-cell>
       <nut-ellipsis :content="content" direction="end"></nut-ellipsis>
     </nut-cell>
 
-    <h2 class="h2">{{ translate('middle') }}</h2>
+    <h2>{{ translate('middle') }}</h2>
     <nut-cell>
       <nut-ellipsis :content="content" direction="middle"></nut-ellipsis>
     </nut-cell>
 
-    <h2 class="h2">{{ translate('rows') }}</h2>
+    <h2>{{ translate('rows') }}</h2>
     <nut-cell>
       <nut-ellipsis :content="content" direction="start" rows="3"></nut-ellipsis>
     </nut-cell>
 
-    <h2 class="h2">{{ translate('expand') }}</h2>
+    <h2>{{ translate('expand') }}</h2>
     <nut-cell>
       <nut-ellipsis :content="content" direction="start" expandText="展开" collapseText="收起"></nut-ellipsis>
     </nut-cell>
@@ -34,9 +34,9 @@
 </template>
 <script lang="ts">
 import { ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('ellipsis');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

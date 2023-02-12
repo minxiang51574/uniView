@@ -1,22 +1,22 @@
 <template>
   <div class="demo">
-    <h2 class="h2">{{ translate('basic') }}</h2>
+    <h2>{{ translate('basic') }}</h2>
     <nut-cell>
       <nut-ecard
         v-model="money"
         @inputChange="inputChange"
         @change="change"
         @changeStep="changeStep"
-        :dataList="dataList"
+        :data-list="dataList"
       ></nut-ecard>
     </nut-cell>
   </div>
 </template>
 <script lang="ts">
 import { reactive, ref } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { createDemo, translate } = createComponent('ecard');
-import { useTranslate } from '../../../sites/assets/util/useTranslate';
+import { useTranslate } from '@/components/sites/assets/util/useTranslate';
 const initTranslate = () =>
   useTranslate({
     'zh-CN': {

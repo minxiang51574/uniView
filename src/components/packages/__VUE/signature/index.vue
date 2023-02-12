@@ -11,7 +11,7 @@
 </template>
 <script lang="ts">
 import { ref, reactive, onMounted, computed, toRefs } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create, translate } = createComponent('signature');
 
 export default create({
@@ -26,7 +26,15 @@ export default create({
     },
     strokeStyle: {
       type: String,
-      default: '#000'
+      default: () => {
+        let bodyDom: any = document.getElementsByTagName('body');
+        let clsName = bodyDom[0]['className'];
+        if (clsName.indexOf('nut-theme-dark') == -1) {
+          return '#000';
+        } else {
+          return '#fff';
+        }
+      }
     },
     type: {
       type: String,
@@ -38,7 +46,7 @@ export default create({
     }
   },
   components: {},
-  emits: ['confirm', 'clear'],
+  emits: ['start', 'end', 'signing', 'confirm', 'clear'],
 
   setup(props, { emit }) {
     const canvas: any = ref<HTMLElement | null>(null);
@@ -73,16 +81,17 @@ export default create({
       state.ctx.beginPath();
       state.ctx.lineWidth = props.lineWidth;
       state.ctx.strokeStyle = props.strokeStyle;
-
+      emit('start');
       canvas.value.addEventListener(state.events[1], moveEventHandler, false);
       canvas.value.addEventListener(state.events[2], endEventHandler, false);
       canvas.value.addEventListener(state.events[3], leaveEventHandler, false);
     };
 
-    const moveEventHandler = (event) => {
+    const moveEventHandler = (event: { preventDefault: () => void; touches: any[] }) => {
       event.preventDefault();
 
       let evt = state.isSupportTouch ? event.touches[0] : event;
+      emit('signing', evt);
       let coverPos = canvas.value.getBoundingClientRect();
       let mouseX = evt.clientX - coverPos.left;
       let mouseY = evt.clientY - coverPos.top;
@@ -91,13 +100,13 @@ export default create({
       state.ctx.stroke();
     };
 
-    const endEventHandler = (event) => {
+    const endEventHandler = (event: { preventDefault: () => void }) => {
       event.preventDefault();
-
+      emit('end');
       canvas.value.removeEventListener(state.events[1], moveEventHandler, false);
       canvas.value.removeEventListener(state.events[2], endEventHandler, false);
     };
-    const leaveEventHandler = (event) => {
+    const leaveEventHandler = (event: { preventDefault: () => void }) => {
       event.preventDefault();
       canvas.value.removeEventListener(state.events[1], moveEventHandler, false);
       canvas.value.removeEventListener(state.events[2], endEventHandler, false);
@@ -112,8 +121,16 @@ export default create({
     const confirm = () => {
       onSave(canvas.value);
     };
-
-    const onSave = (canvas) => {
+    const isCanvasBlank = (canvas: any) => {
+      if (!canvas) {
+        return true;
+      }
+      var blank: any = document.createElement('canvas');
+      blank.width = canvas.width;
+      blank.height = canvas.height;
+      return canvas?.toDataURL() == blank.toDataURL();
+    };
+    const onSave = (canvas: { toDataURL: (arg0: string, arg1?: number | undefined) => any }) => {
       let dataurl;
       switch (props.type) {
         case 'png':
@@ -123,8 +140,10 @@ export default create({
           dataurl = canvas.toDataURL('image/jpeg', 0.8);
           break;
       }
+      const _canvas = isCanvasBlank(canvas) ? '请绘制签名' : canvas;
+      const _filePath = isCanvasBlank(canvas) ? '' : dataurl;
+      emit('confirm', _canvas, _filePath);
       clear();
-      emit('confirm', canvas, dataurl);
     };
 
     onMounted(() => {
@@ -141,5 +160,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>

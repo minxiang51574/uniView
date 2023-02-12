@@ -51,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create, translate } = createComponent('table');
 import { component } from './common';
 export default create(component(componentName, translate));

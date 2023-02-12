@@ -1,7 +1,7 @@
 <template>
   <view class="nut-comment-bottom">
     <view @click="handleClick" class="nut-comment-bottom__lable">
-      <span v-if="type != 'complex'">{{ info.size }}</span></view
+      <span v-if="type != 'complex'" style="display: inline">{{ info.size }}</span></view
     >
 
     <view class="nut-comment-bottom__cpx">
@@ -25,7 +25,7 @@
 <script lang="ts">
 import { ref, watch, onMounted } from 'vue';
 
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create, translate } = createComponent('comment-bottom');
 
 export default create({

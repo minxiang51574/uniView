@@ -14,7 +14,8 @@ import { Swiper,SwiperItem } from '@nutui/nutui';
 import { Swiper,SwiperItem } from '@nutui/nutui-taro';
 
 const app = createApp();
-app.use(Swiper).use(SwiperItem);
+app.use(Swiper);
+app.use(SwiperItem);
 ```
 
 ### 基础用法
@@ -33,7 +34,7 @@ app.use(Swiper).use(SwiperItem);
       <img src="https://storage.360buyimg.com/jdc-article/NutUItaro34.jpg" alt="" />
     </nut-swiper-item>
     <nut-swiper-item>
-      <img src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg'" alt="" />
+      <img src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg" alt="" />
     </nut-swiper-item>
     <nut-swiper-item>
       <img src="https://storage.360buyimg.com/jdc-article/welcomenutui.jpg" alt="" />
@@ -176,7 +177,7 @@ app.use(Swiper).use(SwiperItem);
       <img src="https://storage.360buyimg.com/jdc-article/NutUItaro34.jpg" alt="" />
     </nut-swiper-item>
     <nut-swiper-item>
-      <img src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg'" alt="" />
+      <img src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg" alt="" />
     </nut-swiper-item>
     <nut-swiper-item>
       <img src="https://storage.360buyimg.com/jdc-article/welcomenutui.jpg" alt="" />
@@ -223,7 +224,7 @@ app.use(Swiper).use(SwiperItem);
         <img src="https://storage.360buyimg.com/jdc-article/NutUItaro34.jpg" alt="" />
       </nut-swiper-item>
       <nut-swiper-item>
-        <img src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg'" alt="" />
+        <img src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg" alt="" />
       </nut-swiper-item>
       <nut-swiper-item>
         <img src="https://storage.360buyimg.com/jdc-article/welcomenutui.jpg" alt="" />
@@ -265,7 +266,7 @@ app.use(Swiper).use(SwiperItem);
     right: 0;
     width: 46px;
     height: 22px;
-    background: rgba(0, 0, 0, 0.33);
+    background-color: rgba(0, 0, 0, 0.33);
     border-radius: 22px;
     text-align: center;
     color: #fff;
@@ -290,7 +291,7 @@ app.use(Swiper).use(SwiperItem);
         <img :src="item" alt="" />
       </nut-swiper-item>
     </nut-swiper>
-    <view class="nut-swiper-btns">
+    <view class="nut-swiper-btns" style="width: 100%;">
       <span class="nut-swiper-btns__left" @click="handlePrev">
         <nut-icon name='left'></nut-icon>
       </span>
@@ -337,7 +338,6 @@ app.use(Swiper).use(SwiperItem);
     }
   }
   .nut-swiper-btns{
-    width: 100%;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -371,7 +371,7 @@ app.use(Swiper).use(SwiperItem);
       <img src="https://storage.360buyimg.com/jdc-article/NutUItaro34.jpg" alt="" />
     </nut-swiper-item>
     <nut-swiper-item>
-      <img src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg'" alt="" />
+      <img src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg" alt="" />
     </nut-swiper-item>
     <nut-swiper-item>
       <img src="https://storage.360buyimg.com/jdc-article/welcomenutui.jpg" alt="" />
@@ -430,7 +430,7 @@ app.use(Swiper).use(SwiperItem);
       <img src="https://storage.360buyimg.com/jdc-article/NutUItaro34.jpg" alt="" />
     </nut-swiper-item>
     <nut-swiper-item>
-      <img src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg'" alt="" />
+      <img src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg" alt="" />
     </nut-swiper-item>
     <nut-swiper-item>
       <img src="https://storage.360buyimg.com/jdc-article/welcomenutui.jpg" alt="" />
@@ -477,7 +477,7 @@ app.use(Swiper).use(SwiperItem);
       <img src="https://storage.360buyimg.com/jdc-article/NutUItaro34.jpg" alt="" />
     </nut-swiper-item>
     <nut-swiper-item>
-      <img src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg'" alt="" />
+      <img src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg" alt="" />
     </nut-swiper-item>
     <nut-swiper-item>
       <img src="https://storage.360buyimg.com/jdc-article/welcomenutui.jpg" alt="" />
@@ -518,8 +518,8 @@ app.use(Swiper).use(SwiperItem);
 
 | 参数                   | 说明                                                        | 类型           | 默认值      |
 | ---------------------- | ----------------------------------------------------------- | -------------- | ----------- |
-| width                   | 轮播卡片的宽度           | Number、String        | window.innerWidth       |
-| height                | 轮播卡片的高度                                                    | String、Number | 0        |
+| width                   | 轮播卡片的宽度           | Number、String        | `auto`       |
+| height                | 轮播卡片的高度                                                    | String、Number | `auto`        |
 | direction               | 轮播方向,可选值`horizontal`,`vertical`     | String | 'horizontal'         |
 | pagination-visible          | 分页指示器是否展示                                              | Boolean         | false           |
 | pagination-color         | 分页指示器选中的颜色                                              | String  | '#fff'           |
@@ -528,9 +528,8 @@ app.use(Swiper).use(SwiperItem);
 | auto-play | 自动轮播时长，0表示不会自动轮播                                          | Number、String        | 0        |
 | init-page               | 初始化索引值                   | Number、String         | 0    |
 | touchable             | 是否可触摸滑动                                                      | Boolean         | true          |
-| is-preventDefault                  | 滑动过程中是否禁用默认事件                                              | Boolean  | true           |
-| is-stopPropagation               | 滑动过程中是否禁止冒泡                    | Boolean         | true    |
-| is-center               | 是否居中展示，必须传对应的`width` 和 `height`                    | Boolean         | false    |
+| is-prevent-default                  | 滑动过程中是否禁用默认事件                                              | Boolean  | true           |
+| is-stop-propagation               | 滑动过程中是否禁止冒泡                    | Boolean         | true    |
 
 
 
@@ -540,9 +539,15 @@ app.use(Swiper).use(SwiperItem);
 | ---------------- | ---------------------- | ------------ |
 | change            | 滑动之后的回调         | 当前索引值index |
 
+### Slots
+
+| 名称 | 说明       |
+| ------ | ---------- |
+| page  | 自定义分页器 |
 
 
-### API
+
+### Swipe 方法
 
 | 事件名           | 说明                   | 参数     |
 | ---------------- | ---------------------- | ------------ |

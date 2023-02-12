@@ -3,7 +3,7 @@
     position="bottom"
     closeable
     round
-    :isWrapTeleport="isWrapTeleport"
+    :teleportDisable="teleportDisable"
     :visible="visible"
     :style="popStyle"
     :lock-scroll="lockScroll"
@@ -30,7 +30,7 @@
 </template>
 <script lang="ts">
 import { computed, provide } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/components/packages/utils/create';
 const { componentName, create, translate } = createComponent('timeselect');
 export default create({
   props: {
@@ -60,7 +60,7 @@ export default create({
       type: [Boolean],
       default: false
     },
-    isWrapTeleport: {
+    teleportDisable: {
       type: Boolean,
       default: false
     }
@@ -104,5 +104,5 @@ export default create({
 });
 </script>
 <style lang="scss">
-@import './index.scss'
+@import './index.scss' 
 </style>
