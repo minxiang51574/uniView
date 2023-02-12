@@ -15,6 +15,7 @@
   appearance: none;
   user-select: none;
   touch-action: manipulation;
+  vertical-align: bottom;
 
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
@@ -137,6 +138,10 @@
     line-height: $button-small-line-height;
     padding: $button-small-padding;
     font-size: $button-small-font-size;
+
+    &.nut-button--round {
+      border-radius: $button-small-round-border-radius;
+    }
   }
   &--mini {
     height: $button-mini-height;

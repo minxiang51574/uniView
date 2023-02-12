@@ -4,13 +4,446 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "uni-app"
+        "navigationBarTitleText": "UniNutUI"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/configprovider/demo",
+      "style": {
+        "navigationBarTitleText": "ConfigProvider"
       }
     },
     {
       "path": "components/packages/__VUE/button/demo",
       "style": {
         "navigationBarTitleText": "Button"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/cell/demo",
+      "style": {
+        "navigationBarTitleText": "Cell"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/icon/demo",
+      "style": {
+        "navigationBarTitleText": "Icon"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/image/demo",
+      "style": {
+        "navigationBarTitleText": "Image"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/overlay/demo",
+      "style": {
+        "navigationBarTitleText": "OverLay"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/popup/demo",
+      "style": {
+        "navigationBarTitleText": "Popup"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/divider/demo",
+      "style": {
+        "navigationBarTitleText": "Divider"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/grid/demo",
+      "style": {
+        "navigationBarTitleText": "Grid"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/layout/demo",
+      "style": {
+        "navigationBarTitleText": "Layout"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/sticky/demo",
+      "style": {
+        "navigationBarTitleText": "Sticky"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/elevator/demo",
+      "style": {
+        "navigationBarTitleText": "Elevator"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/fixednav/demo",
+      "style": {
+        "navigationBarTitleText": "FixedNav"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/menu/demo",
+      "style": {
+        "navigationBarTitleText": "Menu"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/navbar/demo",
+      "style": {
+        "navigationBarTitleText": "Navbar"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/pagination/demo",
+      "style": {
+        "navigationBarTitleText": "Pagination"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/sidenavbar/demo",
+      "style": {
+        "navigationBarTitleText": "SideNavBar"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/tabbar/demo",
+      "style": {
+        "navigationBarTitleText": "Tabbar"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/tabs/demo",
+      "style": {
+        "navigationBarTitleText": "Tabs"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/calendar/demo",
+      "style": {
+        "navigationBarTitleText": "Calendar"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/cascader/demo",
+      "style": {
+        "navigationBarTitleText": "Cascader"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/checkbox/demo",
+      "style": {
+        "navigationBarTitleText": "Checkbox"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/datepicker/demo",
+      "style": {
+        "navigationBarTitleText": "DatePicker"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/form/demo",
+      "style": {
+        "navigationBarTitleText": "Form"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/input/demo",
+      "style": {
+        "navigationBarTitleText": "Input"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/inputnumber/demo",
+      "style": {
+        "navigationBarTitleText": "InputNumber"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/numberkeyboard/demo",
+      "style": {
+        "navigationBarTitleText": "NumberKeyboard"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/picker/demo",
+      "style": {
+        "navigationBarTitleText": "Picker"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/radio/demo",
+      "style": {
+        "navigationBarTitleText": "Radio"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/range/demo",
+      "style": {
+        "navigationBarTitleText": "Range"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/rate/demo",
+      "style": {
+        "navigationBarTitleText": "Rate"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/searchbar/demo",
+      "style": {
+        "navigationBarTitleText": "SearchBar"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/shortpassword/demo",
+      "style": {
+        "navigationBarTitleText": "ShortPassword"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/textarea/demo",
+      "style": {
+        "navigationBarTitleText": "TextArea"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/actionsheet/demo",
+      "style": {
+        "navigationBarTitleText": "ActionSheet"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/backtop/demo",
+      "style": {
+        "navigationBarTitleText": "BackTop"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/dialog/demo",
+      "style": {
+        "navigationBarTitleText": "Dialog"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/drag/demo",
+      "style": {
+        "navigationBarTitleText": "Drag",
+        "navigationStyle": "custom"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/notify/demo",
+      "style": {
+        "navigationBarTitleText": "Notify"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/swipe/demo",
+      "style": {
+        "navigationBarTitleText": "Swipe"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/avatar/demo",
+      "style": {
+        "navigationBarTitleText": "Avatar"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/animate/demo",
+      "style": {
+        "navigationBarTitleText": "Animate"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/badge/demo",
+      "style": {
+        "navigationBarTitleText": "Badge"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/circleprogress/demo",
+      "style": {
+        "navigationBarTitleText": "CircleProgress"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/collapse/demo",
+      "style": {
+        "navigationBarTitleText": "Collapse"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/countdown/demo",
+      "style": {
+        "navigationBarTitleText": "CountDown"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/countup/demo",
+      "style": {
+        "navigationBarTitleText": "CountUp"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/empty/demo",
+      "style": {
+        "navigationBarTitleText": "Empty"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/noticebar/demo",
+      "style": {
+        "navigationBarTitleText": "NoticeBar"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/popover/demo",
+      "style": {
+        "navigationBarTitleText": "Popover"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/price/demo",
+      "style": {
+        "navigationBarTitleText": "Price"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/progress/demo",
+      "style": {
+        "navigationBarTitleText": "Progress"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/skeleton/demo",
+      "style": {
+        "navigationBarTitleText": "Skeleton"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/steps/demo",
+      "style": {
+        "navigationBarTitleText": "Steps"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/table/demo",
+      "style": {
+        "navigationBarTitleText": "Table"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/tag/demo",
+      "style": {
+        "navigationBarTitleText": "Tag"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/address/demo",
+      "style": {
+        "navigationBarTitleText": "Address"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/addresslist/demo",
+      "style": {
+        "navigationBarTitleText": "AddressList"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/card/demo",
+      "style": {
+        "navigationBarTitleText": "Card"
+      }
+    },
+
+    {
+      "path": "components/packages/__VUE/category/demo",
+      "style": {
+        "navigationBarTitleText": "Category"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/barrage/demo",
+      "style": {
+        "navigationBarTitleText": "Barrage"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/ecard/demo",
+      "style": {
+        "navigationBarTitleText": "Ecard"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/sku/demo",
+      "style": {
+        "navigationBarTitleText": "Sku"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/swiper/demo",
+      "style": {
+        "navigationBarTitleText": "Swiper"
+      }
+    },
+    {
+      "path": "components/packages/__VUE/trendarrow/demo",
+      "style": {
+        "navigationBarTitleText": "TrendArrow"
       }
     }
   ],

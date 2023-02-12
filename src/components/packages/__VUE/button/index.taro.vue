@@ -5,6 +5,7 @@
       <nut-icon
         v-if="icon && !loading"
         :name="icon"
+        v-bind="$attrs"
         :class-prefix="iconClassPrefix"
         :font-class-name="iconFontClassName"
       ></nut-icon>
@@ -17,7 +18,7 @@
 
 <script lang="ts">
 import { PropType, CSSProperties, toRefs, computed } from 'vue';
-import { createComponent } from '../../utils/create';
+import { createComponent } from '@/packages/utils/create';
 const { componentName, create } = createComponent('button');
 import Icon from '../icon/index.taro.vue';
 export default create({

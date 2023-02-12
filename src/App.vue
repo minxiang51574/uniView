@@ -29,7 +29,7 @@ export default {
 
   &.full {
     padding: 0 0 0 0;
-    .h2 {
+    h2 {
       padding-left: 27px;
     }
   }
@@ -42,7 +42,7 @@ export default {
     width: 0;
     background: transparent;
   }
-  > .h2 {
+  > h2 {
     margin-top: 30px;
     margin-bottom: 10px;
     font-size: 14px;
